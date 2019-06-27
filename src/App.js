@@ -10,10 +10,10 @@ const Sharing = ({ addSharing, sharing }) => {
     setValue('')
   }
   return (
-    <div className="section">
+    <div className="section" data-testid="sharing">
       <h5>Sharing</h5>
       {sharing.length > 0 && (
-        <ul className="collection">
+        <ul className="collection" data-testid="sharing-items">
           {sharing.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
@@ -47,10 +47,10 @@ const NeedHelp = ({ addHelp, help }) => {
     setValue('')
   }
   return (
-    <div className="section">
+    <div className="section" data-testid="need-help">
       <h5>Need Help</h5>
       {help.length > 0 && (
-        <ul className="collection">
+        <ul className="collection" data-testid="help-items">
           {help.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
@@ -83,10 +83,10 @@ const PairConfig = ({ addPair, pairing }) => {
     setValue('')
   }
   return (
-    <div className="section">
+    <div className="section" data-testid="pairing">
       <h5>Pairing Config</h5>
       {pairing.length > 0 && (
-        <ul className="collection">
+        <ul className="collection" data-testid="pairing-items">
           {pairing.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
