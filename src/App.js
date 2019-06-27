@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-const Sharing = ({ addSharing, sharing }) => {
+const Sharing = ({ addSharing, sharing, handleRemoveItem }) => {
   const [value, setValue] = React.useState('')
   const handleSubmit = e => {
     e.preventDefault()
@@ -17,7 +17,14 @@ const Sharing = ({ addSharing, sharing }) => {
           {sharing.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
-              <i className="close-btn material-icons right">close</i>
+              <a href="#/" onClick={() => handleRemoveItem(index, 'sharing')}>
+                <i
+                  data-testid={`remove-share${index}`}
+                  className="material-icons right"
+                >
+                  close
+                </i>
+              </a>
             </li>
           ))}
         </ul>
@@ -25,11 +32,16 @@ const Sharing = ({ addSharing, sharing }) => {
       <form onSubmit={handleSubmit}>
         <input
           placeholder="What are your thoughts...?"
+          aria-label="sharing-input"
           type="text"
           value={value}
           onChange={e => setValue(e.target.value)}
         />
-        <button type="submit" className="waves-effect waves-light btn-small">
+        <button
+          data-testid="share-submit"
+          type="submit"
+          className="waves-effect waves-light btn-small"
+        >
           Share
         </button>
       </form>
@@ -37,7 +49,7 @@ const Sharing = ({ addSharing, sharing }) => {
   )
 }
 
-const NeedHelp = ({ addHelp, help }) => {
+const NeedHelp = ({ addHelp, help, handleRemoveItem }) => {
   const [value, setValue] = React.useState('')
 
   const handleSubmit = e => {
@@ -54,6 +66,18 @@ const NeedHelp = ({ addHelp, help }) => {
           {help.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
+              <a
+                href="#/"
+                data-testid={`remove-help${index}`}
+                onClick={() => handleRemoveItem(index, 'help')}
+              >
+                <i
+                  data-testid={`remove-share${index}`}
+                  className="material-icons right"
+                >
+                  close
+                </i>
+              </a>
             </li>
           ))}
         </ul>
@@ -61,12 +85,17 @@ const NeedHelp = ({ addHelp, help }) => {
       <form onSubmit={handleSubmit}>
         <input
           className="validate"
+          aria-label="help-input"
           placeholder="Anyone need help?..."
           type="text"
           value={value}
           onChange={e => setValue(e.target.value)}
         />
-        <button type="submit" className="waves-effect waves-light btn-small">
+        <button
+          data-testid="help-submit"
+          type="submit"
+          className="waves-effect waves-light btn-small"
+        >
           Help!
         </button>
       </form>
@@ -74,7 +103,7 @@ const NeedHelp = ({ addHelp, help }) => {
   )
 }
 
-const PairConfig = ({ addPair, pairing }) => {
+const PairConfig = ({ addPair, pairing, handleRemoveItem }) => {
   const [value, setValue] = React.useState('')
   const handleSubmit = e => {
     e.preventDefault()
@@ -86,10 +115,22 @@ const PairConfig = ({ addPair, pairing }) => {
     <div className="section" data-testid="pairing">
       <h5>Pairing Config</h5>
       {pairing.length > 0 && (
-        <ul className="collection" data-testid="pairing-items">
+        <ul className="collection" data-testid="pair-items">
           {pairing.map((s, index) => (
             <li key={index} className="collection-item">
               {s}
+              <a
+                data-testid={`remove-pair${index}`}
+                href="#/"
+                onClick={() => handleRemoveItem(index, 'pairing')}
+              >
+                <i
+                  data-testid={`remove-share${index}`}
+                  className="material-icons right"
+                >
+                  close
+                </i>
+              </a>
             </li>
           ))}
         </ul>
@@ -97,12 +138,17 @@ const PairConfig = ({ addPair, pairing }) => {
       <form onSubmit={handleSubmit}>
         <input
           className="validate"
+          aria-label="pair-input"
           placeholder="Pairing config..."
           type="text"
           value={value}
           onChange={e => setValue(e.target.value)}
         />
-        <button type="submit" className="waves-effect waves-light btn-small">
+        <button
+          data-testid="pair-submit"
+          type="submit"
+          className="waves-effect waves-light btn-small"
+        >
           Let's Pair!
         </button>
       </form>
@@ -130,37 +176,52 @@ function App() {
     setPairing(newPair)
   }
 
+  const handleRemoveItem = (index, type) => {
+    switch (type) {
+      case 'sharing':
+        setSharing(sharing.filter(i => i !== sharing[index]))
+        break
+      case 'help':
+        setHelp(help.filter(i => i !== help[index]))
+        break
+      case 'pairing':
+        setPairing(pairing.filter(i => i !== pairing[index]))
+        break
+      default:
+        console.log('nothing')
+    }
+  }
+
   const handlePublish = () => {
     console.table({ sharing, pairing, help })
     const date = new Date()
-    const today = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+    const today = `${date.getDate()}/${date.getMonth() +
+      1}/${date.getFullYear()}`
     const shareText = sharing.length > 0 ? sharing.join('\n - ') : ''
     const helpText = help.length > 0 ? help.join('\n - ') : ''
     const pairText = pairing.length > 0 ? pairing.join('\n - ') : ''
     const content = `
 ***__Stand Up__** (*${today}*)*
 
-${sharing.length > 0 ? '**__Sharing__**\n - ' : ''}${shareText}
+**_Sharing_**\n - ${shareText}
 
-${help.length > 0 ? '**__Need Help_**\n - ' : ''}${helpText}
+**_Need Help_**\n - ${helpText}
 
-${pairing.length > 0 ? '**__Pairing_**\n - ' : ''}${pairText}
-    `
+**_Pairing_**\n - ${pairText}
+`
 
     console.log('body', content)
-    console.log('JSON.stringify(content)', JSON.stringify(content))
+    const webhook = process.env.REACT_APP_WEBHOOK
 
-    console.log('process.env.REACT_APP_WEBHOOK', process.env.REACT_APP_WEBHOOK)
-
-    // fetch(webhook, {
-    //   method: 'POST',
-    //   body: JSON.stringify({ content }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-    //   .then(res => console.log('res', res))
-    //   .catch(err => console.log('err', err))
+    fetch(webhook, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => console.log('res', res))
+      .catch(err => console.log('err', err))
   }
 
   return (
@@ -168,9 +229,21 @@ ${pairing.length > 0 ? '**__Pairing_**\n - ' : ''}${pairText}
       <h4>Stand Up Bot</h4>
       <div className="card">
         <div className="card-content">
-          <Sharing addSharing={addSharing} sharing={sharing} />
-          <NeedHelp addHelp={addHelp} help={help} />
-          <PairConfig addPair={addPair} pairing={pairing} />
+          <Sharing
+            addSharing={addSharing}
+            sharing={sharing}
+            handleRemoveItem={handleRemoveItem}
+          />
+          <NeedHelp
+            addHelp={addHelp}
+            help={help}
+            handleRemoveItem={handleRemoveItem}
+          />
+          <PairConfig
+            addPair={addPair}
+            pairing={pairing}
+            handleRemoveItem={handleRemoveItem}
+          />
         </div>
       </div>
       <div className="right-align">
