@@ -2,10 +2,19 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import 'jest-dom/extend-expect'
 import App from '../App'
+// import { Provider } from '../utils/context'
+// import { AppContextValues } from '../index'
 
 afterEach(cleanup)
 
 let utils
+
+// function render(ui, { ...options } = {}) {
+//   function Wrapper(props) {
+//     return <Provider value={AppContextValues()} {...props} />
+//   }
+//   return rtlRender(ui, { wrapper: Wrapper, ...options })
+// }
 
 beforeEach(() => {
   utils = render(<App />)
@@ -20,9 +29,9 @@ describe('on page load', () => {
     )
   })
   test('Help section is loaded', () => {
-    expect(utils.getByTestId('need-help')).toBeVisible()
-    expect(utils.getByTestId('need-help')).toHaveTextContent('Need Help')
-    expect(utils.getByTestId('need-help')).not.toContainElement(
+    expect(utils.getByTestId('help')).toBeVisible()
+    expect(utils.getByTestId('help')).toHaveTextContent('Need Help')
+    expect(utils.getByTestId('help')).not.toContainElement(
       utils.queryByTestId('help-items')
     )
   })
@@ -36,13 +45,13 @@ describe('on page load', () => {
 })
 
 describe('when new item is added', () => {
-  test('should display new share item', () => {
+  test('should display new sharing item', () => {
     fireEvent.change(utils.getByLabelText('sharing-input'), {
-      target: { value: 'share 1' },
+      target: { value: 'sharing 1' },
     })
-    expect(utils.getByLabelText('sharing-input').value).toBe('share 1')
+    expect(utils.getByLabelText('sharing-input').value).toBe('sharing 1')
 
-    fireEvent.click(utils.getByTestId('share-submit'))
+    fireEvent.click(utils.getByTestId('sharing-submit'))
     expect(utils.getByTestId('sharing')).toContainElement(
       utils.queryByTestId('sharing-items')
     )
@@ -56,7 +65,7 @@ describe('when new item is added', () => {
     expect(helpInput.value).toBe('help 1')
 
     fireEvent.click(utils.getByTestId('help-submit'))
-    expect(utils.getByTestId('need-help')).toContainElement(
+    expect(utils.getByTestId('help')).toContainElement(
       utils.queryByTestId('help-items')
     )
   })
@@ -75,29 +84,31 @@ describe('when new item is added', () => {
   })
 })
 
-describe('when there is a list of shares', () => {
+describe('when there is a list of sharings', () => {
   beforeEach(() => {
     fireEvent.change(utils.getByLabelText('sharing-input'), {
-      target: { value: 'share 1' },
+      target: { value: 'sharing 1' },
     })
-    fireEvent.click(utils.getByTestId('share-submit'))
+    fireEvent.click(utils.getByTestId('sharing-submit'))
     fireEvent.change(utils.getByLabelText('sharing-input'), {
-      target: { value: 'share 2' },
+      target: { value: 'sharing 2' },
     })
-    fireEvent.click(utils.getByTestId('share-submit'))
+    fireEvent.click(utils.getByTestId('sharing-submit'))
     fireEvent.change(utils.getByLabelText('sharing-input'), {
-      target: { value: 'share 3' },
+      target: { value: 'sharing 3' },
     })
-    fireEvent.click(utils.getByTestId('share-submit'))
+    fireEvent.click(utils.getByTestId('sharing-submit'))
   })
-  test('should have a list of share items', () => {
-    expect(utils.getByTestId('sharing-items')).toHaveTextContent('share 1')
-    expect(utils.getByTestId('sharing-items')).toHaveTextContent('share 2')
-    expect(utils.getByTestId('sharing-items')).toHaveTextContent('share 3')
+  test('should have a list of sharing items', () => {
+    expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 1')
+    expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 2')
+    expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 3')
   })
-  test('should remove a share item accordingly', () => {
-    fireEvent.click(utils.getByTestId('remove-share0'))
-    expect(utils.getByTestId('sharing-items')).not.toHaveTextContent('share 1')
+  test('should remove a sharing item accordingly', () => {
+    fireEvent.click(utils.getByTestId('remove-sharing0'))
+    expect(utils.getByTestId('sharing-items')).not.toHaveTextContent(
+      'sharing 1'
+    )
   })
 })
 
