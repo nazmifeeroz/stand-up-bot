@@ -1,5 +1,5 @@
 import React from 'react'
-import AppContext from '../utils/context'
+import { AppContext } from '../utils/context'
 
 export default ({ type, description }) => {
   const [value, setValue] = React.useState('')
