@@ -6,7 +6,10 @@ import { AppContext } from './utils/context'
 
 const App = () => {
   React.useEffect(() => {
-    window.onbeforeunload = () => 'Exiting'
+    window.addEventListener('beforeunload', ev => {
+      ev.preventDefault()
+      return (ev.returnValue = 'Are you sure you want to close?')
+    })
   })
   const store = React.useContext(AppContext)
   return (
@@ -31,7 +34,7 @@ const App = () => {
         </div>
       </div>
       <blockquote>
-        Build with <span className="red-text">&hearts;</span> by Nazmi{' '}
+        Built with <span className="red-text">&hearts;</span> by Nazmi{' '}
         <span className="right">
           &copy; <a href="https://siliconjungles.io">Silicon Jungles</a>{' '}
           {new Date().getFullYear()}
