@@ -1,19 +1,25 @@
 import React from 'react'
 import './styles.css'
-import Category from './components/category'
+import InputSection from './components/input-section'
+import publishStandup from './utils/publish-standup'
+import { AppContext } from './utils/context'
 
-function App(props) {
+const App = () => {
+  const store = React.useContext(AppContext)
   return (
     <div className="container">
       <h4>Stand Up Bot</h4>
       <div className="card">
         <div className="card-content">
-          <Category type="sharing" description="What are your thoughts?.." />
-          <Category type="help" description="Anyone need help?..." />
-          <Category type="pairing" description="Pairing Config..." />
+          <InputSection
+            type="sharing"
+            description="What are your thoughts?.."
+          />
+          <InputSection type="help" description="Anyone need help?..." />
+          <InputSection type="pairing" description="Pairing Config..." />
           <div className="right-align">
             <button
-              // onClick={handlePublish}
+              onClick={() => publishStandup(store)}
               className="orange waves-effect waves-light btn-large"
             >
               Publish!
@@ -24,7 +30,8 @@ function App(props) {
       <blockquote>
         Build with <span className="red-text">&hearts;</span> by Nazmi{' '}
         <span className="right">
-          &copy; <a href="https://siliconjungles.io">Silicon Jungles</a> 2019
+          &copy; <a href="https://siliconjungles.io">Silicon Jungles</a>{' '}
+          {new Date().getFullYear()}
         </span>
       </blockquote>
     </div>
