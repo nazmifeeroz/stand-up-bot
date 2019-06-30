@@ -5,6 +5,9 @@ import publishStandup from './utils/publish-standup'
 import { AppContext } from './utils/context'
 
 const App = () => {
+  React.useEffect(() => {
+    window.onbeforeunload = () => 'Exiting'
+  })
   const store = React.useContext(AppContext)
   return (
     <div className="container">
