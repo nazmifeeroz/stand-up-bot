@@ -37,7 +37,7 @@ const App = () => {
         Built with <span className="red-text">&hearts;</span> by Nazmi{' '}
         <span className="right">
           &copy; <a href="https://siliconjungles.io">Silicon Jungles</a>{' '}
-          {new Date().getFullYear()}
+          {new Date().getFullYear()} &middot; v0.1
         </span>
       </blockquote>
     </div>
