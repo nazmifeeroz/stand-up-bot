@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppContext } from '../utils/context'
+import { StoreContext } from '../utils/store'
 
 export default ({ type, description }) => {
   const [editMode, setEditMode] = React.useState(null)
@@ -7,7 +7,7 @@ export default ({ type, description }) => {
   const [removeItem, setRemoveItem] = React.useState('')
   const {
     [type]: [data, setData],
-  } = React.useContext(AppContext)
+  } = React.useContext(StoreContext)
 
   React.useEffect(() => {
     if (removeItem === '') return

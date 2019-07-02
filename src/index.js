@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import AppContextProvider from './utils/context'
+import StoreProvider from './utils/store'
 
 ReactDOM.render(
-  <AppContextProvider>
+  <StoreProvider>
     <App />
-  </AppContextProvider>,
+  </StoreProvider>,
   document.getElementById('root')
 )

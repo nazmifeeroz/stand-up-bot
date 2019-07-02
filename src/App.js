@@ -2,16 +2,16 @@ import React from 'react'
 import './styles.css'
 import InputSection from './components/input-section'
 import publishStandup from './utils/publish-standup'
-import { AppContext } from './utils/context'
+import { StoreContext } from './utils/store'
 
 const App = () => {
   React.useEffect(() => {
     window.addEventListener('beforeunload', ev => {
       ev.preventDefault()
-      return (ev.returnValue = 'Are you sure you want to close?')
+      return (ev.returnValue = 'Prevent manual reload')
     })
   })
-  const store = React.useContext(AppContext)
+  const store = React.useContext(StoreContext)
   return (
     <div className="container">
       <h4>Stand Up Bot</h4>
