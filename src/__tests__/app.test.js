@@ -1,23 +1,19 @@
 import React from 'react'
-import { render as rtlRender, fireEvent, cleanup } from '@testing-library/react'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import 'jest-dom/extend-expect'
 import App from '../App'
-import { Provider } from '../utils/context'
-import { AppContextValues } from '../index'
+import Provider from '../utils/context'
 
 afterEach(cleanup)
 
 let utils
 
-function render(ui, { ...options } = {}) {
-  function Wrapper(props) {
-    return <Provider value={AppContextValues()} {...props} />
-  }
-  return rtlRender(ui, { wrapper: Wrapper, ...options })
-}
-
 beforeEach(() => {
-  utils = render(<App />)
+  utils = render(
+    <Provider>
+      <App />
+    </Provider>
+  )
 })
 
 describe('on page load', () => {
