@@ -20,11 +20,11 @@ export default ({ children }) => {
   const [help, setHelp] = React.useState([])
   const [pairing, setPairing] = React.useState(initialPairs)
 
-  const value = {
+  const store = {
     sharing: [sharing, setSharing],
     help: [help, setHelp],
     pairing: [pairing, setPairing],
   }
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
