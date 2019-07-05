@@ -2,8 +2,8 @@ import React from 'react'
 import { StoreContext } from '../utils/store'
 
 export default ({ type, description }) => {
-  const [editMode, setEditMode] = React.useState(null)
-  const [value, setValue] = React.useState('')
+  const [editableItem, setEditableItem] = React.useState(null)
+  const [input, setInput] = React.useState('')
   const [removeItem, setRemoveItem] = React.useState('')
   const {
     [type]: [data, setData],
@@ -19,18 +19,31 @@ export default ({ type, description }) => {
 
   const addItem = e => {
     e.preventDefault()
-    if (!value) return
-    const newItem = [...data, value]
+    if (!input) return
+    const newItem = [...data, input]
     setData(newItem)
-    setValue('')
+    setInput('')
   }
 
   const editItem = e => {
     e.preventDefault()
-    data[editMode] = value
+    data[editableItem] = input
     setData(data)
-    setValue('')
-    setEditMode(null)
+    setInput('')
+    setEditableItem(null)
+  }
+
+  const getTabIndex = () => {
+    switch (type) {
+      case 'sharing':
+        return '1'
+      case 'help':
+        return '2'
+      case 'pairing':
+        return '3'
+      default:
+        return new Error()
+    }
   }
 
   return (
@@ -40,9 +53,9 @@ export default ({ type, description }) => {
         <ul className="collection" data-testid={`${type}-items`}>
           {data.map((s, index) => (
             <li key={index} className="collection-item">
-              {editMode === index ? (
+              {editableItem === index ? (
                 <form onSubmit={editItem}>
-                  <a href="#/" onClick={() => setEditMode(null)}>
+                  <a href="#/" onClick={() => setEditableItem(null)}>
                     <i
                       data-testid={`remove-${type}${index}`}
                       className="material-icons right"
@@ -51,19 +64,24 @@ export default ({ type, description }) => {
                     </i>
                   </a>
                   <input
+                    tabIndex="1"
                     autoFocus
                     placeholder={description}
                     aria-label={`${type}-input`}
                     type="text"
-                    value={value || s}
-                    onChange={e => setValue(e.target.value)}
+                    value={input || s}
+                    onChange={e => setInput(e.target.input)}
                   />
                   <small>Press Enter to save</small>
                 </form>
               ) : (
                 <div>
                   {s}
-                  <a href="#/" onClick={() => setRemoveItem(index)}>
+                  <a
+                    href="#/"
+                    onClick={() => setRemoveItem(index)}
+                    tabIndex="-1"
+                  >
                     <i
                       data-testid={`remove-${type}${index}`}
                       className="material-icons right"
@@ -71,7 +89,11 @@ export default ({ type, description }) => {
                       delete
                     </i>
                   </a>
-                  <a href="#/" onClick={() => setEditMode(index)}>
+                  <a
+                    href="#/"
+                    onClick={() => setEditableItem(index)}
+                    tabIndex="-1"
+                  >
                     <i
                       data-testid={`remove-${type}${index}`}
                       className="material-icons right"
@@ -85,16 +107,16 @@ export default ({ type, description }) => {
           ))}
         </ul>
       )}
-      {editMode === null && (
+      {editableItem === null && (
         <form onSubmit={addItem}>
           <input
             placeholder={description}
             aria-label={`${type}-input`}
             type="text"
-            value={value}
-            onChange={e => setValue(e.target.value)}
+            value={input}
+            onChange={e => setInput(e.target.value)}
           />
-          {value && (
+          {input && (
             <span
               className="helper-text"
               data-error="wrong"

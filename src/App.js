@@ -36,7 +36,10 @@ const App = () => {
       <blockquote>
         Built with <span className="red-text">&hearts;</span> by Nazmi{' '}
         <span className="right">
-          &copy; <a href="https://siliconjungles.io">Silicon Jungles</a>{' '}
+          &copy;{' '}
+          <a href="https://siliconjungles.io" tabIndex="-1">
+            Silicon Jungles
+          </a>{' '}
           {new Date().getFullYear()} &middot; v0.1
         </span>
       </blockquote>
