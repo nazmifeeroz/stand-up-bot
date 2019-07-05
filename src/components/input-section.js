@@ -33,18 +33,10 @@ export default ({ type, description }) => {
     setEditableItem(null)
   }
 
-  const getTabIndex = () => {
-    switch (type) {
-      case 'sharing':
-        return '1'
-      case 'help':
-        return '2'
-      case 'pairing':
-        return '3'
-      default:
-        return new Error()
-    }
-  }
+  const autoFocusProp = { autoFocus: false }
+  console.log('type', type)
+  if (type === 'sharing') autoFocusProp.autoFocus = true
+  console.log('autoFocusProp', autoFocusProp)
 
   return (
     <div className="section" data-testid={type}>
@@ -64,8 +56,6 @@ export default ({ type, description }) => {
                     </i>
                   </a>
                   <input
-                    tabIndex="1"
-                    autoFocus
                     placeholder={description}
                     aria-label={`${type}-input`}
                     type="text"

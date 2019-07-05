@@ -1,7 +1,9 @@
 export default ({ sharing: [sharing], help: [help], pairing: [pairing] }) => {
   console.table([sharing, help, pairing])
 
-  const authenticate = prompt('Who are you?', 'Alan Witwicky')
+  const authenticate = window.confirm(
+    'You are about to publish an awesome stand up! Are you sure?'
+  )
 
   // TODO: authenticate valid publisher
   if (!authenticate) return
