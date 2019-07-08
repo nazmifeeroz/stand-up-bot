@@ -33,11 +33,6 @@ export default ({ type, description }) => {
     setEditableItem(null)
   }
 
-  const autoFocusProp = { autoFocus: false }
-  console.log('type', type)
-  if (type === 'sharing') autoFocusProp.autoFocus = true
-  console.log('autoFocusProp', autoFocusProp)
-
   return (
     <div className="section" data-testid={type}>
       <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
@@ -56,11 +51,12 @@ export default ({ type, description }) => {
                     </i>
                   </a>
                   <input
+                    autoFocus
                     placeholder={description}
                     aria-label={`${type}-input`}
                     type="text"
                     value={input || s}
-                    onChange={e => setInput(e.target.input)}
+                    onChange={e => setInput(e.target.value)}
                   />
                   <small>Press Enter to save</small>
                 </form>
