@@ -13,6 +13,7 @@ const initialPairs = [
   'Sam',
   'Vincent',
   'Zek',
+  'Thiam Hock',
 ]
 
 export default ({ children }) => {
