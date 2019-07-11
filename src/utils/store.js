@@ -2,24 +2,10 @@ import React from 'react'
 
 export const StoreContext = React.createContext(null)
 
-const initialPairs = [
-  'Celine',
-  'Jany',
-  'Jarrett',
-  'Jaslyn',
-  'Jason',
-  'Justin',
-  'Nazmi',
-  'Sam',
-  'Thiam Hock',
-  'Vincent',
-  'Zek',
-]
-
 export default ({ children }) => {
   const [sharing, setSharing] = React.useState([])
   const [help, setHelp] = React.useState([])
-  const [pairing, setPairing] = React.useState(initialPairs)
+  const [pairing, setPairing] = React.useState([])
 
   const store = {
     sharing: [sharing, setSharing],
