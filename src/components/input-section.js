@@ -12,16 +12,21 @@ export default ({ type, description }) => {
   React.useEffect(() => {
     if (removeItem === '') return
     if (window.confirm('Are you sure you wish to delete?')) {
-      setData(data.filter(i => i !== data[removeItem]))
+      const newData = data.filter(i => i !== data[removeItem])
+      setData(newData)
+      if (type === 'pairing')
+        localStorage.setItem('pairing', JSON.stringify(newData))
     }
     setRemoveItem('')
-  }, [removeItem, setData, data])
+  }, [removeItem, setData, data, type])
 
   const addItem = e => {
     e.preventDefault()
     if (!input) return
     const newItem = [...data, input]
     setData(newItem)
+    if (type === 'pairing')
+      localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')
   }
 
