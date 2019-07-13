@@ -3,8 +3,10 @@ import './styles.css'
 import InputSection from './components/input-section'
 import publishStandup from './utils/publish-standup'
 import { StoreContext } from './utils/store'
+import Vim from './assets/vim-icon.png'
 
 const App = () => {
+  const [vimMode, setVimMode] = React.useState(false)
   React.useEffect(() => {
     window.addEventListener('beforeunload', ev => {
       ev.preventDefault()
@@ -12,17 +14,27 @@ const App = () => {
     })
   })
   const store = React.useContext(StoreContext)
+
   return (
     <div className="container">
       <h4>Stand Up Bot</h4>
       <div className="card">
         <div className="card-content">
           <InputSection
+            vimMode={vimMode}
             type="sharing"
             description="What are your thoughts?.."
           />
-          <InputSection type="help" description="Anyone need help?..." />
-          <InputSection type="pairing" description="Pairing Config..." />
+          <InputSection
+            vimMode={vimMode}
+            type="help"
+            description="Anyone need help?..."
+          />
+          <InputSection
+            vimMode={vimMode}
+            type="pairing"
+            description="Pairing Config..."
+          />
           <div className="right-align">
             <button
               onClick={() => publishStandup(store)}
@@ -34,7 +46,19 @@ const App = () => {
         </div>
       </div>
       <blockquote>
-        Built with <span className="red-text">&hearts;</span> by Nazmi{' '}
+        Built with <span className="red-text">&hearts;</span> by Nazmi &middot;
+        <a
+          href="#/"
+          className="waves-effect waves-teal btn-flat"
+          onClick={() => setVimMode(!vimMode)}
+        >
+          <img
+            src={Vim}
+            alt="vim mode"
+            width="20px"
+            style={{ filter: !vimMode && 'grayscale(100%)' }}
+          />
+        </a>
         <span className="right">
           &copy;{' '}
           <a href="https://siliconjungles.io" tabIndex="-1">

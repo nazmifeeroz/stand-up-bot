@@ -1,7 +1,10 @@
 import React from 'react'
+import { Controlled as CodeMirror } from 'react-codemirror2'
+import '../codemirror.css'
+import 'codemirror/keymap/vim.js'
 import { StoreContext } from '../utils/store'
 
-export default ({ type, description }) => {
+export default ({ type, description, vimMode }) => {
   const [editableItem, setEditableItem] = React.useState(null)
   const [input, setInput] = React.useState('')
   const [removeItem, setRemoveItem] = React.useState('')
@@ -21,7 +24,7 @@ export default ({ type, description }) => {
   }, [removeItem, setData, data, type])
 
   const addItem = e => {
-    e.preventDefault()
+    e && e.preventDefault()
     if (!input) return
     const newItem = [...data, input]
     setData(newItem)
@@ -31,13 +34,16 @@ export default ({ type, description }) => {
   }
 
   const editItem = e => {
-    e.preventDefault()
+    e && e.preventDefault()
     data[editableItem] = input
     setData(data)
     setInput('')
     setEditableItem(null)
   }
 
+  const onVimEnterPress = e => {
+    e === 'add' ? addItem() : editItem()
+  }
   return (
     <div className="section" data-testid={type}>
       <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
@@ -50,19 +56,37 @@ export default ({ type, description }) => {
                   <a href="#/" onClick={() => setEditableItem(null)}>
                     <i
                       data-testid={`remove-${type}${index}`}
-                      className="material-icons right"
+                      className="cobalt-icons right"
                     >
                       close
                     </i>
                   </a>
-                  <input
-                    autoFocus
-                    placeholder={description}
-                    aria-label={`${type}-input`}
-                    type="text"
-                    value={input || s}
-                    onChange={e => setInput(e.target.value)}
-                  />
+                  {vimMode ? (
+                    <CodeMirror
+                      value={input || s}
+                      options={{
+                        keyMap: 'vim',
+                        extraKeys: {
+                          Enter: () => onVimEnterPress('edit'),
+                        },
+                      }}
+                      onBeforeChange={(editor, data, value) => {
+                        setInput(value)
+                      }}
+                      onChange={(editor, data, value) => {
+                        setInput(value)
+                      }}
+                    />
+                  ) : (
+                    <input
+                      autoFocus
+                      placeholder={description}
+                      aria-label={`${type}-input`}
+                      type="text"
+                      value={input || s}
+                      onChange={e => setInput(e.target.value)}
+                    />
+                  )}
                   <small>Press Enter to save</small>
                 </form>
               ) : (
@@ -100,13 +124,28 @@ export default ({ type, description }) => {
       )}
       {editableItem === null && (
         <form onSubmit={addItem}>
-          <input
-            placeholder={description}
-            aria-label={`${type}-input`}
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-          />
+          {vimMode ? (
+            <CodeMirror
+              value={input}
+              options={{
+                keyMap: 'vim',
+                extraKeys: {
+                  Enter: () => onVimEnterPress('add'),
+                },
+              }}
+              onBeforeChange={(editor, data, value) => {
+                setInput(value)
+              }}
+            />
+          ) : (
+            <input
+              placeholder={description}
+              aria-label={`${type}-input`}
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+            />
+          )}
           {input && (
             <span
               className="helper-text"
