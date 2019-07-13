@@ -18,6 +18,18 @@ const App = () => {
   return (
     <div className="container">
       <h4>Stand Up Bot</h4>
+      <a
+        href="#/"
+        className="waves-effect waves-teal btn-flat right"
+        onClick={() => setVimMode(!vimMode)}
+      >
+        <img
+          src={Vim}
+          alt="vim mode"
+          width="20px"
+          style={{ filter: !vimMode && 'grayscale(100%)' }}
+        />
+      </a>
       <div className="card">
         <div className="card-content">
           <InputSection
@@ -47,24 +59,12 @@ const App = () => {
       </div>
       <blockquote>
         Built with <span className="red-text">&hearts;</span> by Nazmi &middot;
-        <a
-          href="#/"
-          className="waves-effect waves-teal btn-flat"
-          onClick={() => setVimMode(!vimMode)}
-        >
-          <img
-            src={Vim}
-            alt="vim mode"
-            width="20px"
-            style={{ filter: !vimMode && 'grayscale(100%)' }}
-          />
-        </a>
         <span className="right">
           &copy;{' '}
           <a href="https://siliconjungles.io" tabIndex="-1">
             Silicon Jungles
           </a>{' '}
-          {new Date().getFullYear()} &middot; v0.1
+          {new Date().getFullYear()} &middot; v0.3
         </span>
       </blockquote>
     </div>
