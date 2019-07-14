@@ -18,20 +18,28 @@ const App = () => {
   return (
     <div className="container">
       <h4>Stand Up Bot</h4>
-      <a
-        href="#/"
-        className="waves-effect waves-teal btn-flat right"
-        onClick={() => setVimMode(!vimMode)}
-      >
-        <img
-          src={Vim}
-          alt="vim mode"
-          width="20px"
-          style={{ filter: !vimMode && 'grayscale(100%)' }}
-        />
-      </a>
       <div className="card">
         <div className="card-content">
+          <div className="switch valign-wrapper right">
+            <label>
+              <input
+                type="checkbox"
+                value="vimMode"
+                onChange={() => setVimMode(!vimMode)}
+              />
+              <span className="lever" />
+              <img
+                src={Vim}
+                alt="vim mode"
+                width="25px"
+                style={{
+                  marginBottom: -10,
+                  marginLeft: -10,
+                  filter: !vimMode && 'grayscale(100%)',
+                }}
+              />
+            </label>
+          </div>
           <InputSection
             vimMode={vimMode}
             type="sharing"
