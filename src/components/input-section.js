@@ -4,12 +4,13 @@ import '../codemirror.css'
 import 'codemirror/keymap/vim.js'
 import { StoreContext } from '../utils/store'
 
-export default ({ type, description, vimMode }) => {
+export default ({ type, description }) => {
   const [editableItem, setEditableItem] = React.useState(null)
   const [input, setInput] = React.useState('')
   const [removeItem, setRemoveItem] = React.useState('')
   const {
     [type]: [data, setData],
+    vimMode,
   } = React.useContext(StoreContext)
 
   React.useEffect(() => {

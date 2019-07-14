@@ -6,7 +6,6 @@ import { StoreContext } from './utils/store'
 import Vim from './assets/vim-icon.png'
 
 const App = () => {
-  const [vimMode, setVimMode] = React.useState(false)
   React.useEffect(() => {
     window.addEventListener('beforeunload', ev => {
       ev.preventDefault()
@@ -14,6 +13,7 @@ const App = () => {
     })
   })
   const store = React.useContext(StoreContext)
+  const { vimMode, setVimMode } = store
 
   return (
     <div className="container">
@@ -41,20 +41,11 @@ const App = () => {
             </label>
           </div>
           <InputSection
-            vimMode={vimMode}
             type="sharing"
             description="What are your thoughts?.."
           />
-          <InputSection
-            vimMode={vimMode}
-            type="help"
-            description="Anyone need help?..."
-          />
-          <InputSection
-            vimMode={vimMode}
-            type="pairing"
-            description="Pairing Config..."
-          />
+          <InputSection type="help" description="Anyone need help?..." />
+          <InputSection type="pairing" description="Pairing Config..." />
           <div className="right-align">
             <button
               onClick={() => publishStandup(store)}
