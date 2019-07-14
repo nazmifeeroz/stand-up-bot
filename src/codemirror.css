@@ -6,7 +6,8 @@
   height: 30px;
   color: black;
   direction: ltr;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #9e9e9e;
+  transition: box-shadow 0.3s, border 0.3s, -webkit-box-shadow 0.3s;
 }
 
 /* PADDING */

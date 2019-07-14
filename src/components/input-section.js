@@ -129,6 +129,7 @@ export default ({ type, description, vimMode }) => {
               value={input}
               options={{
                 keyMap: 'vim',
+                showCursorWhenSelecting: true,
                 extraKeys: {
                   Enter: () => onVimEnterPress('add'),
                 },
