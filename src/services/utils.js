@@ -1,4 +1,8 @@
-export default ({ sharing: [sharing], help: [help], pairing: [pairing] }) => {
+export const publishStandup = ({
+  sharing: [sharing],
+  help: [help],
+  pairing: [pairing],
+}) => {
   console.table([sharing, help, pairing])
 
   const authenticate = window.confirm(
@@ -38,4 +42,11 @@ export default ({ sharing: [sharing], help: [help], pairing: [pairing] }) => {
     })
     .catch(err => console.log('err', err))
   return
+}
+
+export const fetchFromDiscord = () => {
+  console.log('fetching data from discord')
+  // TODO: get user token and get channel messages
+  // filter latest messages since last standup
+  // print them into store
 }
