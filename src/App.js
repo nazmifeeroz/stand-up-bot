@@ -1,8 +1,8 @@
 import React from 'react'
 import './styles.css'
 import InputSection from './components/input-section'
-import publishStandup from './utils/publish-standup'
-import { StoreContext } from './utils/store'
+import { publishStandup, fetchFromDiscord } from './services/utils'
+import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
 const App = () => {
@@ -11,10 +11,6 @@ const App = () => {
       ev.preventDefault()
       return (ev.returnValue = 'Prevent manual reload')
     })
-    console.log(
-      '%cBuilt With Love.',
-      'font-weight: bold; font-size: 20px;color: blue; text-shadow: 3px 3px 0 rgb(217,31,38)'
-    )
   }, [])
   const store = React.useContext(StoreContext)
   const { vimMode, setVimMode } = store
@@ -44,6 +40,13 @@ const App = () => {
               />
             </label>
           </div>
+          <button
+            onClick={() => fetchFromDiscord()}
+            className="btn-small waves-effect waves-light right"
+          >
+            Fetch
+            <i className="material-icons right">send</i>
+          </button>
           <InputSection
             type="sharing"
             description="What are your thoughts?.."
