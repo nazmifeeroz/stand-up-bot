@@ -11,7 +11,11 @@ const App = () => {
       ev.preventDefault()
       return (ev.returnValue = 'Prevent manual reload')
     })
-  })
+    console.log(
+      '%cBuilt With Love.',
+      'font-weight: bold; font-size: 20px;color: blue; text-shadow: 3px 3px 0 rgb(217,31,38)'
+    )
+  }, [])
   const store = React.useContext(StoreContext)
   const { vimMode, setVimMode } = store
 
