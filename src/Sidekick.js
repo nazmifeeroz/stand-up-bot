@@ -16,7 +16,7 @@ export default () => {
   return (
     <StyledContainer className="container">
       <CardContainer className="card">
-        <div className="card-content">hello</div>
+        <div className="card-content">SideKick!</div>
       </CardContainer>
     </StyledContainer>
   )
