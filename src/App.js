@@ -1,4 +1,6 @@
 import React from 'react'
+import M from 'materialize-css'
+import 'materialize-css/dist/css/materialize.min.css'
 import './styles.css'
 import InputSection from './components/input-section'
 import { publishStandup, fetchFromDiscord } from './services/utils'
@@ -6,17 +8,67 @@ import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
 const App = () => {
+  const modalRef = React.useRef(null)
+  let instance
   React.useEffect(() => {
     window.addEventListener('beforeunload', ev => {
       ev.preventDefault()
       return (ev.returnValue = 'Prevent manual reload')
     })
+    M.Modal.init(modalRef, {
+      onOpenStart: () => {
+        console.log('Open Start')
+      },
+      onOpenEnd: () => {
+        console.log('Open end')
+      },
+      onCloseStart: () => {
+        console.log('close start')
+      },
+      onCloseEnd: () => {
+        console.log('close end')
+      },
+      inDuration: 250,
+      outDuration: 250,
+      opacity: 0.5,
+      dismissible: false,
+      startingTop: '4%',
+      endingTop: '10%',
+    })
   }, [])
+  instance = M.Modal.getInstance(modalRef.current)
   const store = React.useContext(StoreContext)
   const { vimMode, setVimMode } = store
 
   return (
     <div className="container">
+      <a
+        className="waves-effect waves-light btn modal-trigger"
+        data-target="modal1"
+        href="/#"
+        onClick={() => {
+          // modalRef.current.open()
+          instance.open()
+          console.log('modalRef.current', modalRef.current)
+        }}
+      >
+        Modal
+      </a>
+
+      <div id="modal1" className="modal" ref={modalRef}>
+        <div className="modal-content">
+          <h4>Modal Header</h4>
+          <p>A bunch of text</p>
+        </div>
+        <div className="modal-footer">
+          <a
+            href="#!"
+            className="modal-close waves-effect waves-green btn-flat"
+          >
+            Agree
+          </a>
+        </div>
+      </div>
       <h4>Stand Up Bot</h4>
       <div className="card">
         <div className="card-content">
