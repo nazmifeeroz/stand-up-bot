@@ -10,10 +10,28 @@ console.log(
 )
 
 console.log('location.pathname', window.location.pathname)
+let auth
+let route
+
+const insertAuth = () => {
+  console.log('here in insert auth')
+  auth = { idToken: '141359-24u24' }
+  route = '/'
+}
+
+const routeComponent = () => {
+  switch (route || window.location.pathname) {
+    case '/sidekick':
+      return <Sidekick />
+    case '/callback':
+      insertAuth()
+      break
+    default:
+      return <App auth={auth} />
+  }
+}
 
 ReactDOM.render(
-  <StoreProvider>
-    {window.location.pathname === '/sidekick' ? <Sidekick /> : <App />}
-  </StoreProvider>,
+  <StoreProvider>{routeComponent()}</StoreProvider>,
   document.getElementById('root')
 )
