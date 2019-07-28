@@ -5,7 +5,7 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.6.2",
     "apollo-client": "^2.6.3",
-    "apollo-link-http": "^1.5.15",
+    "apollo-link-ws": "^1.0.18",
     "codemirror": "^5.48.0",
     "graphql": "^14.4.2",
     "graphql-tag": "^2.10.1",
@@ -16,7 +16,8 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "scripts": {
     "start": "react-scripts start",
