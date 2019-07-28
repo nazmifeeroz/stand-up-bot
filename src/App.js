@@ -9,7 +9,7 @@ import { ApolloProvider } from 'react-apollo'
 
 import './styles.css'
 import InputSection from './components/input-section'
-import { publishStandup, fetchFromDiscord } from './services/utils'
+import { publishStandup } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
@@ -72,13 +72,6 @@ const App = props => {
                   />
                 </label>
               </div>
-              <button
-                onClick={() => fetchFromDiscord()}
-                className="btn-small waves-effect waves-light right"
-              >
-                Fetch
-                <i className="material-icons right">send</i>
-              </button>
               <InputSection
                 type="sharing"
                 description="What are your thoughts?.."
