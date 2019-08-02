@@ -10,16 +10,22 @@ console.log(
   'font-weight: bold; font-size: 20px;color: blue; text-shadow: 3px 3px 0 rgb(217,31,38)'
 )
 
-const insertAuth = () => {
-  console.log('here in insert auth')
-  const token = '141359-24u24'
+const InsertAuth = props => {
+  console.log('props in insert auth', props)
+  const hash = props.location.hash.substr(1)
+
+  const { id_token } = hash.split('&').reduce(function(result, item) {
+    const parts = item.split('=')
+    result[parts[0]] = parts[1]
+    return result
+  }, {})
 
   return (
     <Redirect
       to={{
         pathname: '/',
         state: {
-          token,
+          id_token,
         },
       }}
     />
@@ -30,7 +36,7 @@ ReactDOM.render(
   <StoreProvider>
     <Router>
       <Route path="/" exact component={App} />
-      <Route path="/callback" exact component={insertAuth} />
+      <Route path="/callback" exact component={InsertAuth} />
       <Route path="/sidekick" exact component={Sidekick} />
     </Router>
   </StoreProvider>,
