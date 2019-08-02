@@ -1,11 +1,9 @@
 import React from 'react'
-// import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import 'materialize-css/dist/css/materialize.min.css'
 
-// import ApolloClient from 'apollo-client'
-// import { InMemoryCache } from 'apollo-cache-inmemory'
-// import { WebSocketLink } from 'apollo-link-ws'
-// import { ApolloProvider } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 import './styles.css'
 import InputSection from './components/input-section'
@@ -13,28 +11,11 @@ import { publishStandup } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
-// const createApolloClient = authToken => {
-//   return new ApolloClient({
-//     link: new WebSocketLink({
-//       uri: 'wss://sj-stand-up-bot.herokuapp.com/v1/graphql',
-//       options: {
-//         reconnect: true,
-//         connectionParams: {
-//           headers: {
-//             Authorization: `Bearer ${authToken}`,
-//           },
-//         },
-//       },
-//     }),
-//     cache: new InMemoryCache(),
-//   })
-// }
-
 const App = props => {
   const {
     location: { state },
   } = props
-  console.log('state', state)
+  console.log('props', props)
 
   React.useEffect(() => {
     window.addEventListener('beforeunload', ev => {
@@ -44,12 +25,9 @@ const App = props => {
   }, [])
   const store = React.useContext(StoreContext)
   const { vimMode, setVimMode } = store
-  // if (!state) return <Redirect to="/callback" />
-  // else {
-  // const client = createApolloClient(state.token)
+  if (!state) return <Redirect to="/login" />
 
   return (
-    // <ApolloProvider client={client}>
     <div className="container">
       <h4>Stand Up Bot</h4>
       <div className="card">
@@ -101,9 +79,20 @@ const App = props => {
         </span>
       </blockquote>
     </div>
-    //     </ApolloProvider>
   )
-  // }
 }
 
-export default App
+export default graphql(gql`
+  query {
+    notes {
+      id
+      note
+      is_public
+      is_completed
+      user {
+        id
+        name
+      }
+    }
+  }
+`)(App)
