@@ -1,98 +1,62 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
-import 'materialize-css/dist/css/materialize.min.css'
+import React, { useState } from 'react'
+import { Redirect, Route } from 'react-router-dom'
+import ApolloClient from 'apollo-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { WebSocketLink } from 'apollo-link-ws'
+import { ApolloProvider } from 'react-apollo'
 
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import Main from './Main'
+import Sidekick from './Sidekick'
+import StoreProvider from './services/store'
 
-import './styles.css'
-import InputSection from './components/input-section'
-import { publishStandup } from './services/utils'
-import { StoreContext } from './services/store'
-import Vim from './assets/vim-icon.png'
+const App = () => {
+  const [authToken, setAuthToken] = useState(localStorage.getItem('token'))
+  const Callback = props => {
+    const hash = props.location.hash.substr(1)
 
-const App = props => {
-  const {
-    location: { state },
-  } = props
-  console.log('props', props)
+    const { id_token: token } = hash.split('&').reduce(function(result, item) {
+      const parts = item.split('=')
+      result[parts[0]] = parts[1]
+      return result
+    }, {})
 
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', ev => {
-      ev.preventDefault()
-      return (ev.returnValue = 'Prevent manual reload')
+    setAuthToken(token)
+    localStorage.setItem('token', token)
+
+    return <Redirect to="/" />
+  }
+
+  const Login = () => {
+    window.location.href = process.env.REACT_APP_AUTH0_URL
+    return null
+  }
+  const createApolloClient = () => {
+    return new ApolloClient({
+      link: new WebSocketLink({
+        uri: process.env.REACT_APP_HASURA_URL,
+        options: {
+          reconnect: true,
+          connectionParams: {
+            headers: {
+              Authorization: `Bearer ${authToken ? authToken : ''}`,
+            },
+          },
+        },
+      }),
+      cache: new InMemoryCache(),
     })
-  }, [])
-  const store = React.useContext(StoreContext)
-  const { vimMode, setVimMode } = store
-  if (!state) return <Redirect to="/login" />
+  }
 
   return (
-    <div className="container">
-      <h4>Stand Up Bot</h4>
-      <div className="card">
-        <div className="card-content">
-          <div className="switch valign-wrapper right">
-            <label>
-              <input
-                type="checkbox"
-                value="vimMode"
-                onChange={() => setVimMode(!vimMode)}
-              />
-              <span className="lever" />
-              <img
-                src={Vim}
-                alt="vim mode"
-                width="25px"
-                style={{
-                  marginBottom: -10,
-                  marginLeft: -10,
-                  filter: !vimMode && 'grayscale(100%)',
-                }}
-              />
-            </label>
-          </div>
-          <InputSection
-            type="sharing"
-            description="What are your thoughts?.."
-          />
-          <InputSection type="help" description="Anyone need help?..." />
-          <InputSection type="pairing" description="Pairing Config..." />
-          <div className="right-align">
-            <button
-              onClick={() => publishStandup(store)}
-              className="orange waves-effect waves-light btn-large"
-            >
-              Publish!
-            </button>
-          </div>
-        </div>
-      </div>
-      <blockquote>
-        Built with <span className="red-text">&hearts;</span> by Nazmi &middot;
-        <span className="right">
-          &copy;{' '}
-          <a href="https://siliconjungles.io" tabIndex="-1">
-            Silicon Jungles
-          </a>{' '}
-          {new Date().getFullYear()} &middot; v0.3
-        </span>
-      </blockquote>
-    </div>
+    <ApolloProvider client={createApolloClient()}>
+      <StoreProvider>
+        <Main />
+        <Route path="/callback" exact component={Callback} />
+        <Route path="/sidekick" exact component={Sidekick} />
+        <Route path="/login" exact component={Login} />
+      </StoreProvider>
+    </ApolloProvider>
   )
 }
 
-export default graphql(gql`
-  query {
-    notes {
-      id
-      note
-      is_public
-      is_completed
-      user {
-        id
-        name
-      }
-    }
-  }
-`)(App)
+export default App

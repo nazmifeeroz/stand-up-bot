@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import '../codemirror.css'
 import 'codemirror/keymap/vim.js'
+
 import { StoreContext } from '../services/store'
 
 export default ({ type, description }) => {
