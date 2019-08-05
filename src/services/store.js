@@ -1,7 +1,8 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import { compose, graphql } from 'react-apollo'
 import { ALL_SHARES, ALL_PAIRS, ALL_HELPS } from './graphql/queries'
-import { NEW_SHARE } from './graphql/subscriptions'
+import { NEW_SHARE, NEW_HELP } from './graphql/subscriptions'
 
 export const StoreContext = React.createContext(null)
 
@@ -23,17 +24,46 @@ const StoreProvider = props => {
   React.useEffect(() => {
     if (sharesQuery.shares) {
       const shares = sharesQuery.shares.map(s => s.sharing)
+      setSharing(shares)
+
       sharesQuery.subscribeToMore({
         document: NEW_SHARE,
         updateQuery: (prev, { subscriptionData }) => {
-          console.log('prev,subscriptionData', prev, subscriptionData)
+          if (
+            subscriptionData.data.shares.length === prev.shares.length ||
+            prev.shares.slice(-1)[0].id ===
+              subscriptionData.data.shares.slice(-1)[0].id
+          )
+            return prev
+
+          return Object.assign({}, prev, {
+            shares: [...prev.shares, subscriptionData.data.shares.slice(-1)[0]],
+          })
         },
       })
-      setSharing(shares)
     }
     if (helpsQuery.assistance) {
       const assistance = helpsQuery.assistance.map(a => a.assist)
       setHelp(assistance)
+      helpsQuery.subscribeToMore({
+        document: NEW_HELP,
+        updateQuery: (prev, { subscriptionData }) => {
+          if (
+            subscriptionData.data.assistance.length ===
+              prev.assistance.length ||
+            prev.assistance.slice(-1)[0].id ===
+              subscriptionData.data.assistance.slice(-1)[0].id
+          )
+            return prev
+
+          return Object.assign({}, prev, {
+            assistance: [
+              ...prev.assistance,
+              subscriptionData.data.assistance.slice(-1)[0],
+            ],
+          })
+        },
+      })
     }
     if (pairsQuery.pairs) {
       const pairs = pairsQuery.pairs.map(p => {
@@ -47,8 +77,7 @@ const StoreProvider = props => {
   if (sharesQuery.loading || helpsQuery.loading || pairsQuery.loading)
     return <div>loading...</div>
   if (sharesQuery.error || helpsQuery.error || pairsQuery.error) {
-    window.location.href = process.env.REACT_APP_AUTH0_URL
-    return null
+    return <Redirect to="/login" />
   }
 
   const store = {

@@ -43,13 +43,7 @@ const App = () => {
       <Route
         path="/callback"
         exact
-        render={props => (
-          <Callback
-            {...props}
-            authToken={authToken}
-            setAuthToken={setAuthToken}
-          />
-        )}
+        render={props => <Callback {...props} setAuthToken={setAuthToken} />}
       />
       <Route path="/sidekick" exact component={Sidekick} />
       <Route path="/login" exact component={Login} />
