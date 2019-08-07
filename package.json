@@ -11,7 +11,7 @@
     "graphql-tag": "^2.10.1",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.8",
+    "react-apollo": "^3.0.0",
     "react-codemirror2": "^6.0.0",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",

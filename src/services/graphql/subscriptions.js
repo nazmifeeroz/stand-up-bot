@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 export const NEW_SHARE = gql`
   subscription {
-    shares {
+    shares(limit: 1, order_by: { id: desc }) {
       created_at
       id
       sharing
@@ -12,7 +12,7 @@ export const NEW_SHARE = gql`
 
 export const NEW_HELP = gql`
   subscription {
-    assistance {
+    assistance(limit: 1, order_by: { id: desc }) {
       assist
       created_at
       id
