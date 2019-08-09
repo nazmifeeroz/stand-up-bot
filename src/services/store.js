@@ -1,6 +1,12 @@
 import React from 'react'
+
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
+
+import styled from 'styled-components'
+import { motion, AnimatePresence } from 'framer-motion'
+import CircleLoader from 'react-spinners/CircleLoader'
+
 import { ALL_SHARES, ALL_PAIRS, ALL_HELPS } from './graphql/queries'
 import { NEW_SHARE, NEW_HELP, NEW_PAIR } from './graphql/subscriptions'
 
@@ -12,13 +18,13 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [pairing, setPairing] = React.useState([])
   const [vimMode, setVimMode] = React.useState(false)
 
-  const today = new Date(new Date().setHours(8, 0, 0, 0)).toISOString()
+  const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
   const sharesQuery = useQuery(ALL_SHARES, { variables: { today } })
   const helpsQuery = useQuery(ALL_HELPS, { variables: { today } })
   const pairsQuery = useQuery(ALL_PAIRS, { variables: { today } })
 
   const subscribeToMore = (state, document, attr) => {
-    const getToday = new Date(new Date().setHours(8, 0, 0, 0)).toISOString()
+    const getToday = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
 
     state.subscribeToMore({
       document,
@@ -60,11 +66,13 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
     }
   }, [pairsQuery])
 
-  if (sharesQuery.error || helpsQuery.error || pairsQuery.error) {
-    return <Redirect to="/login" />
-  }
-  if (sharesQuery.loading || helpsQuery.loading || pairsQuery.loading)
-    return <div>loading...</div>
+  const SpinnerWrapper = styled(motion.div)`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `
 
   const store = {
     authToken,
@@ -76,7 +84,29 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
     vimMode,
   }
 
-  return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+  return (
+    <AnimatePresence>
+      {sharesQuery.loading || helpsQuery.loading || pairsQuery.loading ? (
+        <SpinnerWrapper
+          key="spinner"
+          initial={{ scale: 0 }}
+          animate={{ rotate: 180, scale: 1 }}
+          transition={{
+            type: 'spring',
+            stiffness: 260,
+            damping: 20,
+          }}
+          exit={{ scale: 0, opacity: 0 }}
+        >
+          <CircleLoader color={'#36D7B7'} />
+        </SpinnerWrapper>
+      ) : sharesQuery.error || helpsQuery.error || pairsQuery.error ? (
+        <Redirect to="/login" />
+      ) : (
+        <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+      )}
+    </AnimatePresence>
+  )
 }
 
 export default StoreProvider

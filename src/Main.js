@@ -1,6 +1,8 @@
 import React from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
+import { motion } from 'framer-motion'
+
 import './styles.css'
 import InputSection from './components/input-section'
 import { publishStandup } from './services/utils'
@@ -12,7 +14,12 @@ const Main = props => {
   const { vimMode, setVimMode } = store
 
   return (
-    <div className="container">
+    <motion.div
+      className="container"
+      initial={{ y: 500, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
       <h4>Stand Up Bot</h4>
       <div className="card">
         <div className="card-content">
@@ -62,7 +69,7 @@ const Main = props => {
           {new Date().getFullYear()} &middot; v0.3
         </span>
       </blockquote>
-    </div>
+    </motion.div>
   )
 }
 
