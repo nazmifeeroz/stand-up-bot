@@ -1,6 +1,14 @@
 import React from 'react'
+
 import { useMutation } from 'react-apollo'
-import { ADD_SHARE, ADD_HELP, ADD_PAIR } from '../services/graphql/mutations'
+import {
+  ADD_HELP,
+  ADD_PAIR,
+  ADD_SHARE,
+  UPDATE_HELP,
+  UPDATE_PAIR,
+  UPDATE_SHARE,
+} from '../services/graphql/mutations'
 
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import '../codemirror.css'
@@ -8,17 +16,20 @@ import 'codemirror/keymap/vim.js'
 
 import { StoreContext } from '../services/store'
 
-const useQueryReducer = type => {
+const useMutationReducer = type => {
   const [addShare] = useMutation(ADD_SHARE)
+  const [updateShare] = useMutation(UPDATE_SHARE)
+  const [updatePair] = useMutation(UPDATE_PAIR)
+  const [updateHelp] = useMutation(UPDATE_HELP)
   const [addPair] = useMutation(ADD_PAIR)
   const [addHelp] = useMutation(ADD_HELP)
   switch (type) {
     case 'sharing':
-      return { mutation: addShare }
+      return { mutation: { add: addShare, update: updateShare } }
     case 'pairing':
-      return { mutation: addPair }
+      return { mutation: { add: addPair, update: updatePair } }
     case 'help':
-      return { mutation: addHelp }
+      return { mutation: { add: addHelp, update: updateHelp } }
     default:
       return false
   }
@@ -32,7 +43,8 @@ export default ({ type, description }) => {
     [type]: [data, setData],
     vimMode,
   } = React.useContext(StoreContext)
-  const { mutation } = useQueryReducer(type)
+
+  const { mutation } = useMutationReducer(type)
 
   React.useEffect(() => {
     if (removeItem === '') return
@@ -50,7 +62,7 @@ export default ({ type, description }) => {
     if (!input) return
     const newItem = [...data, input]
     setData(newItem)
-    mutation({ variables: { input } })
+    mutation.add({ variables: { input } })
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')
@@ -59,7 +71,10 @@ export default ({ type, description }) => {
   const editItem = e => {
     e && e.preventDefault()
     data[editableItem] = input
-    // setData(data)
+    setData(data)
+    mutation.update({
+      variables: { id: data[editableItem].id, editedItem: input },
+    })
     setInput('')
     setEditableItem(null)
   }

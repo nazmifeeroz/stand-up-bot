@@ -35,3 +35,30 @@ export const ADD_PAIR = gql`
     }
   }
 `
+
+export const UPDATE_SHARE = gql`
+  mutation($id: Int!, $editedItem: String!) {
+    update_shares(where: { id: { _eq: $id } }, _set: { sharing: $editedItem }) {
+      affected_rows
+    }
+  }
+`
+
+export const UPDATE_HELP = gql`
+  mutation($id: Int!, $editedItem: String!) {
+    update_assistance(
+      where: { id: { _eq: $id } }
+      _set: { assist: $editedItem }
+    ) {
+      affected_rows
+    }
+  }
+`
+
+export const UPDATE_PAIR = gql`
+  mutation($id: Int!, $editedItem: String!) {
+    update_pairs(where: { id: { _eq: $id } }, _set: { project: $editedItem }) {
+      affected_rows
+    }
+  }
+`
