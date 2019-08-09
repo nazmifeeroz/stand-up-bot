@@ -18,6 +18,7 @@ const App = () => {
     localStorage.getItem('token')
   )
   const createApolloClient = () => {
+    console.log('authToken', authToken)
     return new ApolloClient({
       link: new WebSocketLink({
         uri: process.env.REACT_APP_HASURA_URL,

@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 import { ALL_SHARES, ALL_PAIRS, ALL_HELPS } from './graphql/queries'
-import { NEW_SHARE, NEW_HELP } from './graphql/subscriptions'
+import { NEW_SHARE, NEW_HELP, NEW_PAIR } from './graphql/subscriptions'
 
 export const StoreContext = React.createContext(null)
 
@@ -12,61 +12,53 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [pairing, setPairing] = React.useState([])
   const [vimMode, setVimMode] = React.useState(false)
 
-  const sharesQuery = useQuery(ALL_SHARES)
-  const helpsQuery = useQuery(ALL_HELPS)
-  const pairsQuery = useQuery(ALL_PAIRS)
+  const today = new Date(new Date().setHours(8, 0, 0, 0)).toISOString()
+  const sharesQuery = useQuery(ALL_SHARES, { variables: { today } })
+  const helpsQuery = useQuery(ALL_HELPS, { variables: { today } })
+  const pairsQuery = useQuery(ALL_PAIRS, { variables: { today } })
+
+  const subscribeToMore = (state, document, attr) => {
+    const getToday = new Date(new Date().setHours(8, 0, 0, 0)).toISOString()
+
+    state.subscribeToMore({
+      document,
+      variables: { getToday },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (subscriptionData.data[attr].length === 0) return prev
+        const exist = prev[attr].find(
+          p =>
+            p.id === subscriptionData.data[attr][0].id &&
+            p.updated_at === subscriptionData.data[attr][0].updated_at
+        )
+        if (exist) return prev
+
+        return Object.assign({}, prev, {
+          [attr]: [...prev[attr], subscriptionData.data[attr].slice(-1)[0]],
+        })
+      },
+    })
+  }
 
   React.useEffect(() => {
     if (sharesQuery.data && sharesQuery.data.shares) {
       setSharing(sharesQuery.data.shares.map(s => s.sharing))
-      sharesQuery.subscribeToMore({
-        document: NEW_SHARE,
-        updateQuery: (prev, { subscriptionData }) => {
-          if (
-            subscriptionData.data.shares.length === 0 ||
-            subscriptionData.data.shares.length === prev.shares.length ||
-            prev.shares.slice(-1)[0].id ===
-              subscriptionData.data.shares.slice(-1)[0].id
-          )
-            return prev
-
-          return Object.assign({}, prev, {
-            shares: [...prev.shares, subscriptionData.data.shares.slice(-1)[0]],
-          })
-        },
-      })
+      subscribeToMore(sharesQuery, NEW_SHARE, 'shares')
     }
+  }, [sharesQuery])
+
+  React.useEffect(() => {
     if (helpsQuery.data && helpsQuery.data.assistance) {
       setHelp(helpsQuery.data.assistance.map(s => s.assist))
-      helpsQuery.subscribeToMore({
-        document: NEW_HELP,
-        updateQuery: (prev, { subscriptionData }) => {
-          if (
-            subscriptionData.data.assistance.length === 0 ||
-            subscriptionData.data.assistance.length ===
-              prev.assistance.length ||
-            prev.assistance.slice(-1)[0].id ===
-              subscriptionData.data.assistance.slice(-1)[0].id
-          )
-            return prev
+      subscribeToMore(helpsQuery, NEW_HELP, 'assistance')
+    }
+  }, [helpsQuery])
 
-          return Object.assign({}, prev, {
-            assistance: [
-              ...prev.assistance,
-              subscriptionData.data.assistance.slice(-1)[0],
-            ],
-          })
-        },
-      })
+  React.useEffect(() => {
+    if (pairsQuery.data && pairsQuery.data.pairs) {
+      setPairing(pairsQuery.data.pairs.map(s => s.project))
+      subscribeToMore(pairsQuery, NEW_PAIR, 'pairs')
     }
-    if (pairsQuery.data.pairs) {
-      const pairs = pairsQuery.data.pairs.map(p => {
-        const pair = p.pair.reduce((acc, val) => `${acc} & ${val}`, '')
-        return `${pair.substr(2)} - ${p.project}`
-      })
-      setPairing(pairs)
-    }
-  }, [helpsQuery, pairsQuery, sharesQuery])
+  }, [pairsQuery])
 
   if (sharesQuery.error || helpsQuery.error || pairsQuery.error) {
     return <Redirect to="/login" />

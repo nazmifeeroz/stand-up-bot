@@ -1,8 +1,12 @@
 import gql from 'graphql-tag'
 
 export const NEW_SHARE = gql`
-  subscription {
-    shares(limit: 1, order_by: { id: desc }) {
+  subscription($getToday: timestamptz) {
+    shares(
+      limit: 1
+      order_by: { updated_at: desc }
+      where: { created_at: { _gte: $getToday } }
+    ) {
       created_at
       id
       sharing
@@ -11,11 +15,29 @@ export const NEW_SHARE = gql`
 `
 
 export const NEW_HELP = gql`
-  subscription {
-    assistance(limit: 1, order_by: { id: desc }) {
+  subscription($getToday: timestamptz) {
+    assistance(
+      limit: 1
+      order_by: { updated_at: desc }
+      where: { created_at: { _gte: $getToday } }
+    ) {
       assist
       created_at
       id
+    }
+  }
+`
+
+export const NEW_PAIR = gql`
+  subscription($getToday: timestamptz) {
+    pairs(
+      limit: 1
+      order_by: { updated_at: desc }
+      where: { created_at: { _gte: $getToday } }
+    ) {
+      created_at
+      id
+      project
     }
   }
 `

@@ -31,17 +31,17 @@ export const publishStandup = ({
   **_Pairing_**\n - ${pairText}
   `
 
-  // fetch(process.env.REACT_APP_WEBHOOK, {
-  //   method: 'POST',
-  //   body: JSON.stringify({ content }),
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // })
-  //   .then(() => {
-  //     window.M.toast({ html: 'Stand up published! Have a good day!' })
-  //   })
-  //   .catch(err => console.log('err', err))
+  fetch(process.env.REACT_APP_WEBHOOK, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(() => {
+      window.M.toast({ html: 'Stand up published! Have a good day!' })
+    })
+    .catch(err => console.log('err', err))
   return
 }
 

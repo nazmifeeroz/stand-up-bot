@@ -1,10 +1,28 @@
 import React from 'react'
+import { useMutation } from 'react-apollo'
+import { ADD_SHARE, ADD_HELP, ADD_PAIR } from '../services/graphql/mutations'
 
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import '../codemirror.css'
 import 'codemirror/keymap/vim.js'
 
 import { StoreContext } from '../services/store'
+
+const useQueryReducer = type => {
+  const [addShare] = useMutation(ADD_SHARE)
+  const [addPair] = useMutation(ADD_PAIR)
+  const [addHelp] = useMutation(ADD_HELP)
+  switch (type) {
+    case 'sharing':
+      return { mutation: addShare }
+    case 'pairing':
+      return { mutation: addPair }
+    case 'help':
+      return { mutation: addHelp }
+    default:
+      return false
+  }
+}
 
 export default ({ type, description }) => {
   const [editableItem, setEditableItem] = React.useState(null)
@@ -14,23 +32,25 @@ export default ({ type, description }) => {
     [type]: [data, setData],
     vimMode,
   } = React.useContext(StoreContext)
+  const { mutation } = useQueryReducer(type)
 
   React.useEffect(() => {
     if (removeItem === '') return
     if (window.confirm('Are you sure you wish to delete?')) {
       const newData = data.filter(i => i !== data[removeItem])
-      setData(newData)
+      // setData(newData)
       if (type === 'pairing')
         localStorage.setItem('pairing', JSON.stringify(newData))
     }
     setRemoveItem('')
-  }, [removeItem, setData, data, type])
+  }, [data, removeItem, type])
 
   const addItem = e => {
     e && e.preventDefault()
     if (!input) return
     const newItem = [...data, input]
     setData(newItem)
+    mutation({ variables: { input } })
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')
@@ -39,7 +59,7 @@ export default ({ type, description }) => {
   const editItem = e => {
     e && e.preventDefault()
     data[editableItem] = input
-    setData(data)
+    // setData(data)
     setInput('')
     setEditableItem(null)
   }
