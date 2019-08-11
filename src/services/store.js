@@ -30,16 +30,8 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
       document,
       variables: { getToday },
       updateQuery: (prev, { subscriptionData }) => {
-        if (subscriptionData.data[attr].length === 0) return prev
-        const exist = prev[attr].find(
-          p =>
-            p.id === subscriptionData.data[attr][0].id &&
-            p.updated_at === subscriptionData.data[attr][0].updated_at
-        )
-        if (exist) return prev
-
         return Object.assign({}, prev, {
-          [attr]: [...prev[attr], subscriptionData.data[attr].slice(-1)[0]],
+          [attr]: subscriptionData.data[attr],
         })
       },
     })
@@ -47,21 +39,30 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
 
   React.useEffect(() => {
     if (sharesQuery.data && sharesQuery.data.shares) {
-      setSharing(sharesQuery.data.shares.map(s => s.sharing))
+      const reformatedData = sharesQuery.data.shares.map(d => {
+        return { ...d, value: d.sharing }
+      })
+      setSharing(reformatedData)
       subscribeToMore(sharesQuery, NEW_SHARE, 'shares')
     }
   }, [sharesQuery])
 
   React.useEffect(() => {
     if (helpsQuery.data && helpsQuery.data.assistance) {
-      setHelp(helpsQuery.data.assistance.map(s => s.assist))
+      const reformatedData = helpsQuery.data.assistance.map(d => {
+        return { ...d, value: d.assist }
+      })
+      setHelp(reformatedData)
       subscribeToMore(helpsQuery, NEW_HELP, 'assistance')
     }
   }, [helpsQuery])
 
   React.useEffect(() => {
     if (pairsQuery.data && pairsQuery.data.pairs) {
-      setPairing(pairsQuery.data.pairs.map(s => s.project))
+      const reformatedData = pairsQuery.data.pairs.map(d => {
+        return { ...d, value: d.project }
+      })
+      setPairing(reformatedData)
       subscribeToMore(pairsQuery, NEW_PAIR, 'pairs')
     }
   }, [pairsQuery])

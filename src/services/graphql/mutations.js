@@ -62,3 +62,27 @@ export const UPDATE_PAIR = gql`
     }
   }
 `
+
+export const DELETE_SHARE = gql`
+  mutation($id: Int!) {
+    delete_shares(where: { id: { _eq: $id } }) {
+      affected_rows
+    }
+  }
+`
+
+export const DELETE_PAIR = gql`
+  mutation($id: Int!) {
+    delete_pairs(where: { id: { _eq: $id } }) {
+      affected_rows
+    }
+  }
+`
+
+export const DELETE_HELP = gql`
+  mutation($id: Int!) {
+    delete_assistance(where: { id: { _eq: $id } }) {
+      affected_rows
+    }
+  }
+`

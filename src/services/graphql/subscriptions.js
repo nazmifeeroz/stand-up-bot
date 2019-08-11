@@ -3,12 +3,12 @@ import gql from 'graphql-tag'
 export const NEW_SHARE = gql`
   subscription($getToday: timestamptz) {
     shares(
-      limit: 1
+      where: { updated_at: { _gte: $getToday } }
       order_by: { updated_at: desc }
-      where: { created_at: { _gte: $getToday } }
     ) {
-      created_at
       id
+      created_at
+      updated_at
       sharing
     }
   }
@@ -17,13 +17,13 @@ export const NEW_SHARE = gql`
 export const NEW_HELP = gql`
   subscription($getToday: timestamptz) {
     assistance(
-      limit: 1
       order_by: { updated_at: desc }
       where: { created_at: { _gte: $getToday } }
     ) {
+      id
       assist
       created_at
-      id
+      updated_at
     }
   }
 `
@@ -31,12 +31,12 @@ export const NEW_HELP = gql`
 export const NEW_PAIR = gql`
   subscription($getToday: timestamptz) {
     pairs(
-      limit: 1
       order_by: { updated_at: desc }
       where: { created_at: { _gte: $getToday } }
     ) {
-      created_at
       id
+      created_at
+      updated_at
       project
     }
   }

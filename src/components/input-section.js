@@ -5,6 +5,9 @@ import {
   ADD_HELP,
   ADD_PAIR,
   ADD_SHARE,
+  DELETE_HELP,
+  DELETE_PAIR,
+  DELETE_SHARE,
   UPDATE_HELP,
   UPDATE_PAIR,
   UPDATE_SHARE,
@@ -17,19 +20,28 @@ import 'codemirror/keymap/vim.js'
 import { StoreContext } from '../services/store'
 
 const useMutationReducer = type => {
-  const [addShare] = useMutation(ADD_SHARE)
-  const [updateShare] = useMutation(UPDATE_SHARE)
-  const [updatePair] = useMutation(UPDATE_PAIR)
-  const [updateHelp] = useMutation(UPDATE_HELP)
-  const [addPair] = useMutation(ADD_PAIR)
   const [addHelp] = useMutation(ADD_HELP)
+  const [addPair] = useMutation(ADD_PAIR)
+  const [addShare] = useMutation(ADD_SHARE)
+  const [deleteHelp] = useMutation(DELETE_HELP)
+  const [deletePair] = useMutation(DELETE_PAIR)
+  const [deleteShare] = useMutation(DELETE_SHARE)
+  const [updateHelp] = useMutation(UPDATE_HELP)
+  const [updatePair] = useMutation(UPDATE_PAIR)
+  const [updateShare] = useMutation(UPDATE_SHARE)
   switch (type) {
     case 'sharing':
-      return { mutation: { add: addShare, update: updateShare } }
+      return {
+        mutation: { add: addShare, update: updateShare, delete: deleteShare },
+      }
     case 'pairing':
-      return { mutation: { add: addPair, update: updatePair } }
+      return {
+        mutation: { add: addPair, update: updatePair, delete: deletePair },
+      }
     case 'help':
-      return { mutation: { add: addHelp, update: updateHelp } }
+      return {
+        mutation: { add: addHelp, update: updateHelp, delete: deleteHelp },
+      }
     default:
       return false
   }
@@ -50,17 +62,18 @@ export default ({ type, description }) => {
     if (removeItem === '') return
     if (window.confirm('Are you sure you wish to delete?')) {
       const newData = data.filter(i => i !== data[removeItem])
-      // setData(newData)
+      mutation.delete({ variables: { id: data[removeItem].id } })
+      setData(newData)
       if (type === 'pairing')
         localStorage.setItem('pairing', JSON.stringify(newData))
     }
     setRemoveItem('')
-  }, [data, removeItem, type])
+  }, [data, mutation, removeItem, setData, type])
 
   const addItem = e => {
     e && e.preventDefault()
     if (!input) return
-    const newItem = [...data, input]
+    const newItem = [{ value: input }, ...data]
     setData(newItem)
     mutation.add({ variables: { input } })
     if (type === 'pairing')
@@ -70,7 +83,7 @@ export default ({ type, description }) => {
 
   const editItem = e => {
     e && e.preventDefault()
-    data[editableItem] = input
+    data[editableItem].value = input
     setData(data)
     mutation.update({
       variables: { id: data[editableItem].id, editedItem: input },
@@ -101,7 +114,7 @@ export default ({ type, description }) => {
                   </a>
                   {vimMode ? (
                     <CodeMirror
-                      value={input || s}
+                      value={input || s.value}
                       options={{
                         keyMap: 'vim',
                         extraKeys: {
@@ -121,7 +134,7 @@ export default ({ type, description }) => {
                       placeholder={description}
                       aria-label={`${type}-input`}
                       type="text"
-                      value={input || s}
+                      value={input || s.value}
                       onChange={e => setInput(e.target.value)}
                     />
                   )}
@@ -129,7 +142,7 @@ export default ({ type, description }) => {
                 </form>
               ) : (
                 <div>
-                  {s}
+                  {s.value}
                   <a
                     href="#/"
                     onClick={() => setRemoveItem(index)}
