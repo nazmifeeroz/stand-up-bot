@@ -1,9 +1,69 @@
-// import discordResponse from '../../discord-sample.js'
-export const publishStandup = ({
-  sharing: [sharing],
-  help: [help],
-  pairing: [pairing],
-}) => {
+import { useMutation } from 'react-apollo'
+
+import {
+  ADD_HELP,
+  ADD_PAIR,
+  ADD_SHARE,
+  DELETE_HELP,
+  DELETE_PAIR,
+  DELETE_SHARE,
+  START_SESSION,
+  UPDATE_HELP,
+  UPDATE_PAIR,
+  UPDATE_SHARE,
+  PUBLISH_STANDUP,
+} from '../services/graphql/mutations'
+
+export const useMutationReducer = type => {
+  const [addHelp] = useMutation(ADD_HELP)
+  const [addPair] = useMutation(ADD_PAIR)
+  const [addShare] = useMutation(ADD_SHARE)
+  const [deleteHelp] = useMutation(DELETE_HELP)
+  const [deletePair] = useMutation(DELETE_PAIR)
+  const [deleteShare] = useMutation(DELETE_SHARE)
+  const [updateHelp] = useMutation(UPDATE_HELP)
+  const [updatePair] = useMutation(UPDATE_PAIR)
+  const [updateShare] = useMutation(UPDATE_SHARE)
+  const [startSession] = useMutation(START_SESSION)
+  const [updateSession] = useMutation(PUBLISH_STANDUP)
+  switch (type) {
+    case 'sharing':
+      return {
+        mutation: {
+          insert: addShare,
+          update: updateShare,
+          delete: deleteShare,
+        },
+      }
+    case 'pairing':
+      return {
+        mutation: { insert: addPair, update: updatePair, delete: deletePair },
+      }
+    case 'help':
+      return {
+        mutation: { insert: addHelp, update: updateHelp, delete: deleteHelp },
+      }
+    case 'session':
+      return {
+        mutation: { insert: startSession, update: updateSession },
+      }
+    default:
+      return false
+  }
+}
+
+export const doPublishStandup = (
+  {
+    sharing: [sharingData],
+    help: [helpData],
+    pairing: [pairingData],
+    activeSession,
+  },
+  mutation
+) => {
+  const sharing = sharingData.map(d => d.value)
+  const pairing = pairingData.map(d => d.value)
+  const help = helpData.map(d => d.value)
   console.table([sharing, help, pairing])
 
   const authenticate = window.confirm(
@@ -30,24 +90,21 @@ export const publishStandup = ({
 
   **_Pairing_**\n - ${pairText}
   `
-
-  fetch(process.env.REACT_APP_WEBHOOK, {
-    method: 'POST',
-    body: JSON.stringify({ content }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  const id = localStorage.getItem('session_id')
+  mutation
+    .update({
+      variables: { id, content, status: 'COMPLETED', active: false },
+    })
     .then(() => {
       window.M.toast({ html: 'Stand up published! Have a good day!' })
     })
     .catch(err => console.log('err', err))
+  // fetch(process.env.REACT_APP_WEBHOOK, {
+  //   method: 'POST',
+  //   body: JSON.stringify({ content }),
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // })
   return
-}
-
-export const fetchFromDiscord = () => {
-  console.log('fetching data from discord')
-  // TODO: get user token and get channel messages
-  // filter latest messages since last standup
-  // print them into store
 }

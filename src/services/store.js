@@ -7,28 +7,33 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
-import { ALL_SHARES, ALL_PAIRS, ALL_HELPS } from './graphql/queries'
-import { NEW_SHARE, NEW_HELP, NEW_PAIR } from './graphql/subscriptions'
+import { GET_ALL_QUERIES } from './graphql/queries'
+import {
+  NEW_SHARE,
+  NEW_HELP,
+  NEW_PAIR,
+  NEW_SESSION,
+} from './graphql/subscriptions'
 
 export const StoreContext = React.createContext(null)
 
 const StoreProvider = ({ authToken, children, setAuthToken }) => {
-  const [sharing, setSharing] = React.useState([])
+  const [activeSession, setActiveSession] = React.useState(null)
   const [help, setHelp] = React.useState([])
   const [pairing, setPairing] = React.useState([])
+  const [sharing, setSharing] = React.useState([])
   const [vimMode, setVimMode] = React.useState(false)
 
   const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-  const sharesQuery = useQuery(ALL_SHARES, { variables: { today } })
-  const helpsQuery = useQuery(ALL_HELPS, { variables: { today } })
-  const pairsQuery = useQuery(ALL_PAIRS, { variables: { today } })
+
+  const allQueries = useQuery(GET_ALL_QUERIES, { variables: { today } })
 
   const subscribeToMore = (state, document, attr) => {
     const getToday = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
 
     state.subscribeToMore({
       document,
-      variables: { getToday },
+      variables: attr !== 'sessions' && { getToday },
       updateQuery: (prev, { subscriptionData }) => {
         return Object.assign({}, prev, {
           [attr]: subscriptionData.data[attr],
@@ -38,34 +43,32 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   }
 
   React.useEffect(() => {
-    if (sharesQuery.data && sharesQuery.data.shares) {
-      const reformatedData = sharesQuery.data.shares.map(d => {
+    if (allQueries.data && allQueries.data.shares) {
+      const reformatedData = allQueries.data.shares.map(d => {
         return { ...d, value: d.sharing }
       })
       setSharing(reformatedData)
-      subscribeToMore(sharesQuery, NEW_SHARE, 'shares')
+      subscribeToMore(allQueries, NEW_SHARE, 'shares')
     }
-  }, [sharesQuery])
-
-  React.useEffect(() => {
-    if (helpsQuery.data && helpsQuery.data.assistance) {
-      const reformatedData = helpsQuery.data.assistance.map(d => {
+    if (allQueries.data && allQueries.data.assistance) {
+      const reformatedData = allQueries.data.assistance.map(d => {
         return { ...d, value: d.assist }
       })
       setHelp(reformatedData)
-      subscribeToMore(helpsQuery, NEW_HELP, 'assistance')
+      subscribeToMore(allQueries, NEW_HELP, 'assistance')
     }
-  }, [helpsQuery])
-
-  React.useEffect(() => {
-    if (pairsQuery.data && pairsQuery.data.pairs) {
-      const reformatedData = pairsQuery.data.pairs.map(d => {
+    if (allQueries.data && allQueries.data.pairs) {
+      const reformatedData = allQueries.data.pairs.map(d => {
         return { ...d, value: d.project }
       })
       setPairing(reformatedData)
-      subscribeToMore(pairsQuery, NEW_PAIR, 'pairs')
+      subscribeToMore(allQueries, NEW_PAIR, 'pairs')
     }
-  }, [pairsQuery])
+    if (allQueries.data && allQueries.data.sessions) {
+      setActiveSession(allQueries.data.sessions)
+      subscribeToMore(allQueries, NEW_SESSION, 'sessions')
+    }
+  }, [allQueries, allQueries.data])
 
   const SpinnerWrapper = styled(motion.div)`
     width: 100%;
@@ -76,18 +79,21 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   `
 
   const store = {
+    activeSession,
     authToken,
     help: [help, setHelp],
     pairing: [pairing, setPairing],
+    setActiveSession,
     setAuthToken,
     setVimMode,
     sharing: [sharing, setSharing],
     vimMode,
   }
 
+  // return null
   return (
     <AnimatePresence>
-      {sharesQuery.loading || helpsQuery.loading || pairsQuery.loading ? (
+      {allQueries.loading ? (
         <SpinnerWrapper
           key="spinner"
           initial={{ scale: 0 }}
@@ -101,7 +107,7 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
         >
           <CircleLoader color={'#36D7B7'} />
         </SpinnerWrapper>
-      ) : sharesQuery.error || helpsQuery.error || pairsQuery.error ? (
+      ) : allQueries.error ? (
         <Redirect to="/login" />
       ) : (
         <StoreContext.Provider value={store}>{children}</StoreContext.Provider>

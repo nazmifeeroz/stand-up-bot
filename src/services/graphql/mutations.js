@@ -86,3 +86,25 @@ export const DELETE_HELP = gql`
     }
   }
 `
+
+export const START_SESSION = gql`
+  mutation($token: String!) {
+    insert_sessions(objects: { token: $token }) {
+      affected_rows
+      returning {
+        id
+      }
+    }
+  }
+`
+
+export const PUBLISH_STANDUP = gql`
+  mutation($active: Boolean!, $content: String!, $id: uuid!, $status: String!) {
+    update_sessions(
+      where: { id: { _eq: $id } }
+      _set: { active: $active, content: $content, status: $status }
+    ) {
+      affected_rows
+    }
+  }
+`

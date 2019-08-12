@@ -41,3 +41,13 @@ export const NEW_PAIR = gql`
     }
   }
 `
+
+export const NEW_SESSION = gql`
+  subscription {
+    sessions(where: { active: { _eq: true } }) {
+      active
+      id
+      status
+    }
+  }
+`

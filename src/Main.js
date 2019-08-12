@@ -5,13 +5,33 @@ import { motion } from 'framer-motion'
 
 import './styles.css'
 import InputSection from './components/input-section'
-import { publishStandup } from './services/utils'
+import { doPublishStandup, useMutationReducer } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
-const Main = props => {
+const Main = () => {
   const store = React.useContext(StoreContext)
-  const { vimMode, setVimMode } = store
+  const { vimMode, setVimMode, activeSession } = store
+  const { mutation } = useMutationReducer('session')
+  const doStartSession = async () => {
+    const token = localStorage.getItem('token')
+    mutation.insert({ variables: { token } }).then(resp => {
+      localStorage.setItem(
+        'session_id',
+        resp.data.insert_sessions.returning[0].id
+      )
+    })
+  }
+
+  if (!activeSession || activeSession.length === 0)
+    return (
+      <button
+        onClick={doStartSession}
+        className="waves-effect waves-light btn-large"
+      >
+        Start Standup Session
+      </button>
+    )
 
   return (
     <motion.div
@@ -49,14 +69,16 @@ const Main = props => {
           />
           <InputSection type="help" description="Anyone need help?..." />
           <InputSection type="pairing" description="Pairing Config..." />
-          <div className="right-align">
-            <button
-              onClick={() => publishStandup(store)}
-              className="orange waves-effect waves-light btn-large"
-            >
-              Publish!
-            </button>
-          </div>
+          {localStorage.getItem('session_id') && (
+            <div className="right-align">
+              <button
+                onClick={() => doPublishStandup(store, mutation)}
+                className="orange waves-effect waves-light btn-large"
+              >
+                Publish!
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <blockquote>

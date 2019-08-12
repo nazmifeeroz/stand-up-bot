@@ -1,52 +1,11 @@
 import React from 'react'
-
-import { useMutation } from 'react-apollo'
-import {
-  ADD_HELP,
-  ADD_PAIR,
-  ADD_SHARE,
-  DELETE_HELP,
-  DELETE_PAIR,
-  DELETE_SHARE,
-  UPDATE_HELP,
-  UPDATE_PAIR,
-  UPDATE_SHARE,
-} from '../services/graphql/mutations'
+import { useMutationReducer } from '../services/utils'
 
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import '../codemirror.css'
 import 'codemirror/keymap/vim.js'
 
 import { StoreContext } from '../services/store'
-
-const useMutationReducer = type => {
-  const [addHelp] = useMutation(ADD_HELP)
-  const [addPair] = useMutation(ADD_PAIR)
-  const [addShare] = useMutation(ADD_SHARE)
-  const [deleteHelp] = useMutation(DELETE_HELP)
-  const [deletePair] = useMutation(DELETE_PAIR)
-  const [deleteShare] = useMutation(DELETE_SHARE)
-  const [updateHelp] = useMutation(UPDATE_HELP)
-  const [updatePair] = useMutation(UPDATE_PAIR)
-  const [updateShare] = useMutation(UPDATE_SHARE)
-  switch (type) {
-    case 'sharing':
-      return {
-        mutation: { add: addShare, update: updateShare, delete: deleteShare },
-      }
-    case 'pairing':
-      return {
-        mutation: { add: addPair, update: updatePair, delete: deletePair },
-      }
-    case 'help':
-      return {
-        mutation: { add: addHelp, update: updateHelp, delete: deleteHelp },
-      }
-    default:
-      return false
-  }
-}
-
 export default ({ type, description }) => {
   const [editableItem, setEditableItem] = React.useState(null)
   const [input, setInput] = React.useState('')
@@ -75,7 +34,7 @@ export default ({ type, description }) => {
     if (!input) return
     const newItem = [{ value: input }, ...data]
     setData(newItem)
-    mutation.add({ variables: { input } })
+    mutation.insert({ variables: { input } })
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export const ALL_SHARES = gql`
+export const GET_ALL_QUERIES = gql`
   query($today: timestamptz) {
     shares(
       where: { created_at: { _gte: $today } }
@@ -11,11 +11,6 @@ export const ALL_SHARES = gql`
       created_at
       updated_at
     }
-  }
-`
-
-export const ALL_PAIRS = gql`
-  query($today: timestamptz) {
     pairs(
       where: { created_at: { _gte: $today } }
       order_by: { updated_at: desc }
@@ -25,11 +20,6 @@ export const ALL_PAIRS = gql`
       created_at
       updated_at
     }
-  }
-`
-
-export const ALL_HELPS = gql`
-  query($today: timestamptz) {
     assistance(
       where: { created_at: { _gte: $today } }
       order_by: { updated_at: desc }
@@ -38,6 +28,10 @@ export const ALL_HELPS = gql`
       assist
       created_at
       updated_at
+    }
+    sessions(where: { active: { _eq: true } }) {
+      active
+      status
     }
   }
 `
