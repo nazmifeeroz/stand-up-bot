@@ -21,7 +21,9 @@ export default ({ type, description }) => {
     if (removeItem === '') return
     if (window.confirm('Are you sure you wish to delete?')) {
       const newData = data.filter(i => i !== data[removeItem])
-      mutation.delete({ variables: { id: data[removeItem].id } })
+      mutation
+        .delete({ variables: { id: data[removeItem].id } })
+        .catch(err => console.log('err', err))
       setData(newData)
       if (type === 'pairing')
         localStorage.setItem('pairing', JSON.stringify(newData))
@@ -34,7 +36,9 @@ export default ({ type, description }) => {
     if (!input) return
     const newItem = [{ value: input }, ...data]
     setData(newItem)
-    mutation.insert({ variables: { input } })
+    mutation
+      .insert({ variables: { input } })
+      .catch(err => console.log('err', err))
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')
@@ -44,9 +48,11 @@ export default ({ type, description }) => {
     e && e.preventDefault()
     data[editableItem].value = input
     setData(data)
-    mutation.update({
-      variables: { id: data[editableItem].id, editedItem: input },
-    })
+    mutation
+      .update({
+        variables: { id: data[editableItem].id, editedItem: input },
+      })
+      .catch(err => console.log('err', err))
     setInput('')
     setEditableItem(null)
   }

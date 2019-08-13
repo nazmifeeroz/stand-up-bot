@@ -99,12 +99,5 @@ export const doPublishStandup = (
       window.M.toast({ html: 'Stand up published! Have a good day!' })
     })
     .catch(err => console.log('err', err))
-  // fetch(process.env.REACT_APP_WEBHOOK, {
-  //   method: 'POST',
-  //   body: JSON.stringify({ content }),
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // })
   return
 }
