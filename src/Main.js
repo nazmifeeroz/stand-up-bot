@@ -2,12 +2,21 @@ import React from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
+import styled from 'styled-components'
 
 import './styles.css'
 import InputSection from './components/input-section'
 import { doPublishStandup, useMutationReducer } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
+
+const CenterContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 const Main = () => {
   const store = React.useContext(StoreContext)
@@ -25,12 +34,14 @@ const Main = () => {
 
   if (!activeSession || activeSession.length === 0)
     return (
-      <button
-        onClick={doStartSession}
-        className="waves-effect waves-light btn-large"
-      >
-        Start Standup Session
-      </button>
+      <CenterContainer>
+        <button
+          onClick={doStartSession}
+          className="waves-effect waves-light btn-large"
+        >
+          Start Standup Session
+        </button>
+      </CenterContainer>
     )
 
   return (
