@@ -34,10 +34,15 @@ export default ({ type, description }) => {
   const addItem = e => {
     e && e.preventDefault()
     if (!input) return
-    const newItem = [{ value: input }, ...data]
+    let addItem = { input }
+    if (type === 'sharing') {
+      const userName = localStorage.getItem('name')
+      addItem = { ...addItem, contributor: userName }
+    }
+    const newItem = [{ value: input, ...addItem }, ...data]
     setData(newItem)
     mutation
-      .insert({ variables: { input } })
+      .insert({ variables: addItem })
       .catch(err => console.log('err', err))
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
@@ -107,7 +112,7 @@ export default ({ type, description }) => {
                 </form>
               ) : (
                 <div>
-                  {s.value}
+                  {`${s.contributor ? `${s.contributor}: ` : ''} ${s.value}`}
                   <a
                     href="#/"
                     onClick={() => setRemoveItem(index)}

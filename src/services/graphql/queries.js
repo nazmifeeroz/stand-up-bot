@@ -8,6 +8,7 @@ export const GET_ALL_QUERIES = gql`
     ) {
       id
       sharing
+      contributor
       created_at
       updated_at
     }

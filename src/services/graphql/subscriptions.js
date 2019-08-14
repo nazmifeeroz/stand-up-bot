@@ -10,6 +10,7 @@ export const NEW_SHARE = gql`
       created_at
       updated_at
       sharing
+      contributor
     }
   }
 `

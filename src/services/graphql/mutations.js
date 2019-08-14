@@ -1,12 +1,13 @@
 import gql from 'graphql-tag'
 
 export const ADD_SHARE = gql`
-  mutation($input: String!) {
-    insert_shares(objects: { sharing: $input }) {
+  mutation($input: String!, $contributor: String!) {
+    insert_shares(objects: { sharing: $input, contributor: $contributor }) {
       returning {
         id
         created_at
         sharing
+        contributor
       }
     }
   }
