@@ -1,4 +1,5 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
@@ -10,7 +11,7 @@ import { doPublishStandup, useMutationReducer } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
-const CenterContainer = styled.div`
+const CenterContainer = styled(motion.div)`
   width: 100%;
   height: 100%;
   display: flex;
@@ -22,6 +23,7 @@ const Main = () => {
   const store = React.useContext(StoreContext)
   const { vimMode, setVimMode, activeSession } = store
   const { mutation } = useMutationReducer('session')
+
   const doStartSession = async () => {
     const token = localStorage.getItem('token')
     mutation.insert({ variables: { token } }).then(resp => {
@@ -34,7 +36,12 @@ const Main = () => {
 
   if (!activeSession || activeSession.length === 0)
     return (
-      <CenterContainer>
+      <CenterContainer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2 }}
+        exit={{ opacity: 0 }}
+      >
         <button
           onClick={doStartSession}
           className="waves-effect waves-light btn-large"
@@ -43,6 +50,14 @@ const Main = () => {
         </button>
       </CenterContainer>
     )
+
+  if (!localStorage.getItem('name')) {
+    const name = window.prompt('State your name...')
+    if (!name) {
+      return <Redirect to="/" />
+    }
+    localStorage.setItem('name', name)
+  }
 
   return (
     <motion.div
