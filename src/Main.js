@@ -1,5 +1,4 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
