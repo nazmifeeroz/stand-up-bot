@@ -21,6 +21,7 @@ const CenterContainer = styled(motion.div)`
 
 const Main = () => {
   const store = React.useContext(StoreContext)
+  const [name, setName] = React.useState(null)
   const { vimMode, setVimMode, activeSession } = store
   const { mutation } = useMutationReducer('session')
 
@@ -51,12 +52,9 @@ const Main = () => {
       </CenterContainer>
     )
 
-  if (!localStorage.getItem('name')) {
-    const name = window.prompt('State your name...')
-    if (!name) {
-      return <Redirect to="/" />
-    }
-    localStorage.setItem('name', name)
+  if (!name) {
+    const input = window.prompt('State your name...')
+    setName(input)
   }
 
   return (
@@ -114,7 +112,7 @@ const Main = () => {
           <a href="https://siliconjungles.io" tabIndex="-1">
             Silicon Jungles
           </a>{' '}
-          {new Date().getFullYear()} &middot; v0.3
+          {new Date().getFullYear()} &middot; v0.4
         </span>
       </blockquote>
     </motion.div>
