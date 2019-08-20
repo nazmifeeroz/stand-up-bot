@@ -20,7 +20,6 @@ const CenterContainer = styled(motion.div)`
 
 const Main = () => {
   const store = React.useContext(StoreContext)
-  const [name, setName] = React.useState(null)
   const { vimMode, setVimMode, activeSession } = store
   const { mutation } = useMutationReducer('session')
 
@@ -51,9 +50,9 @@ const Main = () => {
       </CenterContainer>
     )
 
-  if (!name) {
+  if (!store.name) {
     const input = window.prompt('State your name...')
-    setName(input)
+    store.setName(input)
   }
 
   return (

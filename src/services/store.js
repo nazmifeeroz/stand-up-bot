@@ -23,6 +23,7 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [pairing, setPairing] = React.useState([])
   const [sharing, setSharing] = React.useState([])
   const [vimMode, setVimMode] = React.useState(false)
+  const [name, setName] = React.useState(null)
 
   const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
 
@@ -82,9 +83,11 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
     activeSession,
     authToken,
     help: [help, setHelp],
+    name,
     pairing: [pairing, setPairing],
     setActiveSession,
     setAuthToken,
+    setName,
     setVimMode,
     sharing: [sharing, setSharing],
     vimMode,
