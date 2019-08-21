@@ -13,6 +13,7 @@ export default ({ type, description }) => {
   const {
     [type]: [data, setData],
     vimMode,
+    name,
   } = React.useContext(StoreContext)
 
   const { mutation } = useMutationReducer(type)
@@ -36,8 +37,8 @@ export default ({ type, description }) => {
     if (!input) return
     let addItem = { input }
     if (type === 'sharing') {
-      const userName = localStorage.getItem('name')
-      addItem = { ...addItem, contributor: userName }
+      // const userName = localStorage.getItem('name')
+      addItem = { ...addItem, contributor: name }
     }
     const newItem = [{ value: input, ...addItem }, ...data]
     setData(newItem)
