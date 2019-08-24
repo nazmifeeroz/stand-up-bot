@@ -12,15 +12,6 @@ export const GET_ALL_QUERIES = gql`
       created_at
       updated_at
     }
-    pairs(
-      where: { created_at: { _gte: $today } }
-      order_by: { updated_at: desc }
-    ) {
-      id
-      project
-      created_at
-      updated_at
-    }
     assistance(
       where: { created_at: { _gte: $today } }
       order_by: { updated_at: desc }
@@ -33,6 +24,20 @@ export const GET_ALL_QUERIES = gql`
     sessions(where: { active: { _eq: true } }) {
       active
       status
+    }
+  }
+`
+
+export const GET_PAIRS = gql`
+  query($yesterday: timestamptz) {
+    pairs(
+      where: { created_at: { _gte: $yesterday } }
+      order_by: { updated_at: desc }
+    ) {
+      id
+      project
+      created_at
+      updated_at
     }
   }
 `

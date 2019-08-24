@@ -1,5 +1,8 @@
 import React from 'react'
 
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 
@@ -7,7 +10,7 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
-import { GET_ALL_QUERIES } from './graphql/queries'
+import { GET_ALL_QUERIES, GET_PAIRS } from './graphql/queries'
 import {
   NEW_SHARE,
   NEW_HELP,
@@ -17,6 +20,16 @@ import {
 
 export const StoreContext = React.createContext(null)
 
+dayjs.extend(utc)
+
+const today = dayjs()
+  .utc()
+  .toISOString()
+const yesterday = dayjs()
+  .utc()
+  .subtract(2, 'day')
+  .toISOString()
+
 const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [activeSession, setActiveSession] = React.useState(null)
   const [help, setHelp] = React.useState([])
@@ -25,16 +38,21 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [vimMode, setVimMode] = React.useState(false)
   const [name, setName] = React.useState(null)
 
-  const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-
-  const allQueries = useQuery(GET_ALL_QUERIES, { variables: { today } })
+  const allQueries = useQuery(GET_ALL_QUERIES, {
+    variables: { today },
+  })
+  const allPairs = useQuery(GET_PAIRS, {
+    variables: { yesterday },
+  })
 
   const subscribeToMore = (state, document, attr) => {
     const getToday = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
 
     state.subscribeToMore({
       document,
-      variables: attr !== 'sessions' && { getToday },
+      variables:
+        attr !== 'sessions' &&
+        (attr === 'pairs' ? { yesterday } : { getToday }),
       updateQuery: (prev, { subscriptionData }) => {
         return Object.assign({}, prev, {
           [attr]: subscriptionData.data[attr],
@@ -58,18 +76,18 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
       setHelp(reformatedData)
       subscribeToMore(allQueries, NEW_HELP, 'assistance')
     }
-    if (allQueries.data && allQueries.data.pairs) {
-      const reformatedData = allQueries.data.pairs.map(d => {
+    if (allPairs.data && allPairs.data.pairs) {
+      const reformatedData = allPairs.data.pairs.map(d => {
         return { ...d, value: d.project }
       })
       setPairing(reformatedData)
-      subscribeToMore(allQueries, NEW_PAIR, 'pairs')
+      subscribeToMore(allPairs, NEW_PAIR, 'pairs')
     }
     if (allQueries.data && allQueries.data.sessions) {
       setActiveSession(allQueries.data.sessions)
       subscribeToMore(allQueries, NEW_SESSION, 'sessions')
     }
-  }, [allQueries, allQueries.data])
+  }, [allPairs, allPairs.data, allQueries, allQueries.data])
 
   const SpinnerWrapper = styled(motion.div)`
     width: 100%;

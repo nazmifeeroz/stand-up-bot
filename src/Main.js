@@ -110,7 +110,7 @@ const Main = () => {
           <a href="https://siliconjungles.io" tabIndex="-1">
             Silicon Jungles
           </a>{' '}
-          {new Date().getFullYear()} &middot; v0.4
+          {new Date().getFullYear()} &middot; v0.6
         </span>
       </blockquote>
     </motion.div>
