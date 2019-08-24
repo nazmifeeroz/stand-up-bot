@@ -63,7 +63,7 @@ const Main = () => {
       transition={{ duration: 1 }}
     >
       <h4>Stand Up Bot</h4>
-      <div className="card">
+      <div className="container">
         <div className="card-content">
           <div className="switch valign-wrapper right">
             <label>
