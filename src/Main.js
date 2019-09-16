@@ -63,45 +63,40 @@ const Main = () => {
       transition={{ duration: 1 }}
     >
       <h4>Stand Up Bot</h4>
-      <div className="container">
-        <div className="card-content">
-          <div className="switch valign-wrapper right">
-            <label>
-              <input
-                type="checkbox"
-                value="vimMode"
-                onChange={() => setVimMode(!vimMode)}
-              />
-              <span className="lever" />
-              <img
-                src={Vim}
-                alt="vim mode"
-                width="25px"
-                style={{
-                  marginBottom: -10,
-                  marginLeft: -10,
-                  filter: !vimMode && 'grayscale(100%)',
-                }}
-              />
-            </label>
-          </div>
-          <InputSection
-            type="sharing"
-            description="What are your thoughts?.."
-          />
-          <InputSection type="help" description="Anyone need help?..." />
-          <InputSection type="pairing" description="Pairing Config..." />
-          {localStorage.getItem('session_id') && (
-            <div className="right-align">
-              <button
-                onClick={() => doPublishStandup(store, mutation)}
-                className="orange waves-effect waves-light btn-large"
-              >
-                Publish!
-              </button>
-            </div>
-          )}
+      <div className="card-content">
+        <div className="switch valign-wrapper right">
+          <label>
+            <input
+              type="checkbox"
+              value="vimMode"
+              onChange={() => setVimMode(!vimMode)}
+            />
+            <span className="lever" />
+            <img
+              src={Vim}
+              alt="vim mode"
+              width="25px"
+              style={{
+                marginBottom: -10,
+                marginLeft: -10,
+                filter: !vimMode && 'grayscale(100%)',
+              }}
+            />
+          </label>
         </div>
+        <InputSection type="sharing" description="What are your thoughts?.." />
+        <InputSection type="help" description="Anyone need help?..." />
+        <InputSection type="pairing" description="Pairing Config..." />
+        {localStorage.getItem('session_id') && (
+          <div className="right-align">
+            <button
+              onClick={() => doPublishStandup(store, mutation)}
+              className="orange waves-effect waves-light btn-large"
+            >
+              Publish!
+            </button>
+          </div>
+        )}
       </div>
       <blockquote>
         Built with <span className="red-text">&hearts;</span> by Nazmi &middot;
