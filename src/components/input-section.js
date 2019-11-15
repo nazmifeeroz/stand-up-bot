@@ -111,6 +111,7 @@ export default ({ type, description }) => {
                       type="text"
                       value={input || s.value}
                       onChange={e => setInput(e.target.value)}
+                      onBlur={editItem}
                     />
                   )}
                   <small>Press Enter to save</small>
