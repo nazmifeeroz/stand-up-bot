@@ -32,6 +32,10 @@ export default ({ type, description }) => {
     setRemoveItem('')
   }, [data, mutation, removeItem, setData, type])
 
+  React.useEffect(() => {
+    setInput(data[editableItem].value)
+  }, [data, editableItem])
+
   const addItem = e => {
     e && e.preventDefault()
     if (!input) return
