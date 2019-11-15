@@ -33,7 +33,7 @@ export default ({ type, description }) => {
   }, [data, mutation, removeItem, setData, type])
 
   React.useEffect(() => {
-    setInput(data[editableItem].value)
+    if (data && data[editableItem]) setInput(data[editableItem].value)
   }, [data, editableItem])
 
   const addItem = e => {
