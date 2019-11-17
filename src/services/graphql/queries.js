@@ -41,3 +41,15 @@ export const GET_PAIRS = gql`
     }
   }
 `
+
+export const GET_POLLS = gql`
+  query($today: timestamptz) {
+    polls(where: { created_at: { _gte: $today } }) {
+      id
+      title
+      description
+      options
+      created_at
+    }
+  }
+`

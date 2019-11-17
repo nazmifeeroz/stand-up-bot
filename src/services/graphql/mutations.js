@@ -109,3 +109,13 @@ export const PUBLISH_STANDUP = gql`
     }
   }
 `
+
+export const NEW_POLL = gql`
+  mutation($title: String!, $options: jsonb!, $description: String!) {
+    insert_polls(
+      objects: { title: $title, options: $options, description: $description }
+    ) {
+      affected_rows
+    }
+  }
+`

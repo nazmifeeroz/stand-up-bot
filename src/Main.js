@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import './styles.css'
 import InputSection from './components/input-section'
+import PollSection from './components/poll-section'
 import { doPublishStandup, useMutationReducer } from './services/utils'
 import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
@@ -87,6 +88,7 @@ const Main = () => {
         <InputSection type="sharing" description="What are your thoughts?.." />
         <InputSection type="help" description="Anyone need help?..." />
         <InputSection type="pairing" description="Pairing Config..." />
+        <PollSection />
         {localStorage.getItem('session_id') && (
           <div className="right-align">
             <button
