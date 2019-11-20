@@ -3,8 +3,8 @@ import gql from 'graphql-tag'
 export const NEW_SHARE = gql`
   subscription($getToday: timestamptz) {
     shares(
-      where: { updated_at: { _gte: $getToday } }
-      order_by: { updated_at: desc }
+      where: { created_at: { _gte: $getToday } }
+      order_by: { created_at: desc }
     ) {
       id
       created_at
@@ -18,7 +18,7 @@ export const NEW_SHARE = gql`
 export const NEW_HELP = gql`
   subscription($getToday: timestamptz) {
     assistance(
-      order_by: { updated_at: desc }
+      order_by: { created_at: desc }
       where: { created_at: { _gte: $getToday } }
     ) {
       id
@@ -32,7 +32,7 @@ export const NEW_HELP = gql`
 export const NEW_PAIR = gql`
   subscription($yesterday: timestamptz) {
     pairs(
-      order_by: { updated_at: desc }
+      order_by: { created_at: desc }
       where: { created_at: { _gte: $yesterday } }
     ) {
       id
@@ -49,6 +49,21 @@ export const NEW_SESSION = gql`
       active
       id
       status
+    }
+  }
+`
+
+export const NEW_POLL = gql`
+  subscription($today: timestamptz) {
+    polls(
+      where: { created_at: { _gte: $today } }
+      order_by: { created_at: desc }
+    ) {
+      created_at
+      description
+      id
+      options
+      title
     }
   }
 `

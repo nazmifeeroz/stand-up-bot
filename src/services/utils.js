@@ -52,12 +52,24 @@ export const useMutationReducer = type => {
   }
 }
 
+const doPollsSummary = polls => {
+  return polls.map(poll => {
+    const head = `\n**${poll.title}** - _${poll.description}_\n`
+    const optionsBody = Object.keys(poll.options).map(
+      option => `  - ${option} - ${poll.options[option].length} votes`
+    )
+    return `${head}${optionsBody.join('\n')}`
+  })
+}
+
 export const doPublishStandup = (
   {
     sharing: [sharingData],
     help: [helpData],
     pairing: [pairingData],
-    activeSession,
+    pollsData: {
+      data: { polls },
+    },
   },
   mutation
 ) => {
@@ -80,6 +92,8 @@ export const doPublishStandup = (
   const today = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
   const shareText = sharing[0].length > 0 ? sharing.join('\n - ') : ''
   const helpText = help.length > 0 ? help.join('\n - ') : '*NO HELP NEEDED...*'
+  const pollsText =
+    polls.length > 0 ? doPollsSummary(polls) : '*NO POLLS CREATED...*'
   const pairText = pairing.length > 0 ? pairing.join('\n - ') : ''
   const content = `
   ***__Stand Up__** (*${today}*)*
@@ -89,7 +103,11 @@ export const doPublishStandup = (
   **_Need Help_**\n - ${helpText}
 
   **_Pairing_**\n - ${pairText}
+
+  **_Polls_**\n ${pollsText}
   `
+
+  console.log('content', content)
   const id = localStorage.getItem('session_id')
   mutation
     .update({

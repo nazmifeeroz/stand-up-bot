@@ -35,8 +35,10 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const [help, setHelp] = React.useState([])
   const [pairing, setPairing] = React.useState([])
   const [sharing, setSharing] = React.useState([])
+  const [pollsData, setPollsData] = React.useState(null)
   const [vimMode, setVimMode] = React.useState(false)
-  const [name, setName] = React.useState(null)
+  const savedName = localStorage.getItem('name')
+  const [name, setName] = React.useState(savedName)
 
   const allQueries = useQuery(GET_ALL_QUERIES, {
     variables: { today },
@@ -103,9 +105,11 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
     help: [help, setHelp],
     name,
     pairing: [pairing, setPairing],
+    pollsData,
     setActiveSession,
     setAuthToken,
     setName,
+    setPollsData,
     setVimMode,
     sharing: [sharing, setSharing],
     vimMode,

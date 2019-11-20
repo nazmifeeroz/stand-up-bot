@@ -109,3 +109,32 @@ export const PUBLISH_STANDUP = gql`
     }
   }
 `
+
+export const INSERT_POLL = gql`
+  mutation($title: String!, $options: jsonb!, $description: String!) {
+    insert_polls(
+      objects: { title: $title, options: $options, description: $description }
+    ) {
+      affected_rows
+    }
+  }
+`
+
+export const UPDATE_POLL = gql`
+  mutation($pollId: Int!, $editedOptions: jsonb!) {
+    update_polls(
+      where: { id: { _eq: $pollId } }
+      _set: { options: $editedOptions }
+    ) {
+      affected_rows
+    }
+  }
+`
+
+export const DELETE_POLL = gql`
+  mutation($pollId: Int!) {
+    delete_polls(where: { id: { _eq: $pollId } }) {
+      affected_rows
+    }
+  }
+`
