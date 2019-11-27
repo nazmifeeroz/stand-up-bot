@@ -134,16 +134,24 @@ const Main = () => {
             <InputSection type="help" description="Anyone need help?..." />
             <InputSection type="pairing" description="Pairing Config..." />
             <PollSection />
-            {localStorage.getItem('session_id') && (
-              <div className="right-align">
-                <button
-                  onClick={() => doPublishStandup(store, mutation)}
-                  className="orange waves-effect waves-light btn-large"
-                >
-                  Publish!
-                </button>
-              </div>
-            )}
+            <ButtonsContainer>
+              <button
+                onClick={() => window.open('https://gc-awards.netlify.com/')}
+                className="waves-effect waves-light btn-large"
+              >
+                GC Lucky Draw
+              </button>
+              {localStorage.getItem('session_id') && (
+                <div className="right-align">
+                  <button
+                    onClick={() => doPublishStandup(store, mutation)}
+                    className="orange waves-effect waves-light btn-large"
+                  >
+                    Publish!
+                  </button>
+                </div>
+              )}
+            </ButtonsContainer>
           </div>
         </StyledBody>
         <StyledBlockquote>
@@ -160,6 +168,12 @@ const Main = () => {
     </>
   )
 }
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
 
 const StyledBlockquote = styled.blockquote`
   padding: 0 30px;
