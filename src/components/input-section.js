@@ -1,4 +1,5 @@
 import React from 'react'
+import Linkify from 'react-linkify'
 import { useMutationReducer } from '../services/utils'
 
 import { Controlled as CodeMirror } from 'react-codemirror2'
@@ -71,120 +72,122 @@ export default ({ type, description }) => {
     e === 'add' ? addItem() : editItem()
   }
   return (
-    <div className="section" data-testid={type}>
-      <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
-      {data.length > 0 && (
-        <ul className="collection" data-testid={`${type}-items`}>
-          {data.map((s, index) => (
-            <li key={index} className="collection-item">
-              {editableItem === index ? (
-                <form onSubmit={editItem}>
-                  <a href="#/" onClick={() => setEditableItem(null)}>
-                    <i
-                      data-testid={`remove-${type}${index}`}
-                      className="cobalt-icons right"
+    <Linkify>
+      <div className="section" data-testid={type}>
+        <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
+        {data.length > 0 && (
+          <ul className="collection" data-testid={`${type}-items`}>
+            {data.map((s, index) => (
+              <li key={index} className="collection-item">
+                {editableItem === index ? (
+                  <form onSubmit={editItem}>
+                    <a href="#/" onClick={() => setEditableItem(null)}>
+                      <i
+                        data-testid={`remove-${type}${index}`}
+                        className="cobalt-icons right"
+                      >
+                        close
+                      </i>
+                    </a>
+                    {vimMode ? (
+                      <CodeMirror
+                        value={input || s.value}
+                        options={{
+                          keyMap: 'vim',
+                          extraKeys: {
+                            Enter: () => onVimEnterPress('edit'),
+                          },
+                        }}
+                        onBeforeChange={(editor, data, value) => {
+                          setInput(value)
+                        }}
+                        onChange={(editor, data, value) => {
+                          setInput(value)
+                        }}
+                      />
+                    ) : (
+                      <input
+                        autoFocus
+                        placeholder={description}
+                        aria-label={`${type}-input`}
+                        type="text"
+                        value={input || s.value}
+                        onChange={e => setInput(e.target.value)}
+                        onBlur={editItem}
+                      />
+                    )}
+                    <small>Press Enter to save</small>
+                  </form>
+                ) : (
+                  <div>
+                    {`${s.contributor ? `${s.contributor}: ` : ''} ${s.value}`}
+                    <a
+                      href="#/"
+                      onClick={() => setRemoveItem(index)}
+                      tabIndex="-1"
                     >
-                      close
-                    </i>
-                  </a>
-                  {vimMode ? (
-                    <CodeMirror
-                      value={input || s.value}
-                      options={{
-                        keyMap: 'vim',
-                        extraKeys: {
-                          Enter: () => onVimEnterPress('edit'),
-                        },
-                      }}
-                      onBeforeChange={(editor, data, value) => {
-                        setInput(value)
-                      }}
-                      onChange={(editor, data, value) => {
-                        setInput(value)
-                      }}
-                    />
-                  ) : (
-                    <input
-                      autoFocus
-                      placeholder={description}
-                      aria-label={`${type}-input`}
-                      type="text"
-                      value={input || s.value}
-                      onChange={e => setInput(e.target.value)}
-                      onBlur={editItem}
-                    />
-                  )}
-                  <small>Press Enter to save</small>
-                </form>
-              ) : (
-                <div>
-                  {`${s.contributor ? `${s.contributor}: ` : ''} ${s.value}`}
-                  <a
-                    href="#/"
-                    onClick={() => setRemoveItem(index)}
-                    tabIndex="-1"
-                  >
-                    <i
-                      data-testid={`remove-${type}${index}`}
-                      className="material-icons right"
+                      <i
+                        data-testid={`remove-${type}${index}`}
+                        className="material-icons right"
+                      >
+                        delete
+                      </i>
+                    </a>
+                    <a
+                      href="#/"
+                      onClick={() => setEditableItem(index)}
+                      tabIndex="-1"
                     >
-                      delete
-                    </i>
-                  </a>
-                  <a
-                    href="#/"
-                    onClick={() => setEditableItem(index)}
-                    tabIndex="-1"
-                  >
-                    <i
-                      data-testid={`remove-${type}${index}`}
-                      className="material-icons right"
-                    >
-                      edit
-                    </i>
-                  </a>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-      {editableItem === null && (
-        <form onSubmit={addItem}>
-          {vimMode ? (
-            <CodeMirror
-              value={input}
-              options={{
-                keyMap: 'vim',
-                showCursorWhenSelecting: true,
-                extraKeys: {
-                  Enter: () => onVimEnterPress('add'),
-                },
-              }}
-              onBeforeChange={(editor, data, value) => {
-                setInput(value)
-              }}
-            />
-          ) : (
-            <input
-              placeholder={description}
-              aria-label={`${type}-input`}
-              type="text"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-            />
-          )}
-          {input && (
-            <span
-              className="helper-text"
-              data-error="wrong"
-              data-success="right"
-            >
-              <small>Press Enter to save</small>
-            </span>
-          )}
-        </form>
-      )}
-    </div>
+                      <i
+                        data-testid={`remove-${type}${index}`}
+                        className="material-icons right"
+                      >
+                        edit
+                      </i>
+                    </a>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {editableItem === null && (
+          <form onSubmit={addItem}>
+            {vimMode ? (
+              <CodeMirror
+                value={input}
+                options={{
+                  keyMap: 'vim',
+                  showCursorWhenSelecting: true,
+                  extraKeys: {
+                    Enter: () => onVimEnterPress('add'),
+                  },
+                }}
+                onBeforeChange={(editor, data, value) => {
+                  setInput(value)
+                }}
+              />
+            ) : (
+              <input
+                placeholder={description}
+                aria-label={`${type}-input`}
+                type="text"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+              />
+            )}
+            {input && (
+              <span
+                className="helper-text"
+                data-error="wrong"
+                data-success="right"
+              >
+                <small>Press Enter to save</small>
+              </span>
+            )}
+          </form>
+        )}
+      </div>
+    </Linkify>
   )
 }
