@@ -71,8 +71,14 @@ export default ({ type, description }) => {
   const onVimEnterPress = e => {
     e === 'add' ? addItem() : editItem()
   }
+
+  const componentDecorator = (href, text, key) => (
+    <a href={href} key={key} target="_blank" rel="noopener noreferrer">
+      {text}
+    </a>
+  )
   return (
-    <Linkify properties={{ target: '_blank' }}>
+    <Linkify componentDecorator={componentDecorator}>
       <div className="section" data-testid={type}>
         <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
         {data.length > 0 && (
