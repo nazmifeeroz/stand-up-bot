@@ -72,7 +72,7 @@ export default ({ type, description }) => {
     e === 'add' ? addItem() : editItem()
   }
   return (
-    <Linkify>
+    <Linkify properties={{ target: '_blank' }}>
       <div className="section" data-testid={type}>
         <h5>{type.charAt(0).toUpperCase() + type.slice(1)}</h5>
         {data.length > 0 && (
