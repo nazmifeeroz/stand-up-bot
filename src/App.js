@@ -14,6 +14,14 @@ import HistoryPage from './components/history-page'
 import Main from './Main'
 import StoreProvider from './services/store'
 
+const MainPage = () => {
+  return (
+    <StoreProvider>
+      <Main />
+    </StoreProvider>
+  )
+}
+
 const App = () => {
   const [authToken, setAuthToken] = React.useState(
     localStorage.getItem('token')
@@ -37,9 +45,8 @@ const App = () => {
   return (
     <Router>
       <ApolloProvider client={createApolloClient()}>
-        <StoreProvider>
-          <Main />
-        </StoreProvider>
+        <Route path="/" exact component={MainPage} />
+        <Route path="/history" exact component={HistoryPage} />
       </ApolloProvider>
       <Route
         path="/callback"
@@ -48,7 +55,6 @@ const App = () => {
       />
       <Route path="/sidekick" exact component={Sidekick} />
       <Route path="/login" exact component={Login} />
-      <Route path="/history" exact component={HistoryPage} />
     </Router>
   )
 }
