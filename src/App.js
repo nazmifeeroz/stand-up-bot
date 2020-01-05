@@ -1,14 +1,15 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 import ApolloClient from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { WebSocketLink } from 'apollo-link-ws'
-import { ApolloProvider } from 'react-apollo'
+import {InMemoryCache} from 'apollo-cache-inmemory'
+import {WebSocketLink} from 'apollo-link-ws'
+import {ApolloProvider} from 'react-apollo'
 
 import Sidekick from './Sidekick'
 import Callback from './components/callback'
 import Login from './components/login'
+import HistoryPage from './components/history-page'
 
 import Main from './Main'
 import StoreProvider from './services/store'
@@ -47,6 +48,7 @@ const App = () => {
       />
       <Route path="/sidekick" exact component={Sidekick} />
       <Route path="/login" exact component={Login} />
+      <Route path="/history" exact component={HistoryPage} />
     </Router>
   )
 }
