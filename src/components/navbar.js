@@ -22,6 +22,11 @@ const Navbar = () => {
           <ul id="nav-mobile" className="right hide-on-med-and-down">
             <li>
               <a className="modal-trigger" href="#newPoll">
+                History
+              </a>
+            </li>
+            <li>
+              <a className="modal-trigger" href="#newPoll">
                 Create Poll
               </a>
             </li>
@@ -35,6 +40,11 @@ const Navbar = () => {
       </nav>
 
       <ul className="sidenav" id="mobile-view">
+        <li>
+          <a className="modal-trigger" href="#newPoll">
+            History
+          </a>
+        </li>
         <li>
           <a className="modal-trigger" href="#newPoll">
             Create Poll
