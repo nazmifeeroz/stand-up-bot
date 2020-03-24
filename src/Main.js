@@ -85,8 +85,9 @@ const Main = () => {
                 <b>Singapore Covid Situation</b>
                 <br />
                 Cases: {stats.cases} | Today: {stats.todayCases} | Active:{' '}
-                {stats.active} | Deaths: {stats.deaths} | Recovered:{' '}
-                {stats.recovered} | Critical: {stats.critical}
+                {stats.active} <br />
+                Deaths: {stats.deaths} | Recovered: {stats.recovered} |
+                Critical: {stats.critical}
               </div>
               <br />
               <div>
