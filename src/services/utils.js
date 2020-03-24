@@ -56,7 +56,7 @@ const doPollsSummary = polls => {
   return polls.map(poll => {
     const head = `\n**${poll.title}** - _${poll.description}_\n`
     const optionsBody = Object.keys(poll.options).map(
-      option => `  - ${option} - ${poll.options[option].length} votes`
+      option => `  - ${option} - ${poll.options[option].length} votes`,
     )
     return `${head}${optionsBody.join('\n')}`
   })
@@ -71,7 +71,9 @@ export const doPublishStandup = (
       data: { polls },
     },
   },
-  mutation
+  mutation,
+  stats,
+  globalStats,
 ) => {
   const sharing = sharingData.map(d => d.value)
   const pairing = pairingData.map(d => d.value)
@@ -79,7 +81,7 @@ export const doPublishStandup = (
   console.table([sharing, help, pairing])
 
   const authenticate = window.confirm(
-    'You are about to publish an awesome stand up! Are you sure?'
+    'You are about to publish an awesome stand up! Are you sure?',
   )
 
   // TODO: authenticate valid publisher
@@ -97,6 +99,13 @@ export const doPublishStandup = (
   const pairText = pairing.length > 0 ? pairing.join('\n - ') : ''
   const content = `
   ***__Stand Up__** (*${today}*)*
+
+  ***_Singapore CoronaVirus Situation_**
+  Cases: ${stats.cases} | Today: ${stats.todayCases} | Active: ${stats.active}
+  Deaths: ${stats.deaths} | Recovered: ${stats.recovered} | Critical: ${stats.critical}
+
+  ***_Global CoronaVirus Situation_**
+  Cases: ${globalStats.cases} | Deaths: ${globalStats.deaths} | Recovered: ${globalStats.recovered}
 
   **_Sharing_**\n - ${shareText}
 

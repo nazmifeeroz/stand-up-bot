@@ -1,15 +1,16 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import './styles.css'
 import InputSection from './components/input-section'
 import PollSection from './components/poll-section'
 import Navbar from './components/navbar'
-import {doPublishStandup, useMutationReducer} from './services/utils'
-import {StoreContext} from './services/store'
+import { doPublishStandup, useMutationReducer } from './services/utils'
+import useCovidStats from './services/useCovidStats'
+import { StoreContext } from './services/store'
 import Vim from './assets/vim-icon.png'
 
 const CenterContainer = styled(motion.div)`
@@ -22,18 +23,19 @@ const CenterContainer = styled(motion.div)`
 
 const Main = () => {
   const store = React.useContext(StoreContext)
-  const {vimMode, setVimMode, activeSession} = store
-  const {mutation} = useMutationReducer('session')
+  const { vimMode, setVimMode, activeSession } = store
+  const { mutation } = useMutationReducer('session')
+  const { stats, globalStats, loading } = useCovidStats()
   useEffect(() => {
     window.M.AutoInit()
   }, [])
 
   const doStartSession = async () => {
     const token = localStorage.getItem('token')
-    mutation.insert({variables: {token}}).then(resp => {
+    mutation.insert({ variables: { token } }).then(resp => {
       localStorage.setItem(
         'session_id',
-        resp.data.insert_sessions.returning[0].id
+        resp.data.insert_sessions.returning[0].id,
       )
     })
   }
@@ -41,10 +43,10 @@ const Main = () => {
   if (!activeSession || activeSession.length === 0)
     return (
       <CenterContainer
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        transition={{duration: 2}}
-        exit={{opacity: 0}}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2 }}
+        exit={{ opacity: 0 }}
       >
         <button
           onClick={doStartSession}
@@ -65,37 +67,55 @@ const Main = () => {
     handleChangeName()
   }
 
+  if (loading) return null
+
   return (
     <>
       <motion.div
-        initial={{y: 500, opacity: 0}}
-        animate={{y: 0, opacity: 1}}
-        transition={{duration: 1}}
+        initial={{ y: 500, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1 }}
       >
         <Navbar />
 
         <StyledBody className="row">
           <div className="card-content container">
-            <div className="switch valign-wrapper right">
-              <label>
-                <input
-                  type="checkbox"
-                  value="vimMode"
-                  onChange={() => setVimMode(!vimMode)}
-                />
-                <span className="lever" />
-                <img
-                  src={Vim}
-                  alt="vim mode"
-                  width="25px"
-                  style={{
-                    marginBottom: -10,
-                    marginLeft: -10,
-                    filter: !vimMode && 'grayscale(100%)',
-                  }}
-                />
-              </label>
-            </div>
+            <CovidWrapper>
+              <div>
+                <b>Singapore Covid Situation</b>
+                <br />
+                Cases: {stats.cases} | Today: {stats.todayCases} | Active:{' '}
+                {stats.active} | Deaths: {stats.deaths} | Recovered:{' '}
+                {stats.recovered} | Critical: {stats.critical}
+              </div>
+              <br />
+              <div>
+                <b>Global Covid Situation</b>
+                <br />
+                Cases: {globalStats.cases} | Deaths: {globalStats.deaths} |
+                Recovered: {globalStats.recovered}
+              </div>
+              <div className="switch valign-wrapper right">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="vimMode"
+                    onChange={() => setVimMode(!vimMode)}
+                  />
+                  <span className="lever" />
+                  <img
+                    src={Vim}
+                    alt="vim mode"
+                    width="25px"
+                    style={{
+                      marginBottom: -10,
+                      marginLeft: -10,
+                      filter: !vimMode && 'grayscale(100%)',
+                    }}
+                  />
+                </label>
+              </div>
+            </CovidWrapper>
             <InputSection
               type="sharing"
               description="What are your thoughts?.."
@@ -113,7 +133,9 @@ const Main = () => {
               {localStorage.getItem('session_id') && (
                 <div className="right-align">
                   <button
-                    onClick={() => doPublishStandup(store, mutation)}
+                    onClick={() =>
+                      doPublishStandup(store, mutation, stats, globalStats)
+                    }
                     className="orange waves-effect waves-light btn-large"
                   >
                     Publish!
@@ -150,6 +172,12 @@ const StyledBlockquote = styled.blockquote`
 
 const StyledBody = styled.div`
   margin-top: 20px;
+`
+
+const CovidWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `
 
 export default Main
