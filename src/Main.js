@@ -95,7 +95,7 @@ const Main = () => {
                 Cases: {globalStats.cases} | Deaths: {globalStats.deaths} |
                 Recovered: {globalStats.recovered}
               </div>
-              <div className="switch valign-wrapper right">
+              {/* <div className="switch valign-wrapper right">
                 <label>
                   <input
                     type="checkbox"
@@ -114,7 +114,7 @@ const Main = () => {
                     }}
                   />
                 </label>
-              </div>
+              </div> */}
             </CovidWrapper>
             <InputSection
               type="sharing"
