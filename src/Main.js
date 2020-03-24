@@ -82,7 +82,7 @@ const Main = () => {
           <div className="card-content container">
             <CovidWrapper>
               <div>
-                <b>Singapore Covid Situation</b>
+                <b>Singapore Covid Information</b>
                 <br />
                 Cases: {stats.cases} | Today: {stats.todayCases} | Active:{' '}
                 {stats.active} <br />
@@ -91,7 +91,7 @@ const Main = () => {
               </div>
               <br />
               <div>
-                <b>Global Covid Situation</b>
+                <b>Global Covid Information</b>
                 <br />
                 Cases: {globalStats.cases} | Deaths: {globalStats.deaths} |
                 Recovered: {globalStats.recovered}
