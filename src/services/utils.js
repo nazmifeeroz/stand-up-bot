@@ -100,11 +100,11 @@ export const doPublishStandup = (
   const content = `
   ***__Stand Up__** (*${today}*)*
 
-  ***_Singapore CoronaVirus Information_**
+  **_Singapore CoronaVirus Information_**
   Cases: ${stats.cases} | Today: ${stats.todayCases} | Active: ${stats.active}
   Deaths: ${stats.deaths} | Recovered: ${stats.recovered} | Critical: ${stats.critical}
 
-  ***_Global CoronaVirus Information_**
+  **_Global CoronaVirus Information_**
   Cases: ${globalStats.cases} | Deaths: ${globalStats.deaths} | Recovered: ${globalStats.recovered}
 
   **_Sharing_**\n - ${shareText}
