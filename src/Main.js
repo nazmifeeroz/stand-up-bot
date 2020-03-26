@@ -128,7 +128,7 @@ const Main = () => {
                 Dark Mode
                 <input
                   type="checkbox"
-                  value="darkMode"
+                  checked={darkMode}
                   onChange={() => setDarkMode(!darkMode)}
                 />
                 <span className="lever" />
