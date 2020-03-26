@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { createGlobalStyle, css } from 'styled-components'
 
 import './styles.css'
 import InputSection from './components/input-section'
@@ -11,7 +11,6 @@ import Navbar from './components/navbar'
 import { doPublishStandup, useMutationReducer } from './services/utils'
 import useCovidStats from './services/useCovidStats'
 import { StoreContext } from './services/store'
-import Vim from './assets/vim-icon.png'
 
 const CenterContainer = styled(motion.div)`
   width: 100%;
@@ -21,11 +20,37 @@ const CenterContainer = styled(motion.div)`
   align-items: center;
 `
 
+const GlobalStyles = createGlobalStyle`
+${props =>
+  props.dark &&
+  css`
+    body {
+      background-color: #37474f;
+      color: #fff;
+    }
+
+    input {
+      color: #fff;
+    }
+
+    a {
+      color: #b3e5fc !important;
+    }
+
+    .collection-item {
+      background-color: #455a64 !important;
+    }
+  `}
+`
+
 const Main = () => {
   const store = React.useContext(StoreContext)
-  const { vimMode, setVimMode, activeSession } = store
+  const { activeSession } = store
   const { mutation } = useMutationReducer('session')
   const { stats, globalStats, loading } = useCovidStats()
+
+  const [darkMode, setDarkMode] = React.useState(true)
+
   useEffect(() => {
     window.M.AutoInit()
   }, [])
@@ -76,6 +101,7 @@ const Main = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
+        <GlobalStyles dark={darkMode} />
         <Navbar />
 
         <StyledBody className="row">
@@ -96,27 +122,18 @@ const Main = () => {
                 Cases: {globalStats.cases} | Deaths: {globalStats.deaths} |
                 Recovered: {globalStats.recovered}
               </div>
-              {/* <div className="switch valign-wrapper right">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="vimMode"
-                    onChange={() => setVimMode(!vimMode)}
-                  />
-                  <span className="lever" />
-                  <img
-                    src={Vim}
-                    alt="vim mode"
-                    width="25px"
-                    style={{
-                      marginBottom: -10,
-                      marginLeft: -10,
-                      filter: !vimMode && 'grayscale(100%)',
-                    }}
-                  />
-                </label>
-              </div> */}
             </CovidWrapper>
+            <div className="switch valign-wrapper right">
+              <label>
+                Dark Mode
+                <input
+                  type="checkbox"
+                  value="darkMode"
+                  onChange={() => setDarkMode(!darkMode)}
+                />
+                <span className="lever" />
+              </label>
+            </div>
             <InputSection
               type="sharing"
               description="What are your thoughts?.."
@@ -145,17 +162,17 @@ const Main = () => {
               )}
             </ButtonsContainer>
           </div>
+          <StyledBlockquote>
+            Built with <span className="red-text">&hearts;</span> by Nazmi
+            <span className="right">
+              &copy;{' '}
+              <a href="https://siliconjungles.io" tabIndex="-1">
+                Silicon Jungles
+              </a>{' '}
+              {new Date().getFullYear()} &middot; v0.8.1
+            </span>
+          </StyledBlockquote>
         </StyledBody>
-        <StyledBlockquote>
-          Built with <span className="red-text">&hearts;</span> by Nazmi
-          <span className="right">
-            &copy;{' '}
-            <a href="https://siliconjungles.io" tabIndex="-1">
-              Silicon Jungles
-            </a>{' '}
-            {new Date().getFullYear()} &middot; v0.8.1
-          </span>
-        </StyledBlockquote>
       </motion.div>
     </>
   )
