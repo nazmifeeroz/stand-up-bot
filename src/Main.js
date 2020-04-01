@@ -25,7 +25,7 @@ ${props =>
   props.dark &&
   css`
     body {
-      background-color: #37474f;
+      background-color: #333;
       color: #fff;
     }
 
