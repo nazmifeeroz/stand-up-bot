@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import Linkify from 'react-linkify'
 import { useMutationReducer } from '../services/utils'
 
@@ -125,33 +126,39 @@ export default ({ type, description }) => {
                     <small>Press Enter to save</small>
                   </form>
                 ) : (
-                  <div>
-                    {`${s.contributor ? `${s.contributor}: ` : ''} ${s.value}`}
-                    <a
-                      href="#/"
-                      onClick={() => setRemoveItem(index)}
-                      tabIndex="-1"
-                    >
-                      <i
-                        data-testid={`remove-${type}${index}`}
-                        className="material-icons right"
+                  <StyledDiv>
+                    <StyledSpan>
+                      {`${s.contributor ? `${s.contributor}: ` : ''} ${
+                        s.value
+                      }`}
+                    </StyledSpan>
+                    <StyledIconsDiv>
+                      <a
+                        href="#/"
+                        onClick={() => setRemoveItem(index)}
+                        tabIndex="-1"
                       >
-                        delete
-                      </i>
-                    </a>
-                    <a
-                      href="#/"
-                      onClick={() => setEditableItem(index)}
-                      tabIndex="-1"
-                    >
-                      <i
-                        data-testid={`remove-${type}${index}`}
-                        className="material-icons right"
+                        <i
+                          data-testid={`remove-${type}${index}`}
+                          className="material-icons right"
+                        >
+                          delete
+                        </i>
+                      </a>
+                      <a
+                        href="#/"
+                        onClick={() => setEditableItem(index)}
+                        tabIndex="-1"
                       >
-                        edit
-                      </i>
-                    </a>
-                  </div>
+                        <i
+                          data-testid={`remove-${type}${index}`}
+                          className="material-icons right"
+                        >
+                          edit
+                        </i>
+                      </a>
+                    </StyledIconsDiv>
+                  </StyledDiv>
                 )}
               </li>
             ))}
@@ -197,3 +204,20 @@ export default ({ type, description }) => {
     </Linkify>
   )
 }
+
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const StyledIconsDiv = styled.div`
+  /* display: flex;
+  justify-content: space-between; */
+  min-width: 80px;
+`
+
+const StyledSpan = styled.span`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`
