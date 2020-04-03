@@ -10,7 +10,11 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
-import { GET_ALL_QUERIES, GET_PAIRS } from './graphql/queries'
+import {
+  GET_ALL_QUERIES,
+  GET_PAIRS,
+  GET_LAST_PUBLISHED_SESSION,
+} from './graphql/queries'
 import {
   NEW_SHARE,
   NEW_HELP,
@@ -30,7 +34,12 @@ const yesterday = dayjs()
   .subtract(2, 'day')
   .toISOString()
 
-const StoreProvider = ({ authToken, children, setAuthToken }) => {
+const StoreProvider = ({
+  lastPublishedAt,
+  authToken,
+  children,
+  setAuthToken,
+}) => {
   const [activeSession, setActiveSession] = React.useState(null)
   const [help, setHelp] = React.useState([])
   const [pairing, setPairing] = React.useState([])
@@ -40,30 +49,34 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   const savedName = localStorage.getItem('name')
   const [name, setName] = React.useState(savedName)
 
+  const parselastpublish = dayjs(lastPublishedAt)
+    .utc()
+    .toISOString()
+
   const allQueries = useQuery(GET_ALL_QUERIES, {
-    variables: { today },
+    variables: { last_published: parselastpublish },
   })
   const allPairs = useQuery(GET_PAIRS, {
     variables: { yesterday },
   })
 
-  const subscribeToMore = (state, document, attr) => {
-    const getToday = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-
-    state.subscribeToMore({
-      document,
-      variables:
-        attr !== 'sessions' &&
-        (attr === 'pairs' ? { yesterday } : { getToday }),
-      updateQuery: (prev, { subscriptionData }) => {
-        return Object.assign({}, prev, {
-          [attr]: subscriptionData.data[attr],
-        })
-      },
-    })
-  }
-
   React.useEffect(() => {
+    const subscribeToMore = (state, document, attr) => {
+      state.subscribeToMore({
+        document,
+        variables:
+          attr !== 'sessions' &&
+          (attr === 'pairs'
+            ? { yesterday }
+            : { lastPublishedAt: parselastpublish }),
+        updateQuery: (prev, { subscriptionData }) => {
+          return Object.assign({}, prev, {
+            [attr]: subscriptionData.data[attr],
+          })
+        },
+      })
+    }
+
     if (allQueries.data && allQueries.data.shares) {
       const reformatedData = allQueries.data.shares.map(d => {
         return { ...d, value: d.sharing }
@@ -89,7 +102,7 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
       setActiveSession(allQueries.data.sessions)
       subscribeToMore(allQueries, NEW_SESSION, 'sessions')
     }
-  }, [allPairs, allPairs.data, allQueries, allQueries.data])
+  }, [allPairs, allPairs.data, allQueries, allQueries.data, parselastpublish])
 
   const SpinnerWrapper = styled(motion.div)`
     width: 100%;
@@ -141,4 +154,15 @@ const StoreProvider = ({ authToken, children, setAuthToken }) => {
   )
 }
 
-export default StoreProvider
+const StoreWrapper = props => {
+  const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
+  if (lastSession.loading) return null
+  return (
+    <StoreProvider
+      {...props}
+      lastPublishedAt={lastSession.data.sessions[0].published_at}
+    />
+  )
+}
+
+export default StoreWrapper

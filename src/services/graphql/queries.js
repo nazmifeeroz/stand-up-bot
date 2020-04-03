@@ -1,9 +1,22 @@
 import gql from 'graphql-tag'
 
+export const GET_LAST_PUBLISHED_SESSION = gql`
+  query {
+    sessions(
+      limit: 1
+      order_by: { created_at: desc }
+      where: { published_at: { _is_null: false } }
+    ) {
+      id
+      published_at
+    }
+  }
+`
+
 export const GET_ALL_QUERIES = gql`
-  query($today: timestamptz) {
+  query($last_published: timestamptz) {
     shares(
-      where: { created_at: { _gte: $today } }
+      where: { created_at: { _gte: $last_published } }
       order_by: { updated_at: desc }
     ) {
       id
@@ -13,7 +26,7 @@ export const GET_ALL_QUERIES = gql`
       updated_at
     }
     assistance(
-      where: { created_at: { _gte: $today } }
+      where: { created_at: { _gte: $last_published } }
       order_by: { updated_at: desc }
     ) {
       id
