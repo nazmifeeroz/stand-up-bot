@@ -26,9 +26,9 @@ export const StoreContext = React.createContext(null)
 
 dayjs.extend(utc)
 
-const today = dayjs()
-  .utc()
-  .toISOString()
+// const today = dayjs()
+//   .utc()
+//   .toISOString()
 const yesterday = dayjs()
   .utc()
   .subtract(2, 'day')
@@ -156,7 +156,9 @@ const StoreProvider = ({
 
 const StoreWrapper = props => {
   const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
-  if (lastSession.loading) return null
+  if (lastSession.loading) return <Redirect to="/login" />
+
+  console.log(lastSession)
   return (
     <StoreProvider
       {...props}
