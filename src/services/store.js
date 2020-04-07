@@ -104,14 +104,6 @@ const StoreProvider = ({
     }
   }, [allPairs, allPairs.data, allQueries, allQueries.data, parselastpublish])
 
-  const SpinnerWrapper = styled(motion.div)`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `
-
   const store = {
     activeSession,
     authToken,
@@ -148,15 +140,31 @@ const StoreProvider = ({
       ) : allQueries.error ? (
         <Redirect to="/login" />
       ) : (
-        <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
-      )}
+            <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+          )}
     </AnimatePresence>
   )
 }
 
 const StoreWrapper = props => {
   const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
-  if (lastSession.loading) return <Redirect to="/login" />
+  if (lastSession.loading) return (
+    <SpinnerWrapper
+      key="spinner"
+      initial={{ scale: 0 }}
+      animate={{ rotate: 180, scale: 1 }}
+      transition={{
+        type: 'spring',
+        stiffness: 260,
+        damping: 20,
+      }}
+      exit={{ scale: 0, opacity: 0 }}
+    >
+      <CircleLoader color={'#36D7B7'} />
+    </SpinnerWrapper>
+  )
+
+  if (lastSession.error) return <Redirect to="/login" />
 
   console.log(lastSession)
   return (
@@ -166,5 +174,13 @@ const StoreWrapper = props => {
     />
   )
 }
+
+const SpinnerWrapper = styled(motion.div)`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `
 
 export default StoreWrapper
