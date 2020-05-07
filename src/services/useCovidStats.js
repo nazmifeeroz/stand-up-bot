@@ -11,7 +11,11 @@ const useCovidStats = () => {
         'https://coronavirus-19-api.herokuapp.com/countries/singapore',
       ).then(resp => resp.json())
 
-      setStats(data)
+      const { yesterdayCases } = await fetch(
+        'https://standup-discord.glitch.me/yesterday-cases',
+      ).then(resp => resp.json())
+
+      setStats({ ...data, yesterdayCases })
     }
 
     const fetchGlobalData = async () => {
