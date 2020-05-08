@@ -101,7 +101,8 @@ export const doPublishStandup = (
   ***__Stand Up__** (*${today}*)*
 
   **_Singapore CoronaVirus Information_**
-  Cases: ${stats.cases} | Today: ${stats.todayCases} | Active: ${stats.active}
+  Cases: ${stats.cases} | Today: ${stats.todayCases} 
+  Yesterday: ${stats.yesterdayCases} | Active: ${stats.active}
   Deaths: ${stats.deaths} | Recovered: ${stats.recovered} | Critical: ${stats.critical}
 
   **_Global CoronaVirus Information_**
