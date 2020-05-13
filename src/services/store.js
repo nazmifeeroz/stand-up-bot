@@ -157,7 +157,7 @@ const StoreWrapper = props => {
         }}
       >
         <CircleLoader color={'#36D7B7'} />
-        <div>&nbsp; Checking authentication...</div>
+        <div>&nbsp; Verifying authentication...</div>
       </SpinnerWrapper>
     )
 

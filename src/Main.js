@@ -107,7 +107,7 @@ const Main = () => {
         exit={{ scale: 0, opacity: 0 }}
       >
         <CircleLoader color={'#36D7B7'} />
-        <div>&nbsp; Getting Covid Stats...</div>
+        <div>&nbsp; Retrieving Covid Stats...</div>
       </SpinnerWrapper>
     )
 
