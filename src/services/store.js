@@ -128,7 +128,7 @@ const StoreProvider = ({
             stiffness: 260,
             damping: 20,
           }}
-          exit={{ scale: 0, opacity: 0 }}
+          exit={{ opacity: 0 }}
         >
           <CircleLoader color={'#36D7B7'} />
           <div>&nbsp; Querying data...</div>
