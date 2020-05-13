@@ -29,10 +29,7 @@ dayjs.extend(utc)
 // const today = dayjs()
 //   .utc()
 //   .toISOString()
-const yesterday = dayjs()
-  .utc()
-  .subtract(2, 'day')
-  .toISOString()
+const yesterday = dayjs().utc().subtract(2, 'day').toISOString()
 
 const StoreProvider = ({
   lastPublishedAt,
@@ -49,9 +46,7 @@ const StoreProvider = ({
   const savedName = localStorage.getItem('name')
   const [name, setName] = React.useState(savedName)
 
-  const parselastpublish = dayjs(lastPublishedAt)
-    .utc()
-    .toISOString()
+  const parselastpublish = dayjs(lastPublishedAt).utc().toISOString()
 
   const allQueries = useQuery(GET_ALL_QUERIES, {
     variables: { last_published: parselastpublish },
@@ -127,7 +122,7 @@ const StoreProvider = ({
         <SpinnerWrapper
           key="spinner"
           initial={{ scale: 0 }}
-          animate={{ rotate: 180, scale: 1 }}
+          animate={{ scale: 1 }}
           transition={{
             type: 'spring',
             stiffness: 260,
@@ -136,37 +131,38 @@ const StoreProvider = ({
           exit={{ scale: 0, opacity: 0 }}
         >
           <CircleLoader color={'#36D7B7'} />
+          <div>&nbsp; Querying data...</div>
         </SpinnerWrapper>
       ) : allQueries.error ? (
         <Redirect to="/login" />
       ) : (
-            <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
-          )}
+        <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+      )}
     </AnimatePresence>
   )
 }
 
 const StoreWrapper = props => {
   const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
-  if (lastSession.loading) return (
-    <SpinnerWrapper
-      key="spinner"
-      initial={{ scale: 0 }}
-      animate={{ rotate: 180, scale: 1 }}
-      transition={{
-        type: 'spring',
-        stiffness: 260,
-        damping: 20,
-      }}
-      exit={{ scale: 0, opacity: 0 }}
-    >
-      <CircleLoader color={'#36D7B7'} />
-    </SpinnerWrapper>
-  )
+  if (lastSession.loading)
+    return (
+      <SpinnerWrapper
+        key="spinner"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: 'spring',
+          stiffness: 260,
+          damping: 20,
+        }}
+      >
+        <CircleLoader color={'#36D7B7'} />
+        <div>&nbsp; Checking authentication...</div>
+      </SpinnerWrapper>
+    )
 
   if (lastSession.error) return <Redirect to="/login" />
 
-  console.log(lastSession)
   return (
     <StoreProvider
       {...props}
@@ -176,11 +172,11 @@ const StoreWrapper = props => {
 }
 
 const SpinnerWrapper = styled(motion.div)`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 export default StoreWrapper

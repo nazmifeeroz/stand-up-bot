@@ -3,6 +3,7 @@ import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
 import styled, { createGlobalStyle, css } from 'styled-components'
+import CircleLoader from 'react-spinners/CircleLoader'
 
 import './styles.css'
 import InputSection from './components/input-section'
@@ -92,7 +93,23 @@ const Main = () => {
     handleChangeName()
   }
 
-  if (loading) return null
+  if (loading)
+    return (
+      <SpinnerWrapper
+        key="spinner"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: 'spring',
+          stiffness: 260,
+          damping: 20,
+        }}
+        exit={{ scale: 0, opacity: 0 }}
+      >
+        <CircleLoader color={'#36D7B7'} />
+        <div>&nbsp; Getting Covid Stats...</div>
+      </SpinnerWrapper>
+    )
 
   return (
     <>
@@ -197,6 +214,14 @@ const CovidWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`
+
+const SpinnerWrapper = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export default Main
