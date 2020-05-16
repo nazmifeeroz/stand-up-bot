@@ -164,7 +164,7 @@ const Main = () => {
                 onClick={() => window.open('https://gc-awards.netlify.com/')}
                 className="waves-effect waves-light btn-large"
               >
-                GC Lucky Draw
+                Lucky Spin
               </button>
               {localStorage.getItem('session_id') && (
                 <div className="right-align">
