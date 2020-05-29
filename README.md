@@ -16,3 +16,9 @@ To run the app, you need create an `.env` file and copy the keys from `.env.samp
 ## Bugs
 
 - [ ] When user press enter without editing, it becomes blank
+
+## GC Awards intergration
+
+- [ ] add a table for GC awardee
+- [ ] the GC app receives the token to mutate Hasura server
+- [ ] on receive mutation, Hasura calls discord webhook to post in Discord
