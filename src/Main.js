@@ -161,7 +161,7 @@ const Main = () => {
             <PollSection />
             <ButtonsContainer>
               <button
-                onClick={() => window.open('https://gc-awards.netlify.com/')}
+                onClick={() => window.open(`https://gc-awards.netlify.app/?token=${localStorage.getItem("token")}`)}
                 className="waves-effect waves-light btn-large"
               >
                 Lucky Spin
