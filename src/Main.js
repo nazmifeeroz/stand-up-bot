@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import { motion } from 'framer-motion'
-import styled, { createGlobalStyle, css } from 'styled-components'
+import styled from 'styled-components'
 import CircleLoader from 'react-spinners/CircleLoader'
 
 import './styles.css'
@@ -21,36 +21,11 @@ const CenterContainer = styled(motion.div)`
   align-items: center;
 `
 
-const GlobalStyles = createGlobalStyle`
-${props =>
-  props.dark &&
-  css`
-    body {
-      background-color: #333;
-      color: #fff;
-    }
-
-    input {
-      color: #fff;
-    }
-
-    a {
-      color: #b3e5fc !important;
-    }
-
-    .collection-item {
-      background-color: #455a64 !important;
-    }
-  `}
-`
-
 const Main = () => {
   const store = React.useContext(StoreContext)
   const { activeSession } = store
   const { mutation } = useMutationReducer('session')
   const { stats, globalStats, loading } = useCovidStats()
-
-  const [darkMode, setDarkMode] = React.useState(true)
 
   useEffect(() => {
     window.M.AutoInit()
@@ -118,8 +93,7 @@ const Main = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <GlobalStyles dark={darkMode} />
-        <Navbar />
+        <Navbar setDarkMode={store.setDarkMode} darkMode={store.darkMode} />
 
         <StyledBody className="row">
           <div className="card-content container">
@@ -140,17 +114,6 @@ const Main = () => {
                 Recovered: {globalStats.recovered}
               </StyledStatsBlock>
             </CovidWrapper>
-            <div className="switch valign-wrapper right">
-              <label>
-                Dark Mode
-                <input
-                  type="checkbox"
-                  checked={darkMode}
-                  onChange={() => setDarkMode(!darkMode)}
-                />
-                <span className="lever" />
-              </label>
-            </div>
             <InputSection
               type="sharing"
               description="What are your thoughts?.."

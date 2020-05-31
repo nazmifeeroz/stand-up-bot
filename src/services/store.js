@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle, css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
@@ -32,6 +32,9 @@ dayjs.extend(utc)
 const yesterday = dayjs().utc().subtract(2, 'day').toISOString()
 
 const GlobalStyles = createGlobalStyle`
+${props =>
+  props.darkMode &&
+  css`
     body {
       background-color: #333;
       color: #fff;
@@ -48,6 +51,7 @@ const GlobalStyles = createGlobalStyle`
     .collection-item {
       background-color: #455a64 !important;
     }
+  `}
   `
 
 const StoreProvider = ({
@@ -55,6 +59,8 @@ const StoreProvider = ({
   authToken,
   children,
   setAuthToken,
+  darkMode,
+  setDarkMode,
 }) => {
   const [activeSession, setActiveSession] = React.useState(null)
   const [help, setHelp] = React.useState([])
@@ -132,6 +138,8 @@ const StoreProvider = ({
     setVimMode,
     sharing: [sharing, setSharing],
     vimMode,
+    darkMode,
+    setDarkMode,
   }
 
   // return null
@@ -163,10 +171,11 @@ const StoreProvider = ({
 
 const StoreWrapper = props => {
   const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
+  const [darkMode, setDarkMode] = React.useState(true)
 
   return (
     <>
-      <GlobalStyles />
+      <GlobalStyles darkMode={darkMode} />
       {lastSession.loading && (
         <SpinnerWrapper
           key="spinner"
@@ -185,6 +194,8 @@ const StoreWrapper = props => {
       {lastSession.error && <Redirect to="/login" />}
       {!lastSession.error && !lastSession.loading && (
         <StoreProvider
+          setDarkMode={setDarkMode}
+          darkMode={darkMode}
           {...props}
           lastPublishedAt={lastSession.data.sessions[0].published_at}
         />

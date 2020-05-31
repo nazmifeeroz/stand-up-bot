@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { StoreContext } from '../services/store'
 import { ReactComponent as SJLogo } from '../assets/sj-logo.svg'
 
-const Navbar = () => {
+const Navbar = ({ darkMode, setDarkMode }) => {
   const store = React.useContext(StoreContext)
 
   const handleChangeName = e => {
@@ -18,6 +18,17 @@ const Navbar = () => {
         <SJLogo width={200} />
       </div>
       <StyledUL className="hide-on-med-and-down">
+        <div className="switch valign-wrapper right">
+          <label>
+            Dark Mode
+            <input
+              type="checkbox"
+              checked={darkMode}
+              onChange={() => setDarkMode(!darkMode)}
+            />
+            <span className="lever" />
+          </label>
+        </div>
         <div>
           <StyledLink onClick={handleChangeName}>{store.name}</StyledLink>
         </div>
@@ -42,8 +53,9 @@ const StyledNav = styled.div`
   }
 `
 
-const StyledUL = styled.ul`
-  flex-direction: row;
+const StyledUL = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 export default Navbar
