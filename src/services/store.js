@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 
-import styled from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
@@ -30,6 +30,25 @@ dayjs.extend(utc)
 //   .utc()
 //   .toISOString()
 const yesterday = dayjs().utc().subtract(2, 'day').toISOString()
+
+const GlobalStyles = createGlobalStyle`
+    body {
+      background-color: #333;
+      color: #fff;
+    }
+
+    input {
+      color: #fff;
+    }
+
+    a {
+      color: #b3e5fc !important;
+    }
+
+    .collection-item {
+      background-color: #455a64 !important;
+    }
+  `
 
 const StoreProvider = ({
   lastPublishedAt,
@@ -144,30 +163,33 @@ const StoreProvider = ({
 
 const StoreWrapper = props => {
   const lastSession = useQuery(GET_LAST_PUBLISHED_SESSION)
-  if (lastSession.loading)
-    return (
-      <SpinnerWrapper
-        key="spinner"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{
-          type: 'spring',
-          stiffness: 260,
-          damping: 20,
-        }}
-      >
-        <CircleLoader color={'#36D7B7'} />
-        <div>&nbsp; Verifying authentication...</div>
-      </SpinnerWrapper>
-    )
-
-  if (lastSession.error) return <Redirect to="/login" />
 
   return (
-    <StoreProvider
-      {...props}
-      lastPublishedAt={lastSession.data.sessions[0].published_at}
-    />
+    <>
+      <GlobalStyles />
+      {lastSession.loading && (
+        <SpinnerWrapper
+          key="spinner"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            type: 'spring',
+            stiffness: 260,
+            damping: 20,
+          }}
+        >
+          <CircleLoader color={'#36D7B7'} />
+          <div>&nbsp; Verifying authentication...</div>
+        </SpinnerWrapper>
+      )}
+      {lastSession.error && <Redirect to="/login" />}
+      {!lastSession.error && !lastSession.loading && (
+        <StoreProvider
+          {...props}
+          lastPublishedAt={lastSession.data.sessions[0].published_at}
+        />
+      )}
+    </>
   )
 }
 
