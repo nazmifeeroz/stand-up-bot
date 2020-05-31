@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {StoreContext} from '../services/store'
+import { StoreContext } from '../services/store'
 
 const Navbar = () => {
   const store = React.useContext(StoreContext)
@@ -13,9 +13,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav>
+      <StyledNav>
         <div className="nav-wrapper">
-          <div className="brand-logo">Stand Up Bot</div>
+          <StyledBrandLogo>Stand Up Bot</StyledBrandLogo>
           <a href="!#" data-target="mobile-view" className="sidenav-trigger">
             <i className="material-icons">menu</i>
           </a>
@@ -37,7 +37,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-      </nav>
+      </StyledNav>
 
       <ul className="sidenav" id="mobile-view">
         <li>
@@ -63,6 +63,20 @@ const Navbar = () => {
 const StyledLink = styled.a`
   display: flex;
   flex-direction: column;
+`
+
+const StyledBrandLogo = styled.div.attrs({
+  className: 'brand-logo',
+})`
+  @media only screen and (max-width: 600px) {
+    display: none !important;
+  }
+`
+
+const StyledNav = styled.nav`
+  @media only screen and (min-width: 600px) {
+    padding: 0 15%;
+  }
 `
 
 export default Navbar
