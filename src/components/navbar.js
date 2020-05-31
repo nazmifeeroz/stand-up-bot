@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { StoreContext } from '../services/store'
+import { ReactComponent as SJLogo } from '../assets/sj-logo.svg'
 
 const Navbar = () => {
   const store = React.useContext(StoreContext)
@@ -12,71 +13,37 @@ const Navbar = () => {
   }
 
   return (
-    <>
-      <StyledNav>
-        <div className="nav-wrapper">
-          <StyledBrandLogo>Stand Up Bot</StyledBrandLogo>
-          <a href="!#" data-target="mobile-view" className="sidenav-trigger">
-            <i className="material-icons">menu</i>
-          </a>
-          <ul id="nav-mobile" className="right hide-on-med-and-down">
-            <li>
-              <a className="modal-trigger" href="#newPoll">
-                History
-              </a>
-            </li>
-            <li>
-              <a className="modal-trigger" href="#newPoll">
-                Create Poll
-              </a>
-            </li>
-            <li>
-              <StyledLink onClick={handleChangeName}>
-                <div>{store.name}</div>
-              </StyledLink>
-            </li>
-          </ul>
+    <StyledNav>
+      <div>
+        <SJLogo width={200} />
+      </div>
+      <StyledUL className="hide-on-med-and-down">
+        <div>
+          <StyledLink onClick={handleChangeName}>{store.name}</StyledLink>
         </div>
-      </StyledNav>
-
-      <ul className="sidenav" id="mobile-view">
-        <li>
-          <a className="modal-trigger" href="#newPoll">
-            History
-          </a>
-        </li>
-        <li>
-          <a className="modal-trigger" href="#newPoll">
-            Create Poll
-          </a>
-        </li>
-        <li>
-          <a href="!#" onClick={handleChangeName}>
-            {store.name}
-          </a>
-        </li>
-      </ul>
-    </>
+      </StyledUL>
+    </StyledNav>
   )
 }
 
-const StyledLink = styled.a`
+const StyledLink = styled.a.attrs({
+  className: 'waves-effect waves-light btn',
+})`
   display: flex;
   flex-direction: column;
 `
 
-const StyledBrandLogo = styled.div.attrs({
-  className: 'brand-logo',
-})`
-  @media only screen and (max-width: 600px) {
-    display: none !important;
-  }
-`
-
-const StyledNav = styled.nav`
+const StyledNav = styled.div`
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
   @media only screen and (min-width: 600px) {
     padding: 0 15%;
   }
+`
+
+const StyledUL = styled.ul`
+  flex-direction: row;
 `
 
 export default Navbar
