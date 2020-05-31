@@ -124,22 +124,21 @@ const Main = () => {
         <StyledBody className="row">
           <div className="card-content container">
             <CovidWrapper>
-              <div>
+              <StyledStatsBlock>
                 <b>Singapore Covid Information</b>
                 <br />
-                Cases: {stats.cases} | Today: {stats.todayCases} <br />
+                Total Cases: {stats.cases} <br />
                 Yesterday: {stats.yesterdayCases} | Active: {stats.active}
                 <br />
                 Deaths: {stats.deaths} | Recovered: {stats.recovered} |
                 Critical: {stats.critical}
-              </div>
-              <br />
-              <div>
+              </StyledStatsBlock>
+              <StyledStatsBlock>
                 <b>Global Covid Information</b>
                 <br />
                 Cases: {globalStats.cases} | Deaths: {globalStats.deaths} |
                 Recovered: {globalStats.recovered}
-              </div>
+              </StyledStatsBlock>
             </CovidWrapper>
             <div className="switch valign-wrapper right">
               <label>
@@ -161,7 +160,13 @@ const Main = () => {
             <PollSection />
             <ButtonsContainer>
               <button
-                onClick={() => window.open(`https://gc-awards.netlify.app/?token=${localStorage.getItem("token")}`)}
+                onClick={() =>
+                  window.open(
+                    `https://gc-awards.netlify.app/?token=${localStorage.getItem(
+                      'token',
+                    )}`,
+                  )
+                }
                 className="waves-effect waves-light btn-large"
               >
                 Lucky Spin
@@ -181,14 +186,18 @@ const Main = () => {
             </ButtonsContainer>
           </div>
           <StyledBlockquote>
-            Built with <span className="red-text">&hearts;</span> by Nazmi
-            <span className="right">
-              &copy;{' '}
-              <a href="https://siliconjungles.io" tabIndex="-1">
-                Silicon Jungles
-              </a>{' '}
-              {new Date().getFullYear()} &middot; v0.8.1
-            </span>
+            <div>
+              Built with <span className="red-text">&hearts;</span> by Nazmi
+            </div>
+            <div>
+              <span>
+                &copy;{' '}
+                <a href="https://siliconjungles.io" tabIndex="-1">
+                  Silicon Jungles
+                </a>{' '}
+                {new Date().getFullYear()} &middot; v0.9
+              </span>
+            </div>
           </StyledBlockquote>
         </StyledBody>
       </motion.div>
@@ -202,8 +211,17 @@ const ButtonsContainer = styled.div`
   justify-content: space-between;
 `
 
-const StyledBlockquote = styled.blockquote`
-  padding: 0 30px;
+const StyledBlockquote = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+  @media only screen and (min-width: 600px) {
+    padding: 0 15%;
+  }
 `
 
 const StyledBody = styled.div`
@@ -214,6 +232,9 @@ const CovidWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `
 
 const SpinnerWrapper = styled(motion.div)`
@@ -222,6 +243,10 @@ const SpinnerWrapper = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const StyledStatsBlock = styled.div`
+  margin-bottom: 10px;
 `
 
 export default Main
