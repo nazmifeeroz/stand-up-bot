@@ -102,10 +102,10 @@ const Main = () => {
                 <b>Singapore Covid Information</b>
                 <br />
                 Total Cases: {stats.cases} <br />
-                Yesterday: {stats.yesterdayCases} | Active: {stats.critical}
+                Yesterday: {stats.yesterdayCases} | Active: {stats.active}
                 <br />
                 Deaths: {stats.deaths} | Recovered: {stats.recovered} |
-                Critical: {stats.active}
+                Critical: {stats.critical}
               </StyledStatsBlock>
               <StyledStatsBlock>
                 <b>Global Covid Information</b>
