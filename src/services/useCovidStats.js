@@ -12,9 +12,10 @@ const useCovidStats = () => {
       ).then(resp => resp.json())
 
       const { yesterdayCases } = await fetch(
-        'https://standup-discord.glitch.me/yesterday-cases',
+        'https://next-standup-bot.now.sh/api/yesterday-cases',
       ).then(resp => resp.json())
 
+      console.log('yesterdayCases', yesterdayCases)
       setStats({ ...data, yesterdayCases })
     }
 
