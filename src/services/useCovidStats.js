@@ -15,7 +15,6 @@ const useCovidStats = () => {
         'https://next-standup-bot.now.sh/api/yesterday-cases',
       ).then(resp => resp.json())
 
-      console.log('yesterdayCases', yesterdayCases)
       setStats({ ...data, yesterdayCases })
     }
 
