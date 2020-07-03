@@ -29,7 +29,7 @@ dayjs.extend(utc)
 // const today = dayjs()
 //   .utc()
 //   .toISOString()
-const yesterday = dayjs().utc().subtract(2, 'day').toISOString()
+const yesterday = dayjs().utc().subtract(5, 'day').toISOString()
 
 const GlobalStyles = createGlobalStyle`
 ${props =>
