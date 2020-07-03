@@ -87,8 +87,9 @@ export const doPublishStandup = (
   // TODO: authenticate valid publisher
   if (!authenticate) return
 
-  if (sharing.length === 0 && help.length === 0 && pairing.length === 0)
-    return window.M.toast({ html: 'You are not sharing anything!' })
+  // if (sharing.length === 0 && help.length === 0 && pairing.length === 0)
+  // if (help.length === 0 && pairing.length === 0)
+  //   return window.M.toast({ html: 'You are not sharing anything!' })
 
   const date = new Date()
   const today = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
