@@ -158,7 +158,7 @@ const Main = () => {
                 <a href="https://siliconjungles.io" tabIndex="-1">
                   Silicon Jungles
                 </a>{' '}
-                {new Date().getFullYear()} &middot; v0.9
+                {new Date().getFullYear()} &middot; v0.94
               </span>
             </div>
           </StyledBlockquote>
