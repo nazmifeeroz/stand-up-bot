@@ -1,11 +1,8 @@
 import React from 'react'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
-
-import ApolloClient from 'apollo-client'
-import {InMemoryCache} from 'apollo-cache-inmemory'
-import {WebSocketLink} from 'apollo-link-ws'
 import {ApolloProvider} from 'react-apollo'
 
+import {createApolloClient} from './services/graphql'
 import Sidekick from './Sidekick'
 import Callback from './components/callback'
 import Login from './components/login'
@@ -24,27 +21,12 @@ const MainPage = () => {
 
 const App = () => {
   const [authToken, setAuthToken] = React.useState(
-    localStorage.getItem('token')
+    localStorage.getItem('token'),
   )
-  const createApolloClient = () => {
-    return new ApolloClient({
-      link: new WebSocketLink({
-        uri: process.env.REACT_APP_HASURA_URL,
-        options: {
-          reconnect: true,
-          connectionParams: {
-            headers: {
-              Authorization: `Bearer ${authToken ? authToken : ''}`,
-            },
-          },
-        },
-      }),
-      cache: new InMemoryCache(),
-    })
-  }
+
   return (
     <Router>
-      <ApolloProvider client={createApolloClient()}>
+      <ApolloProvider client={createApolloClient(authToken)}>
         <Route path="/" exact component={MainPage} />
         <Route path="/history" exact component={HistoryPage} />
       </ApolloProvider>
