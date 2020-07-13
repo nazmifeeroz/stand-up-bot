@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import 'materialize-css/dist/css/materialize.min.css'
 
-import { motion } from 'framer-motion'
+import {motion} from 'framer-motion'
 import styled from 'styled-components'
 import CircleLoader from 'react-spinners/CircleLoader'
 
@@ -9,9 +9,9 @@ import './styles.css'
 import InputSection from './components/input-section'
 import PollSection from './components/poll-section'
 import Navbar from './components/navbar'
-import { doPublishStandup, useMutationReducer } from './services/utils'
+import {doPublishStandup, useMutationReducer} from './services/utils'
 import useCovidStats from './services/useCovidStats'
-import { StoreContext } from './services/store'
+import {StoreContext} from './services/store'
 
 const CenterContainer = styled(motion.div)`
   width: 100%;
@@ -19,13 +19,19 @@ const CenterContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+`
+
+const Switch = styled.div`
+  margin-top: 20px;
 `
 
 const Main = () => {
   const store = React.useContext(StoreContext)
-  const { activeSession } = store
-  const { mutation } = useMutationReducer('session')
-  const { stats, globalStats, loading } = useCovidStats()
+  const {activeSession} = store
+  const {mutation} = useMutationReducer('session')
+  const {stats, globalStats, loading} = useCovidStats()
+  const [devMode, setDevMode] = useState(false)
 
   useEffect(() => {
     window.M.AutoInit()
@@ -33,7 +39,7 @@ const Main = () => {
 
   const doStartSession = async () => {
     const token = localStorage.getItem('token')
-    mutation.insert({ variables: { token } }).then(resp => {
+    mutation.insert({variables: {token, devMode}}).then(resp => {
       localStorage.setItem(
         'session_id',
         resp.data.insert_sessions.returning[0].id,
@@ -41,13 +47,21 @@ const Main = () => {
     })
   }
 
+  const handleDevMode = mode => {
+    if (mode) {
+      const intention = window.prompt('State your intention.')
+      if (intention === process.env.REACT_APP_INTENTION) return setDevMode(true)
+      return alert('You do not have a pure heart...')
+    }
+  }
+
   if (!activeSession || activeSession.length === 0)
     return (
       <CenterContainer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2 }}
-        exit={{ opacity: 0 }}
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        transition={{duration: 2}}
+        exit={{opacity: 0}}
       >
         <button
           onClick={doStartSession}
@@ -55,6 +69,17 @@ const Main = () => {
         >
           Start Standup Session
         </button>
+        <Switch className="switch valign-wrapper right">
+          <label>
+            Dev Mode
+            <input
+              type="checkbox"
+              checked={devMode}
+              onChange={() => handleDevMode(!devMode)}
+            />
+            <span className="lever" />
+          </label>
+        </Switch>
       </CenterContainer>
     )
 
@@ -72,14 +97,14 @@ const Main = () => {
     return (
       <SpinnerWrapper
         key="spinner"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
+        initial={{scale: 0}}
+        animate={{scale: 1}}
         transition={{
           type: 'spring',
           stiffness: 260,
           damping: 20,
         }}
-        exit={{ scale: 0, opacity: 0 }}
+        exit={{scale: 0, opacity: 0}}
       >
         <CircleLoader color={'#36D7B7'} />
         <div>&nbsp; Retrieving Covid Stats...</div>
@@ -89,9 +114,9 @@ const Main = () => {
   return (
     <>
       <motion.div
-        initial={{ y: 500, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1 }}
+        initial={{y: 500, opacity: 0}}
+        animate={{y: 0, opacity: 1}}
+        transition={{duration: 1}}
       >
         <Navbar setDarkMode={store.setDarkMode} darkMode={store.darkMode} />
 
