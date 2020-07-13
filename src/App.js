@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
-import {ApolloProvider} from 'react-apollo'
+import {ApolloProvider} from '@apollo/react-hooks'
 
 import {createApolloClient} from './services/graphql'
 import Sidekick from './Sidekick'
