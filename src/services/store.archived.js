@@ -3,11 +3,11 @@ import React from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
-import { Redirect } from 'react-router-dom'
-import { useQuery } from 'react-apollo'
+import {Redirect} from 'react-router-dom'
+import {useQuery} from 'react-apollo'
 
-import styled, { createGlobalStyle, css } from 'styled-components'
-import { motion, AnimatePresence } from 'framer-motion'
+import styled, {createGlobalStyle, css} from 'styled-components'
+import {motion, AnimatePresence} from 'framer-motion'
 import CircleLoader from 'react-spinners/CircleLoader'
 
 import {
@@ -74,10 +74,10 @@ const StoreProvider = ({
   const parselastpublish = dayjs(lastPublishedAt).utc().toISOString()
 
   const allQueries = useQuery(GET_ALL_QUERIES, {
-    variables: { last_published: parselastpublish },
+    variables: {last_published: parselastpublish},
   })
   const allPairs = useQuery(GET_PAIRS, {
-    variables: { yesterday },
+    variables: {yesterday},
   })
 
   React.useEffect(() => {
@@ -87,9 +87,9 @@ const StoreProvider = ({
         variables:
           attr !== 'sessions' &&
           (attr === 'pairs'
-            ? { yesterday }
-            : { lastPublishedAt: parselastpublish }),
-        updateQuery: (prev, { subscriptionData }) => {
+            ? {yesterday}
+            : {lastPublishedAt: parselastpublish}),
+        updateQuery: (prev, {subscriptionData}) => {
           return Object.assign({}, prev, {
             [attr]: subscriptionData.data[attr],
           })
@@ -99,21 +99,21 @@ const StoreProvider = ({
 
     if (allQueries.data && allQueries.data.shares) {
       const reformatedData = allQueries.data.shares.map(d => {
-        return { ...d, value: d.sharing }
+        return {...d, value: d.sharing}
       })
       setSharing(reformatedData)
       subscribeToMore(allQueries, NEW_SHARE, 'shares')
     }
     if (allQueries.data && allQueries.data.assistance) {
       const reformatedData = allQueries.data.assistance.map(d => {
-        return { ...d, value: d.assist }
+        return {...d, value: d.assist}
       })
       setHelp(reformatedData)
       subscribeToMore(allQueries, NEW_HELP, 'assistance')
     }
     if (allPairs.data && allPairs.data.pairs) {
       const reformatedData = allPairs.data.pairs.map(d => {
-        return { ...d, value: d.project }
+        return {...d, value: d.project}
       })
       setPairing(reformatedData)
       subscribeToMore(allPairs, NEW_PAIR, 'pairs')
@@ -148,14 +148,14 @@ const StoreProvider = ({
       {allQueries.loading ? (
         <SpinnerWrapper
           key="spinner"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          initial={{scale: 0}}
+          animate={{scale: 1}}
           transition={{
             type: 'spring',
             stiffness: 260,
             damping: 20,
           }}
-          exit={{ opacity: 0 }}
+          exit={{opacity: 0}}
         >
           <CircleLoader color={'#36D7B7'} />
           <div>&nbsp; Querying data...</div>
@@ -179,8 +179,8 @@ const StoreWrapper = props => {
       {lastSession.loading && (
         <SpinnerWrapper
           key="spinner"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          initial={{scale: 0}}
+          animate={{scale: 1}}
           transition={{
             type: 'spring',
             stiffness: 260,
