@@ -51,7 +51,7 @@ const Main = () => {
     if (mode) {
       const intention = window.prompt('State your intention.')
       if (intention === process.env.REACT_APP_INTENTION) return setDevMode(true)
-      return alert('You do not have a pure heart...')
+      return alert('You may not enter...')
     }
   }
 
