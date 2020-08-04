@@ -1,35 +1,39 @@
 import React from 'react'
 
 const useCovidStats = () => {
-  const [loading, setLoading] = React.useState(true)
-  const [stats, setStats] = React.useState()
-  const [globalStats, setGlobalStats] = React.useState()
+  const [covidAPI, setCovidAPI] = React.useState({
+    loading: true,
+  })
 
   React.useEffect(() => {
     const fetchSgData = async () => {
-      const data = await fetch(
+      const todayAllStats = await fetch(
         'https://coronavirus-19-api.herokuapp.com/countries/singapore',
       ).then(resp => resp.json())
 
-      const { yesterdayCases } = await fetch(
+      const {yesterdayCases} = await fetch(
         'https://next-standup-bot.now.sh/api/yesterday-cases',
       ).then(resp => resp.json())
 
-      setStats({ ...data, yesterdayCases })
+      return {...todayAllStats, yesterdayCases}
     }
 
     const fetchGlobalData = async () => {
-      const data = await fetch(
+      return await fetch(
         'https://coronavirus-19-api.herokuapp.com/all',
       ).then(resp => resp.json())
-
-      setGlobalStats(data)
     }
 
-    fetchSgData().then(() => fetchGlobalData().then(() => setLoading(false)))
+    Promise.all([fetchSgData(), fetchGlobalData()]).then(covidStats => {
+      setCovidAPI({
+        sgStats: covidStats[0],
+        globalStats: covidStats[1],
+        loading: false,
+      })
+    })
   }, [])
 
-  return { stats, globalStats, loading }
+  return covidAPI
 }
 
 export default useCovidStats

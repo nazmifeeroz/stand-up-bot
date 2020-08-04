@@ -10,12 +10,7 @@ export const GET_ACTIVE_SESSION = gql`
       id
       published_at
     }
-  }
-`
-
-export const GET_LAST_PUBLISHED_SESSION = gql`
-  query {
-    sessions(
+    lastSession: sessions(
       limit: 1
       order_by: {created_at: desc}
       where: {published_at: {_is_null: false}}
@@ -26,9 +21,22 @@ export const GET_LAST_PUBLISHED_SESSION = gql`
   }
 `
 
+// export const GET_LAST_PUBLISHED_SESSION = gql`
+//   query {
+//     sessions(
+//       limit: 1
+//       order_by: {created_at: desc}
+//       where: {published_at: {_is_null: false}}
+//     ) {
+//       id
+//       published_at
+//     }
+//   }
+// `
+
 export const GET_ALL_QUERIES = gql`
   query($last_published: timestamptz) {
-    shares(
+    sharing: shares(
       where: {created_at: {_gte: $last_published}}
       order_by: {updated_at: desc}
     ) {

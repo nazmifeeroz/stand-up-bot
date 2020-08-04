@@ -1,47 +1,46 @@
 import React from 'react'
 import styled from 'styled-components'
-import { StoreContext } from '../services/store'
-import { ReactComponent as SJLogo } from '../assets/sj-logo.svg'
+import {StoreContext} from '../services/store'
+import {ReactComponent as SJLogo} from '../assets/sj-logo.svg'
 
-const Navbar = ({ darkMode, setDarkMode }) => {
-  const store = React.useContext(StoreContext)
-
-  const handleChangeName = e => {
-    const input = window.prompt('State your name...')
-    store.setName(input)
-    localStorage.setItem('name', input)
-  }
+const Navbar = () => {
+  const {current, send} = React.useContext(StoreContext)
 
   return (
     <StyledNav>
       <div>
         <SJLogo width={200} />
       </div>
-      <StyledUL className="hide-on-med-and-down">
+      <StyledUL>
         <div className="switch valign-wrapper right">
           <label>
             Dark Mode
             <input
               type="checkbox"
-              checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
+              checked={current.context.darkMode}
+              onChange={() => send('TOGGLE_DARK_MODE')}
             />
             <span className="lever" />
           </label>
         </div>
         <div>
-          <StyledLink onClick={handleChangeName}>{store.name}</StyledLink>
+          <Username onClick={() => send('SET_USERNAME')}>
+            {current.context.username}
+          </Username>
         </div>
       </StyledUL>
     </StyledNav>
   )
 }
 
-const StyledLink = styled.a.attrs({
+const Username = styled.a.attrs({
   className: 'waves-effect waves-light btn',
 })`
   display: flex;
   flex-direction: column;
+  @media only screen and (max-width: 600px) {
+    margin-top: 10px;
+  }
 `
 
 const StyledNav = styled.div`
@@ -56,6 +55,10 @@ const StyledNav = styled.div`
 const StyledUL = styled.div`
   display: flex;
   align-items: center;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+    align-items: space-around;
+  }
 `
 
 export default Navbar
