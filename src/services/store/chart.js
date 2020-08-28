@@ -45,12 +45,16 @@ const storeMachine = Machine(
             actions: 'loadQueriesData',
           },
           DELETE_ITEM: {actions: 'deleteItem'},
+          ON_INPUT_CHANGE: {actions: 'onInputChange'},
         },
       },
     },
   },
   {
     actions: {
+      onInputChange: assign((_ctx, e) => ({
+        inputValue: e.inputValue,
+      })),
       toggleDarkMode: assign(ctx => ({darkMode: !ctx.darkMode})),
       getUsername: assign(() => {
         const username = localStorage.getItem(USERNAME)

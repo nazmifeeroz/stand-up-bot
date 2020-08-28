@@ -1,54 +1,68 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const InputSection = React.memo(({title, placeholder, data, send}) => {
-  console.log('data', data)
+const RenderCollection = React.memo(({obj, send}) => {
+  return (
+    <CollectionItem key={obj.id}>
+      <StyledDiv>
+        <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
+        <StyledIconsDiv>
+          <a
+            href="#/"
+            onClick={() => send('DELETE_ITEM', {id: obj.id})}
+            tabIndex="-1"
+          >
+            <i className="material-icons right">delete</i>
+          </a>
+          <a
+            href="#/"
+            onClick={() => send('EDIT_ITEM', {id: obj.id})}
+            tabIndex="-1"
+          >
+            <i className="material-icons right">edit</i>
+          </a>
+        </StyledIconsDiv>
+      </StyledDiv>
+    </CollectionItem>
+  )
+})
+
+const InputElement = React.memo(({title, placeholder}) => {
+  const [inputValue, setInputValue] = React.useState('')
 
   return (
-    <Section>
+    <input
+      placeholder={placeholder}
+      aria-label={`${title}-input`}
+      type="text"
+      value={inputValue}
+      onChange={e => setInputValue(e.target.value)}
+    />
+  )
+})
+
+const InputSection = React.memo(({title, placeholder, data, send}) => {
+  return (
+    <Section
+      onSubmit={e => {
+        e.preventDefault()
+        console.log('e', e)
+      }}
+    >
       <SectionTitle>{title}</SectionTitle>
       {data && (
-        <Collection>
+        <Collections>
           {data.map(obj => (
-            <CollectionItem key={obj.id}>
-              <StyledDiv>
-                <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
-                <StyledIconsDiv>
-                  <a
-                    href="#/"
-                    onClick={() => send('DELETE_ITEM', {id: obj.id})}
-                    tabIndex="-1"
-                  >
-                    <i
-                      // data-testid={`remove-${type}${index}`}
-                      className="material-icons right"
-                    >
-                      delete
-                    </i>
-                  </a>
-                  <a
-                    href="#/"
-                    onClick={() => send('EDIT_ITEM', {id: obj.id})}
-                    tabIndex="-1"
-                  >
-                    <i
-                      // data-testid={`remove-${type}${index}`}
-                      className="material-icons right"
-                    >
-                      edit
-                    </i>
-                  </a>
-                </StyledIconsDiv>
-              </StyledDiv>
-            </CollectionItem>
+            <RenderCollection key={obj.id} obj={obj} send={send} />
           ))}
-        </Collection>
+        </Collections>
       )}
+      <InputElement title={title} placeholder={placeholder} />
     </Section>
   )
 })
 
-const Section = styled.div.attrs({
+const Section = styled.form.attrs({
   className: 'section',
 })``
 
@@ -56,7 +70,7 @@ const SectionTitle = styled.h5`
   text-transform: capitalize;
 `
 
-const Collection = styled.ul.attrs({className: 'collection'})``
+const Collections = styled.ul.attrs({className: 'collection'})``
 
 const CollectionItem = styled.li.attrs({className: 'collection-item'})``
 
