@@ -1,3 +1,16 @@
 .close-btn:hover {
   cursor: pointer;
 }
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  font-family: 'Menlo';
+  src: local('Menlo'), url(./fonts/Menlo-Regular.ttf) format('ttf');
+}
+
+input {
+  font-family: 'Menlo' !important;
+}

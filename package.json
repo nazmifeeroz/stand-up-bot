@@ -3,11 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apollo-cache-inmemory": "^1.6.2",
+    "apollo-client": "^2.6.3",
+    "apollo-link-ws": "^1.0.18",
     "codemirror": "^5.48.0",
+    "dayjs": "^1.8.15",
+    "framer-motion": "^1.5.0",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
+    "materialize-css": "^1.0.0-rc.2",
     "react": "^16.8.6",
+    "react-apollo": "^3.0.0",
     "react-codemirror2": "^6.0.0",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-linkify": "^1.0.0-alpha",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "react-spinners": "^0.5.13",
+    "styled-components": "^4.3.2",
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "scripts": {
     "start": "react-scripts start",
