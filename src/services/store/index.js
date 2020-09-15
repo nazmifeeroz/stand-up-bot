@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 import {GET_ACTIVE_SESSION, GET_ALL_QUERIES} from '../graphql/queries'
+import {NEW_SESSION} from '../graphql/subscriptions'
 import {useMutationReducer} from '../utils'
 import storeMachine from './chart'
 
@@ -14,7 +15,11 @@ export const StoreContext = React.createContext(null)
 const StoreProvider = ({children}) => {
   const [
     getLastSession,
-    {data: sessionsData, error: activeSessionError},
+    {
+      data: sessionsData,
+      error: activeSessionError,
+      subscribeToMore: sessionSubscribe,
+    },
   ] = useLazyQuery(GET_ACTIVE_SESSION)
   dayjs.extend(utc).utc().toISOString()
   const [
@@ -42,7 +47,7 @@ const StoreProvider = ({children}) => {
         loadLastSessionDataAction: assign((_ctx, e) => {
           return {...e}
         }),
-        loadQueriesData: assign((ctx, {queries}) => {
+        loadQueriesData: assign((_ctx, {queries}) => {
           return {...queries}
         }),
         startSession: ({devMode}) => {
@@ -76,8 +81,25 @@ const StoreProvider = ({children}) => {
         activeSession: sessionsData.sessions[0],
         lastSession: sessionsData.lastSession[0],
       })
+      sessionSubscribe({
+        document: NEW_SESSION,
+        updateQuery: (prev, {subscriptionData}) => {
+          if (
+            (prev.sessions.length === 0 &&
+              subscriptionData.data.sessions.length === 0) ||
+            (prev.sessions.length !== 0 &&
+              subscriptionData.data.sessions.length !== 0 &&
+              subscriptionData.data.sessions[0].id === prev.sessions[0].id)
+          )
+            return prev
+
+          return Object.assign({}, prev, {
+            sessions: subscriptionData.data.sessions,
+          })
+        },
+      })
     }
-  }, [activeSessionError, sessionsData, send])
+  }, [activeSessionError, sessionsData, sessionSubscribe, send])
 
   useEffect(() => {
     if (queriesDataError) {

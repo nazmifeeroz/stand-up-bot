@@ -6,17 +6,19 @@ import {getMainDefinition} from 'apollo-utilities'
 import {split} from 'apollo-link'
 
 export const createApolloClient = authToken => {
-  console.log('creating apollo client')
   const headers = {
     Authorization: `Bearer ${authToken || ''}`,
   }
 
   const wsLink = process.browser
     ? new WebSocketLink({
-        headers,
         uri: `wss://${process.env.REACT_APP_HASURA_URL}`,
+        timeout: 30000,
         options: {
           reconnect: true,
+          connectionParams: {
+            headers,
+          },
         },
       })
     : null

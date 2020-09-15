@@ -6,6 +6,12 @@ const storeMachine = Machine(
   {
     initial: 'verifyAuth',
     context: {darkMode: true, loadingMsg: '', devMode: false, username: ''},
+    on: {
+      LOAD_SESSION_DATA: {
+        target: 'checkSession',
+        actions: 'loadLastSessionDataAction',
+      },
+    },
     states: {
       verifyAuth: {
         entry: [
@@ -14,10 +20,6 @@ const storeMachine = Machine(
         ],
         on: {
           HAS_ERROR: {actions: 'routeToLogin'},
-          LOAD_SESSION_DATA: {
-            target: 'checkSession',
-            actions: 'loadLastSessionDataAction',
-          },
         },
       },
       checkSession: {
