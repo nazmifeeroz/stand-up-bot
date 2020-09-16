@@ -1,28 +1,37 @@
 import React from 'react'
 import styled from 'styled-components'
+import Linkify from 'react-linkify'
+
+const componentDecorator = (href, text, key) => (
+  <a href={href} key={key} target="_blank" rel="noopener noreferrer">
+    {text}
+  </a>
+)
 
 const RenderCollection = React.memo(({obj, send}) => {
   return (
     <CollectionItem key={obj.id}>
-      <StyledDiv>
-        <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
-        <StyledIconsDiv>
-          <a
-            href="#/"
-            onClick={() => send('DELETE_ITEM', {id: obj.id})}
-            tabIndex="-1"
-          >
-            <i className="material-icons right">delete</i>
-          </a>
-          <a
-            href="#/"
-            onClick={() => send('EDIT_ITEM', {id: obj.id})}
-            tabIndex="-1"
-          >
-            <i className="material-icons right">edit</i>
-          </a>
-        </StyledIconsDiv>
-      </StyledDiv>
+      <Linkify componentDecorator={componentDecorator}>
+        <StyledDiv>
+          <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
+          <StyledIconsDiv>
+            <a
+              href="#/"
+              onClick={() => send('DELETE_ITEM', {id: obj.id})}
+              tabIndex="-1"
+            >
+              <i className="material-icons right">delete</i>
+            </a>
+            <a
+              href="#/"
+              onClick={() => send('EDIT_ITEM', {id: obj.id})}
+              tabIndex="-1"
+            >
+              <i className="material-icons right">edit</i>
+            </a>
+          </StyledIconsDiv>
+        </StyledDiv>
+      </Linkify>
     </CollectionItem>
   )
 })
