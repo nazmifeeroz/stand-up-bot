@@ -24,7 +24,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-spinners": "^0.5.13",
+    "react-spinners": "^0.9.0",
     "styled-components": "^4.3.2",
     "subscriptions-transport-ws": "^0.9.16",
     "xstate": "^4.11.0"

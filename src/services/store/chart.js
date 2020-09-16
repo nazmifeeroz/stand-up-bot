@@ -23,12 +23,13 @@ const storeMachine = Machine(
         },
       },
       checkSession: {
-        entry: assign({loadingMsg: 'Checking for active session...'}),
-        invoke: {
-          src: 'checkSession',
-          onDone: 'sessionStarted',
-          onError: 'promptStartSession',
-        },
+        always: [
+          {
+            target: 'sessionStarted',
+            cond: 'checkSession',
+          },
+          {target: 'promptStartSession'},
+        ],
       },
       promptStartSession: {
         on: {
@@ -71,14 +72,8 @@ const storeMachine = Machine(
         }
       }),
     },
-    services: {
-      checkSession: ctx =>
-        new Promise((res, rej) => {
-          if (!!ctx.activeSession) {
-            return res()
-          }
-          return rej()
-        }),
+    guards: {
+      checkSession: ctx => !!ctx.activeSession,
     },
   },
 )

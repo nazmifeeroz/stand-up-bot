@@ -14,7 +14,7 @@ import {StoreContext} from './services/store'
 // import useCovidStats from './services/useCovidStats'
 
 const Main = () => {
-  const {current, send} = useContext(StoreContext)
+  const {current} = useContext(StoreContext)
 
   return (
     <>
@@ -22,12 +22,8 @@ const Main = () => {
       {['verifyAuth', 'checkSession'].some(current.matches) && (
         <Loader current={current} />
       )}
-      {current.matches('promptStartSession') && (
-        <PromptStartSession current={current} send={send} />
-      )}
-      {current.matches('sessionStarted') && (
-        <Body current={current} send={send} />
-      )}
+      {current.matches('promptStartSession') && <PromptStartSession />}
+      {current.matches('sessionStarted') && <Body />}
     </>
   )
 }
