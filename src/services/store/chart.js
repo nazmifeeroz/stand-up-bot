@@ -5,7 +5,15 @@ const USERNAME = '@username'
 const storeMachine = Machine(
   {
     initial: 'verifyAuth',
-    context: {darkMode: true, loadingMsg: '', devMode: false, username: ''},
+    context: {
+      darkMode: true,
+      loadingMsg: '',
+      devMode: false,
+      username: '',
+      inputValues: {
+        sharing: '',
+      },
+    },
     on: {
       LOAD_SESSION_DATA: {
         target: 'checkSession',
@@ -49,15 +57,18 @@ const storeMachine = Machine(
           },
           DELETE_ITEM: {actions: 'deleteItem'},
           ON_INPUT_CHANGE: {actions: 'onInputChange'},
+          NEW_INPUT_PRESSED: {actions: 'addNewInput'},
         },
       },
     },
   },
   {
     actions: {
-      onInputChange: assign((_ctx, e) => ({
-        inputValue: e.inputValue,
-      })),
+      onInputChange: assign((ctx, {type, ...rest}) => {
+        return {
+          inputValues: {...ctx.inputValues, ...rest},
+        }
+      }),
       toggleDarkMode: assign(ctx => ({darkMode: !ctx.darkMode})),
       getUsername: assign(() => {
         const username = localStorage.getItem(USERNAME)

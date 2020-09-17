@@ -36,42 +36,56 @@ const RenderCollection = React.memo(({obj, send}) => {
   )
 })
 
-const InputElement = React.memo(({title, placeholder}) => {
-  const [inputValue, setInputValue] = React.useState('')
-
+const InputElement = React.memo(({title, placeholder, value, send}) => {
   return (
-    <input
-      placeholder={placeholder}
-      aria-label={`${title}-input`}
-      type="text"
-      value={inputValue}
-      onChange={e => setInputValue(e.target.value)}
-    />
-  )
-})
-
-const InputSection = React.memo(({title, placeholder, data, send}) => {
-  return (
-    <Section
-      onSubmit={e => {
-        e.preventDefault()
-        console.log('e', e)
-      }}
-    >
-      <SectionTitle>{title}</SectionTitle>
-      {data && (
-        <Collections>
-          {data.map(obj => (
-            <RenderCollection key={obj.id} obj={obj} send={send} />
-          ))}
-        </Collections>
+    <>
+      <input
+        placeholder={placeholder}
+        aria-label={`${title}-input`}
+        type="text"
+        value={value}
+        onChange={e => send('ON_INPUT_CHANGE', {[title]: e.target.value})}
+      />
+      {value && (
+        <span className="helper-text" data-error="wrong" data-success="right">
+          <small>Press Enter to save</small>
+        </span>
       )}
-      <InputElement title={title} placeholder={placeholder} />
-    </Section>
+    </>
   )
 })
 
-const Section = styled.form.attrs({
+const InputSection = React.memo(
+  ({title, placeholder, data, send, inputValue}) => {
+    console.log('render input section')
+    return (
+      <SectionForm
+        onSubmit={e => {
+          e.preventDefault()
+          console.log('e', e)
+          send('NEW_INPUT_PRESSED', {title})
+        }}
+      >
+        <SectionTitle>{title}</SectionTitle>
+        {data && (
+          <Collections>
+            {data.map(obj => (
+              <RenderCollection key={obj.id} obj={obj} send={send} />
+            ))}
+          </Collections>
+        )}
+        <InputElement
+          title={title}
+          placeholder={placeholder}
+          value={inputValue}
+          send={send}
+        />
+      </SectionForm>
+    )
+  },
+)
+
+const SectionForm = styled.form.attrs({
   className: 'section',
 })``
 

@@ -27,6 +27,7 @@ const Body = () => {
             placeholder="What are your thoughts?.."
             data={current.context['sharing']}
             send={send}
+            inputValue={current.context.inputValues['sharing']}
           />
           {/*
           <InputSection type="help" description="Anyone need help?..." />

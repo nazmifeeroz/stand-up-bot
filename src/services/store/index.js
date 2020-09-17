@@ -30,10 +30,20 @@ const StoreProvider = ({children}) => {
   const token = localStorage.getItem('token')
 
   const {mutation: sessionMutation} = useMutationReducer('session')
+  const {mutation: sharingMutation} = useMutationReducer('sharing')
 
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
+        addNewInput: (ctx, e) => {
+          console.log('e in addinput', e)
+          sharingMutation.insert({
+            variables: {
+              input: ctx.inputValues[e.title],
+              contributor: 'some guy',
+            },
+          })
+        },
         getQueriesData: ctx => {
           const parselastpublish = dayjs(ctx.lastSession.published_at)
           getQueriesData({
