@@ -39,6 +39,15 @@ const StoreProvider = ({children}) => {
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
+        deleteItem: assign((_ctx, e) => {
+          if (window.confirm('Are you sure you wish to delete?')) {
+            sharingMutation.delete({
+              variables: {
+                id: e.id,
+              },
+            })
+          }
+        }),
         addNewInput: assign((ctx, e) => {
           sharingMutation.insert({
             variables: {
