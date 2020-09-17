@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 import {GET_ACTIVE_SESSION, GET_ALL_QUERIES} from '../graphql/queries'
-import {NEW_SESSION} from '../graphql/subscriptions'
+import {NEW_SESSION, NEW_SHARE} from '../graphql/subscriptions'
 import {useMutationReducer} from '../utils'
 import storeMachine from './chart'
 
@@ -24,7 +24,11 @@ const StoreProvider = ({children}) => {
   dayjs.extend(utc).utc().toISOString()
   const [
     getQueriesData,
-    {data: queriesData, error: queriesDataError},
+    {
+      data: queriesData,
+      error: queriesDataError,
+      subscribeToMore: queriesSubscribe,
+    },
   ] = useLazyQuery(GET_ALL_QUERIES)
 
   const token = localStorage.getItem('token')
@@ -120,8 +124,28 @@ const StoreProvider = ({children}) => {
       send('LOAD_QUERIES_DATA', {
         queries: queriesData,
       })
+
+      const parselastpublish = dayjs(current.context.lastSession.published_at)
+        .utc()
+        .toISOString()
+
+      queriesSubscribe({
+        document: NEW_SHARE,
+        variables: {lastPublishedAt: parselastpublish},
+        updateQuery: (prev, {subscriptionData}) => {
+          return Object.assign({}, prev, {
+            sharing: subscriptionData.data.shares,
+          })
+        },
+      })
     }
-  }, [queriesDataError, queriesData, send])
+  }, [
+    queriesDataError,
+    queriesData,
+    send,
+    queriesSubscribe,
+    current.context.lastSession,
+  ])
 
   return (
     <StoreContext.Provider value={{current, send}}>
