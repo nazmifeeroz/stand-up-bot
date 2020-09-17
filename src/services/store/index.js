@@ -39,15 +39,28 @@ const StoreProvider = ({children}) => {
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
-        addNewInput: (ctx, e) => {
-          console.log('e in addinput', e)
+        addNewInput: assign((ctx, e) => {
           sharingMutation.insert({
             variables: {
               input: ctx.inputValues[e.title],
               contributor: 'some guy',
             },
           })
-        },
+          return {
+            [e.title]: [
+              {
+                id: 9999,
+                [e.title]: ctx.inputValues[e.title],
+                contributor: 'some guy',
+              },
+              ...ctx[e.title],
+            ],
+            inputValues: {
+              ...ctx.inputValues,
+              [e.title]: '',
+            },
+          }
+        }),
         getQueriesData: ctx => {
           const parselastpublish = dayjs(ctx.lastSession.published_at)
           getQueriesData({

@@ -62,7 +62,6 @@ const InputSection = React.memo(
       <SectionForm
         onSubmit={e => {
           e.preventDefault()
-          console.log('e', e)
           send('NEW_INPUT_PRESSED', {title})
         }}
       >
