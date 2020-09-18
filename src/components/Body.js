@@ -11,7 +11,6 @@ import Footer from './Footer'
 const Body = () => {
   const {current, send} = useContext(StoreContext)
 
-  // console.log('current.context["sharing"]', current.context['sharing'])
   return (
     <motion.div
       initial={{opacity: 0}}
@@ -28,6 +27,16 @@ const Body = () => {
             data={current.context['sharing']}
             send={send}
             inputValue={current.context.inputValues['sharing']}
+            editableItem={current.context.editableItem}
+            editableValue={current.context.editableValue}
+            loading={current.context.loading}
+          />
+          <InputSection
+            title="help"
+            placeholder="Anyone need help?..."
+            data={current.context['assistance']}
+            send={send}
+            inputValue={current.context.inputValues['help']}
             editableItem={current.context.editableItem}
             editableValue={current.context.editableValue}
             loading={current.context.loading}

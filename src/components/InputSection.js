@@ -9,18 +9,47 @@ const componentDecorator = (href, text, key) => (
   </a>
 )
 
+const inputDataReducer = (key, data) => {
+  let parsedData
+
+  switch (key) {
+    case 'sharing':
+      parsedData = {
+        id: data.id,
+        content: `${data.contributor}: ${data.sharing}`,
+        value: data.sharing,
+      }
+      break
+
+    case 'help':
+      parsedData = {
+        id: data.id,
+        content: data.assist,
+        value: data.assist,
+      }
+      break
+    default:
+      return null
+  }
+
+  return parsedData
+}
+
 const RenderCollection = React.memo(
   ({editableItem, editableValue, title, obj, send}) => {
+    const parsedData = inputDataReducer(title, obj)
     return (
-      <CollectionItem key={obj.id}>
+      <CollectionItem key={parsedData.id}>
         <Linkify componentDecorator={componentDecorator}>
           <StyledDiv>
-            <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
-            {editableItem !== obj.id ? (
+            <StyledSpan>{parsedData.content}</StyledSpan>
+            {editableItem !== parsedData.id ? (
               <StyledIconsDiv>
                 <a
                   href="#/"
-                  onClick={() => send('DELETE_ITEM', {id: obj.id})}
+                  onClick={() =>
+                    send('DELETE_ITEM', {id: parsedData.id, title})
+                  }
                   tabIndex="-1"
                 >
                   <i className="material-icons right">delete</i>
@@ -28,7 +57,10 @@ const RenderCollection = React.memo(
                 <a
                   href="#/"
                   onClick={() =>
-                    send('EDIT_ITEM', {id: obj.id, value: obj.sharing})
+                    send('EDIT_ITEM', {
+                      id: parsedData.id,
+                      value: parsedData.value,
+                    })
                   }
                   tabIndex="-1"
                 >
@@ -42,7 +74,7 @@ const RenderCollection = React.memo(
             )}
           </StyledDiv>
         </Linkify>
-        {editableItem === obj.id && (
+        {editableItem === parsedData.id && (
           <InputElement
             title={title}
             placeholder=""
@@ -90,18 +122,17 @@ const InputSection = React.memo(
     send,
     title,
   }) => {
-    console.log('render input section')
     return (
       <>
         <SectionForm
           onSubmit={e => {
             e.preventDefault()
-            send('UPDATE_EDITED_ITEM')
+            send('UPDATE_EDITED_ITEM', {title})
           }}
         >
           <TitleWrapper>
             <SectionTitle>{title}</SectionTitle>
-            <SyncLoader size={8} color={'#36D7B7'} loading={loading} />
+            <SyncLoader size={8} color={'#36D7B7'} loading={loading[title]} />
           </TitleWrapper>
           {data && (
             <Collections>

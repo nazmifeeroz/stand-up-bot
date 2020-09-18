@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 import {GET_ACTIVE_SESSION, GET_ALL_QUERIES} from '../graphql/queries'
-import {NEW_SESSION, NEW_SHARE} from '../graphql/subscriptions'
+import {NEW_SESSION, NEW_SHARE, NEW_HELP} from '../graphql/subscriptions'
 import {useMutationReducer} from '../utils'
 import storeMachine from './chart'
 
@@ -35,38 +35,61 @@ const StoreProvider = ({children}) => {
 
   const {mutation: sessionMutation} = useMutationReducer('session')
   const {mutation: sharingMutation} = useMutationReducer('sharing')
+  const {mutation: helpMutation} = useMutationReducer('help')
 
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
-        updateEditedItem: assign(ctx => {
+        updateEditedItem: assign((ctx, e) => {
           if (ctx.editableValue === '') return
 
-          sharingMutation.update({
-            variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
-          })
+          if (e.title === 'sharing')
+            sharingMutation.update({
+              variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
+            })
+
+          if (e.title === 'help')
+            helpMutation.update({
+              variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
+            })
 
           return {
             editableItem: null,
             editableValue: null,
           }
         }),
-        deleteItem: assign((_ctx, e) => {
+        deleteItem: assign((ctx, e) => {
           if (window.confirm('Are you sure you wish to delete?')) {
-            sharingMutation.delete({
-              variables: {
-                id: e.id,
-              },
-            })
+            if (e.title === 'sharing')
+              sharingMutation.delete({
+                variables: {
+                  id: e.id,
+                },
+              })
+
+            if (e.title === 'help')
+              helpMutation.delete({
+                variables: {
+                  id: e.id,
+                },
+              })
           }
         }),
         addNewInput: assign((ctx, e) => {
-          sharingMutation.insert({
-            variables: {
-              input: ctx.inputValues[e.title],
-              contributor: ctx.username,
-            },
-          })
+          if (e.title === 'sharing')
+            sharingMutation.insert({
+              variables: {
+                input: ctx.inputValues[e.title],
+                contributor: ctx.username,
+              },
+            })
+
+          if (e.title === 'help')
+            helpMutation.insert({
+              variables: {
+                input: ctx.inputValues[e.title],
+              },
+            })
 
           return {
             inputValues: {
@@ -162,6 +185,15 @@ const StoreProvider = ({children}) => {
         updateQuery: (prev, {subscriptionData}) => {
           return Object.assign({}, prev, {
             sharing: subscriptionData.data.shares,
+          })
+        },
+      })
+      queriesSubscribe({
+        document: NEW_HELP,
+        variables: {lastPublishedAt: parselastpublish},
+        updateQuery: (prev, {subscriptionData}) => {
+          return Object.assign({}, prev, {
+            assistance: subscriptionData.data.assistance,
           })
         },
       })

@@ -2,6 +2,8 @@ import {assign, Machine} from 'xstate'
 
 const USERNAME = '@username'
 
+const initialLoading = {sharing: false, help: false, pair: false}
+
 const storeMachine = Machine(
   {
     initial: 'verifyAuth',
@@ -11,10 +13,11 @@ const storeMachine = Machine(
       editableItem: null,
       editableValue: null,
       loadingMsg: '',
-      loading: false,
+      loading: initialLoading,
       username: '',
       inputValues: {
         sharing: '',
+        help: '',
       },
     },
     on: {
@@ -92,8 +95,17 @@ const storeMachine = Machine(
   },
   {
     actions: {
-      stopLoading: assign({loading: false}),
-      startLoading: assign({loading: true}),
+      stopLoading: assign({
+        loading: initialLoading,
+      }),
+      startLoading: assign((ctx, e) => {
+        return {
+          loading: {
+            ...ctx.loading,
+            [e.title]: true,
+          },
+        }
+      }),
       onEditableChange: assign((_ctx, e) => {
         return {
           editableValue: e.value,
