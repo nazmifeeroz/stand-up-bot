@@ -7,8 +7,10 @@ const storeMachine = Machine(
     initial: 'verifyAuth',
     context: {
       darkMode: true,
-      loadingMsg: '',
       devMode: false,
+      editableItem: null,
+      editableValue: null,
+      loadingMsg: '',
       username: '',
       inputValues: {
         sharing: '',
@@ -56,14 +58,31 @@ const storeMachine = Machine(
             actions: 'loadQueriesData',
           },
           DELETE_ITEM: {actions: 'deleteItem'},
+          EDIT_ITEM: {actions: 'editItem'},
           ON_INPUT_CHANGE: {actions: 'onInputChange'},
           NEW_INPUT_PRESSED: {actions: 'addNewInput'},
+          CLOSE_EDIT_ITEM: {actions: 'closeEditItem'},
+          ON_EDITABLE_CHANGE: {actions: 'onEditableChange'},
+          UPDATE_EDITED_ITEM: {actions: 'updateEditedItem'},
         },
       },
     },
   },
   {
     actions: {
+      onEditableChange: assign((_ctx, e) => {
+        return {
+          editableValue: e.value,
+        }
+      }),
+      closeEditItem: assign({
+        editableItem: null,
+        editableValue: null,
+      }),
+      editItem: assign((_, e) => ({
+        editableItem: e.id,
+        editableValue: e.value,
+      })),
       onInputChange: assign((ctx, {type, ...rest}) => {
         return {
           inputValues: {...ctx.inputValues, ...rest},

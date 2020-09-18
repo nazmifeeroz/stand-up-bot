@@ -39,6 +39,18 @@ const StoreProvider = ({children}) => {
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
+        updateEditedItem: assign(ctx => {
+          if (ctx.editableValue === '') return
+
+          sharingMutation.update({
+            variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
+          })
+
+          return {
+            editableItem: null,
+            editableValue: null,
+          }
+        }),
         deleteItem: assign((_ctx, e) => {
           if (window.confirm('Are you sure you wish to delete?')) {
             sharingMutation.delete({

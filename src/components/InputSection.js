@@ -8,43 +8,66 @@ const componentDecorator = (href, text, key) => (
   </a>
 )
 
-const RenderCollection = React.memo(({obj, send}) => {
-  return (
-    <CollectionItem key={obj.id}>
-      <Linkify componentDecorator={componentDecorator}>
-        <StyledDiv>
-          <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
-          <StyledIconsDiv>
-            <a
-              href="#/"
-              onClick={() => send('DELETE_ITEM', {id: obj.id})}
-              tabIndex="-1"
-            >
-              <i className="material-icons right">delete</i>
-            </a>
-            <a
-              href="#/"
-              onClick={() => send('EDIT_ITEM', {id: obj.id})}
-              tabIndex="-1"
-            >
-              <i className="material-icons right">edit</i>
-            </a>
-          </StyledIconsDiv>
-        </StyledDiv>
-      </Linkify>
-    </CollectionItem>
-  )
-})
+const RenderCollection = React.memo(
+  ({editableItem, editableValue, title, obj, send}) => {
+    return (
+      <CollectionItem key={obj.id}>
+        <Linkify componentDecorator={componentDecorator}>
+          <StyledDiv>
+            <StyledSpan>{`${obj.contributor}: ${obj.sharing}`}</StyledSpan>
+            {editableItem !== obj.id ? (
+              <StyledIconsDiv>
+                <a
+                  href="#/"
+                  onClick={() => send('DELETE_ITEM', {id: obj.id})}
+                  tabIndex="-1"
+                >
+                  <i className="material-icons right">delete</i>
+                </a>
+                <a
+                  href="#/"
+                  onClick={() =>
+                    send('EDIT_ITEM', {id: obj.id, value: obj.sharing})
+                  }
+                  tabIndex="-1"
+                >
+                  <i className="material-icons right">edit</i>
+                </a>
+              </StyledIconsDiv>
+            ) : (
+              <a href="#/" onClick={() => send('CLOSE_EDIT_ITEM')}>
+                <i className="cobalt-icons right">close</i>
+              </a>
+            )}
+          </StyledDiv>
+        </Linkify>
+        {editableItem === obj.id && (
+          <InputElement
+            title={title}
+            placeholder=""
+            value={editableValue}
+            onChange={e =>
+              send('ON_EDITABLE_CHANGE', {
+                value: e.target.value,
+              })
+            }
+          />
+        )}
+      </CollectionItem>
+    )
+  },
+)
 
-const InputElement = React.memo(({title, placeholder, value, send}) => {
+const InputElement = React.memo(({title, placeholder, value, onChange}) => {
   return (
     <>
       <input
+        autoFocus
         placeholder={placeholder}
         aria-label={`${title}-input`}
         type="text"
         value={value}
-        onChange={e => send('ON_INPUT_CHANGE', {[title]: e.target.value})}
+        onChange={onChange}
       />
       {value && (
         <span className="helper-text" data-error="wrong" data-success="right">
@@ -56,30 +79,54 @@ const InputElement = React.memo(({title, placeholder, value, send}) => {
 })
 
 const InputSection = React.memo(
-  ({title, placeholder, data, send, inputValue}) => {
+  ({
+    editableItem,
+    editableValue,
+    title,
+    placeholder,
+    data,
+    send,
+    inputValue,
+  }) => {
     console.log('render input section')
     return (
-      <SectionForm
-        onSubmit={e => {
-          e.preventDefault()
-          send('NEW_INPUT_PRESSED', {title})
-        }}
-      >
-        <SectionTitle>{title}</SectionTitle>
-        {data && (
-          <Collections>
-            {data.map(obj => (
-              <RenderCollection key={obj.id} obj={obj} send={send} />
-            ))}
-          </Collections>
-        )}
-        <InputElement
-          title={title}
-          placeholder={placeholder}
-          value={inputValue}
-          send={send}
-        />
-      </SectionForm>
+      <>
+        <SectionForm
+          onSubmit={e => {
+            e.preventDefault()
+            send('UPDATE_EDITED_ITEM')
+          }}
+        >
+          <SectionTitle>{title}</SectionTitle>
+          {data && (
+            <Collections>
+              {data.map(obj => (
+                <RenderCollection
+                  key={obj.id}
+                  title={title}
+                  obj={obj}
+                  send={send}
+                  editableItem={editableItem}
+                  editableValue={editableValue}
+                />
+              ))}
+            </Collections>
+          )}
+        </SectionForm>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            send('NEW_INPUT_PRESSED', {title})
+          }}
+        >
+          <InputElement
+            title={title}
+            placeholder={placeholder}
+            value={inputValue}
+            onChange={e => send('ON_INPUT_CHANGE', {[title]: e.target.value})}
+          />
+        </form>
+      </>
     )
   },
 )
