@@ -11,11 +11,11 @@ const useCovidStats = () => {
         'https://coronavirus-19-api.herokuapp.com/countries/singapore',
       ).then(resp => resp.json())
 
-      const { yesterdayCases } = await fetch(
-        'https://next-standup-bot.now.sh/api/yesterday-cases',
+      const {yesterdayCases} = await fetch(
+        'http://sj-standup.netlify.com/.netlify/functions/yesterday-cases',
       ).then(resp => resp.json())
 
-      setStats({ ...data, yesterdayCases })
+      setStats({...data, yesterdayCases})
     }
 
     const fetchGlobalData = async () => {
@@ -29,7 +29,7 @@ const useCovidStats = () => {
     fetchSgData().then(() => fetchGlobalData().then(() => setLoading(false)))
   }, [])
 
-  return { stats, globalStats, loading }
+  return {stats, globalStats, loading}
 }
 
 export default useCovidStats
