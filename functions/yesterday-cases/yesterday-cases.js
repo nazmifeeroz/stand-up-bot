@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const fetch = require('node-fetch')
 
-exports.handler = async () => {
+exports.handler = async (_, _event, callback) => {
   let response
 
   try {
@@ -71,9 +71,16 @@ exports.handler = async () => {
   const sgYestStat = result.find(c => c.country === 'Singapore')
 
   const body = JSON.stringify({yesterdayCases: sgYestStat.yesterdayCases})
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+  }
 
-  return {
+  callback(null, {
+    headers,
     statusCode: 200,
     body,
-  }
+  })
+
+  return
 }
