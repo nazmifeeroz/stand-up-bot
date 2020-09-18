@@ -1,4 +1,5 @@
 import React from 'react'
+import SyncLoader from 'react-spinners/SyncLoader'
 import styled from 'styled-components'
 import Linkify from 'react-linkify'
 
@@ -80,13 +81,14 @@ const InputElement = React.memo(({title, placeholder, value, onChange}) => {
 
 const InputSection = React.memo(
   ({
+    data,
     editableItem,
     editableValue,
-    title,
-    placeholder,
-    data,
-    send,
     inputValue,
+    loading,
+    placeholder,
+    send,
+    title,
   }) => {
     console.log('render input section')
     return (
@@ -97,7 +99,10 @@ const InputSection = React.memo(
             send('UPDATE_EDITED_ITEM')
           }}
         >
-          <SectionTitle>{title}</SectionTitle>
+          <TitleWrapper>
+            <SectionTitle>{title}</SectionTitle>
+            <SyncLoader size={8} color={'#36D7B7'} loading={loading} />
+          </TitleWrapper>
           {data && (
             <Collections>
               {data.map(obj => (
@@ -130,6 +135,15 @@ const InputSection = React.memo(
     )
   },
 )
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > h5 {
+    margin-right: 10px;
+  }
+`
 
 const SectionForm = styled.form.attrs({
   className: 'section',

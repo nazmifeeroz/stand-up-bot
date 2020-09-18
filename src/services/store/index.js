@@ -64,18 +64,11 @@ const StoreProvider = ({children}) => {
           sharingMutation.insert({
             variables: {
               input: ctx.inputValues[e.title],
-              contributor: 'some guy',
+              contributor: ctx.username,
             },
           })
+
           return {
-            [e.title]: [
-              {
-                id: 9999,
-                [e.title]: ctx.inputValues[e.title],
-                contributor: 'some guy',
-              },
-              ...ctx[e.title],
-            ],
             inputValues: {
               ...ctx.inputValues,
               [e.title]: '',

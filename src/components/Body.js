@@ -30,6 +30,7 @@ const Body = () => {
             inputValue={current.context.inputValues['sharing']}
             editableItem={current.context.editableItem}
             editableValue={current.context.editableValue}
+            loading={current.context.loading}
           />
           {/*
           <InputSection type="help" description="Anyone need help?..." />
