@@ -24,3 +24,5 @@ yarn-error.log*
 
 .env
 discord-sample.js
+# Local Netlify folder
+.netlify
