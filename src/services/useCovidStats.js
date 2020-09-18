@@ -12,7 +12,7 @@ const useCovidStats = () => {
       ).then(resp => resp.json())
 
       const {yesterdayCases} = await fetch(
-        'https://sj-standup.netlify.com/.netlify/functions/yesterday-cases',
+        'https://sj-standup.netlify.app/.netlify/functions/yesterday-cases',
       ).then(resp => resp.json())
 
       setStats({...data, yesterdayCases})
