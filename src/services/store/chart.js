@@ -2,7 +2,7 @@ import {assign, Machine} from 'xstate'
 
 const USERNAME = '@username'
 
-const initialLoading = {sharing: false, help: false, pair: false}
+const initialLoading = {sharing: false, help: false, pairing: false}
 
 const storeMachine = Machine(
   {
@@ -18,6 +18,7 @@ const storeMachine = Machine(
       inputValues: {
         sharing: '',
         help: '',
+        pairing: '',
       },
     },
     on: {

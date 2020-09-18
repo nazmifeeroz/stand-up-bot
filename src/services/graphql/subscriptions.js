@@ -30,10 +30,10 @@ export const NEW_HELP = gql`
 `
 
 export const NEW_PAIR = gql`
-  subscription($yesterday: timestamptz) {
+  subscription($a_week_ago: timestamptz) {
     pairs(
       order_by: {created_at: desc}
-      where: {created_at: {_gte: $yesterday}}
+      where: {created_at: {_gte: $a_week_ago}}
     ) {
       id
       created_at

@@ -6,7 +6,12 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 import {GET_ACTIVE_SESSION, GET_ALL_QUERIES} from '../graphql/queries'
-import {NEW_SESSION, NEW_SHARE, NEW_HELP} from '../graphql/subscriptions'
+import {
+  NEW_SESSION,
+  NEW_SHARE,
+  NEW_HELP,
+  NEW_PAIR,
+} from '../graphql/subscriptions'
 import {useMutationReducer} from '../utils'
 import storeMachine from './chart'
 
@@ -36,6 +41,7 @@ const StoreProvider = ({children}) => {
   const {mutation: sessionMutation} = useMutationReducer('session')
   const {mutation: sharingMutation} = useMutationReducer('sharing')
   const {mutation: helpMutation} = useMutationReducer('help')
+  const {mutation: pairingMutation} = useMutationReducer('pairing')
 
   const [current, send] = useMachine(
     storeMachine.withConfig({
@@ -50,6 +56,11 @@ const StoreProvider = ({children}) => {
 
           if (e.title === 'help')
             helpMutation.update({
+              variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
+            })
+
+          if (e.title === 'pairing')
+            pairingMutation.update({
               variables: {id: ctx.editableItem, editedItem: ctx.editableValue},
             })
 
@@ -73,6 +84,13 @@ const StoreProvider = ({children}) => {
                   id: e.id,
                 },
               })
+
+            if (e.title === 'pairing')
+              pairingMutation.delete({
+                variables: {
+                  id: e.id,
+                },
+              })
           }
         }),
         addNewInput: assign((ctx, e) => {
@@ -91,6 +109,13 @@ const StoreProvider = ({children}) => {
               },
             })
 
+          if (e.title === 'pairing')
+            pairingMutation.insert({
+              variables: {
+                input: ctx.inputValues[e.title],
+              },
+            })
+
           return {
             inputValues: {
               ...ctx.inputValues,
@@ -100,8 +125,9 @@ const StoreProvider = ({children}) => {
         }),
         getQueriesData: ctx => {
           const parselastpublish = dayjs(ctx.lastSession.published_at)
+          const aWeekAgo = dayjs().utc().subtract(5, 'day').toISOString()
           getQueriesData({
-            variables: {last_published: parselastpublish},
+            variables: {last_published: parselastpublish, a_week_ago: aWeekAgo},
           })
         },
         getLastSession,
@@ -179,6 +205,7 @@ const StoreProvider = ({children}) => {
         .utc()
         .toISOString()
 
+      const aWeekAgo = dayjs().utc().subtract(5, 'day').toISOString()
       queriesSubscribe({
         document: NEW_SHARE,
         variables: {lastPublishedAt: parselastpublish},
@@ -194,6 +221,15 @@ const StoreProvider = ({children}) => {
         updateQuery: (prev, {subscriptionData}) => {
           return Object.assign({}, prev, {
             assistance: subscriptionData.data.assistance,
+          })
+        },
+      })
+      queriesSubscribe({
+        document: NEW_PAIR,
+        variables: {a_week_ago: aWeekAgo},
+        updateQuery: (prev, {subscriptionData}) => {
+          return Object.assign({}, prev, {
+            pairs: subscriptionData.data.pairs,
           })
         },
       })

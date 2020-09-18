@@ -35,7 +35,7 @@ export const GET_ACTIVE_SESSION = gql`
 // `
 
 export const GET_ALL_QUERIES = gql`
-  query($last_published: timestamptz) {
+  query($last_published: timestamptz, $a_week_ago: timestamptz) {
     sharing: shares(
       where: {created_at: {_gte: $last_published}}
       order_by: {updated_at: desc}
@@ -58,6 +58,15 @@ export const GET_ALL_QUERIES = gql`
     sessions(where: {active: {_eq: true}}) {
       active
       status
+    }
+    pairs(
+      where: {created_at: {_gte: $a_week_ago}}
+      order_by: {updated_at: desc}
+    ) {
+      id
+      project
+      created_at
+      updated_at
     }
   }
 `

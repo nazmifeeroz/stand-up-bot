@@ -28,6 +28,13 @@ const inputDataReducer = (key, data) => {
         value: data.assist,
       }
       break
+    case 'pairing':
+      parsedData = {
+        id: data.id,
+        content: data.project,
+        value: data.project,
+      }
+      break
     default:
       return null
   }

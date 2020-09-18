@@ -3,7 +3,6 @@ import {motion} from 'framer-motion'
 import styled from 'styled-components'
 import InputSection from './InputSection'
 import Navbar from './navbar'
-// import PollSection from './poll-section'
 import {StoreContext} from '../services/store'
 import CovidStats from './CovidStats'
 import Footer from './Footer'
@@ -41,11 +40,18 @@ const Body = () => {
             editableValue={current.context.editableValue}
             loading={current.context.loading}
           />
-          {/*
-          <InputSection type="help" description="Anyone need help?..." />
-          <InputSection type="pairing" description="Pairing Config..." />
-          <PollSection />
-          <ButtonsContainer>
+          <InputSection
+            title="pairing"
+            placeholder="Pairing Config..."
+            data={current.context['pairs']}
+            send={send}
+            inputValue={current.context.inputValues['pairing']}
+            editableItem={current.context.editableItem}
+            editableValue={current.context.editableValue}
+            loading={current.context.loading}
+          />
+
+          {/* <ButtonsContainer>
             <button
               onClick={() =>
                 window.open(
