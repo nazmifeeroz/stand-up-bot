@@ -29,7 +29,7 @@ const useCovidStats = () => {
     fetchSgData().then(() => fetchGlobalData().then(() => setLoading(false)))
   }, [])
 
-  return {stats, globalStats, loading}
+  return {sgStats: stats, globalStats, loading}
 }
 
 export default useCovidStats
