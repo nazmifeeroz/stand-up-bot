@@ -46,6 +46,62 @@ const StoreProvider = ({children}) => {
   const [current, send] = useMachine(
     storeMachine.withConfig({
       actions: {
+        publishSession: ctx => {
+          const sharingData = ctx.sharing.map(s => s.sharing)
+          const helpData = ctx.assistance.map(a => a.assist)
+          const pairingData = ctx.pairs.map(p => p.project)
+
+          const authenticate = window.confirm(
+            'You are about to publish an awesome stand up! Are you sure?',
+          )
+
+          if (!authenticate) return
+
+          const date = new Date()
+          const today = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`
+          const shareText =
+            sharingData[0].length > 0 ? sharingData.join('\n - ') : ''
+          const helpText =
+            helpData.length > 0 ? helpData.join('\n - ') : '*NO HELP NEEDED...*'
+          const pairText =
+            pairingData.length > 0 ? pairingData.join('\n - ') : ''
+          const content = `
+  ***__Stand Up__** (*${today}*)*
+
+  **_Singapore CoronaVirus Information_**
+  Cases: ${ctx.sgStats.cases}
+  Yesterday: ${ctx.sgStats.yesterdayCases} | Active: ${ctx.sgStats.active}
+  Deaths: ${ctx.sgStats.deaths} | Recovered: ${ctx.sgStats.recovered} | Critical: ${ctx.sgStats.critical}
+
+  **_Global CoronaVirus Information_**
+  Cases: ${ctx.globalStats.cases} | Deaths: ${ctx.globalStats.deaths} | Recovered: ${ctx.globalStats.recovered}
+
+  **_Sharing_**\n - ${shareText}
+
+  **_Need Help_**\n - ${helpText}
+
+  **_Pairing_**\n - ${pairText}
+
+  `
+
+          console.log('content', content)
+
+          sessionMutation
+            .update({
+              variables: {
+                id: ctx.activeSession.id,
+                content,
+                status: 'COMPLETED',
+                active: false,
+              },
+            })
+            .then(() => {
+              window.M.toast({html: 'Stand up published! Have a good day!'})
+            })
+            .catch(err => console.log('err', err))
+        },
         updateEditedItem: assign((ctx, e) => {
           if (ctx.editableValue === '') return
 
@@ -141,12 +197,16 @@ const StoreProvider = ({children}) => {
           return {...queries}
         }),
         startSession: ({devMode}) => {
-          sessionMutation.insert({variables: {token, devMode}}).then(resp => {
-            localStorage.setItem(
-              'session_id',
-              resp.data.insert_sessions.returning[0].id,
-            )
-          })
+          const disclaimer = window.prompt(
+            'You are about to host the standup session. Only you have the power to publish the session when it ends! Will you take this responsibility? (Only correct answer is "yes")',
+          )
+          if (disclaimer === 'yes')
+            sessionMutation.insert({variables: {token, devMode}}).then(resp => {
+              localStorage.setItem(
+                'session_id',
+                resp.data.insert_sessions.returning[0].id,
+              )
+            })
         },
         toggleDevMode: assign(({devMode}) => {
           if (!devMode) {

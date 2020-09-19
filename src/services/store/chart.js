@@ -96,7 +96,9 @@ const storeMachine = Machine(
           NEW_INPUT_PRESSED: {actions: ['addNewInput', 'startLoading']},
           ON_EDITABLE_CHANGE: {actions: 'onEditableChange'},
           ON_INPUT_CHANGE: {actions: 'onInputChange'},
+          PUBLISH_STANDUP_SESSION: {actions: 'publishSession'},
           REDIRECT_LUCKY_DRAW: {actions: 'redirectLuckyDraw'},
+          SAVE_COVID_STATS: {actions: 'saveCovidStats'},
           TOGGLE_DARK_MODE: {actions: 'toggleDarkMode'},
           UPDATE_EDITED_ITEM: {actions: ['updateEditedItem', 'startLoading']},
           SET_USERNAME: {
@@ -111,6 +113,12 @@ const storeMachine = Machine(
   },
   {
     actions: {
+      saveCovidStats: assign((_, e) => {
+        return {
+          sgStats: e.sgStats,
+          globalStats: e.globalStats,
+        }
+      }),
       redirectLuckyDraw: () => {
         window.open(
           `https://gc-awards.netlify.app/?token=${localStorage.getItem(

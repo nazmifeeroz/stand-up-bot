@@ -12,9 +12,7 @@ const PublishButtons = ({sessionId, send}) => {
       </button>
       <div className="right-align">
         <button
-          // onClick={() =>
-          //   // doPublishStandup(store, mutation, stats, globalStats)
-          // }
+          onClick={() => send('PUBLISH_STANDUP_SESSION')}
           className="orange waves-effect waves-light btn-large"
         >
           Publish!

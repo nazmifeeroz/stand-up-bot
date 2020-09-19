@@ -1,9 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styled, {css} from 'styled-components'
 import useCovidStats from '../services/useCovidStats'
 
-const CovidStats = () => {
+const CovidStats = ({send}) => {
   const {loading, sgStats, globalStats} = useCovidStats()
+
+  useEffect(() => {
+    if (!loading) send('SAVE_COVID_STATS', {sgStats, globalStats})
+  }, [loading, sgStats, globalStats, send])
 
   return (
     <CovidWrapper>

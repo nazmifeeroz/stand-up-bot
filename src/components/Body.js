@@ -20,7 +20,7 @@ const Body = () => {
       <Navbar />
       <StyledBody>
         <CardContainer>
-          <CovidStats />
+          <CovidStats send={send} />
           <InputSection
             title="sharing"
             placeholder="What are your thoughts?.."

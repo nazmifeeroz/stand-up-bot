@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo'
+import {useMutation} from 'react-apollo'
 
 import {
   ADD_HELP,
@@ -37,15 +37,15 @@ export const useMutationReducer = type => {
       }
     case 'pairing':
       return {
-        mutation: { insert: addPair, update: updatePair, delete: deletePair },
+        mutation: {insert: addPair, update: updatePair, delete: deletePair},
       }
     case 'help':
       return {
-        mutation: { insert: addHelp, update: updateHelp, delete: deleteHelp },
+        mutation: {insert: addHelp, update: updateHelp, delete: deleteHelp},
       }
     case 'session':
       return {
-        mutation: { insert: startSession, update: updateSession },
+        mutation: {insert: startSession, update: updateSession},
       }
     default:
       return false
@@ -68,7 +68,7 @@ export const doPublishStandup = (
     help: [helpData],
     pairing: [pairingData],
     pollsData: {
-      data: { polls },
+      data: {polls},
     },
   },
   mutation,
@@ -122,10 +122,10 @@ export const doPublishStandup = (
   const id = localStorage.getItem('session_id')
   mutation
     .update({
-      variables: { id, content, status: 'COMPLETED', active: false },
+      variables: {id, content, status: 'COMPLETED', active: false},
     })
     .then(() => {
-      window.M.toast({ html: 'Stand up published! Have a good day!' })
+      window.M.toast({html: 'Stand up published! Have a good day!'})
     })
     .catch(err => console.log('err', err))
   return
