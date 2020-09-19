@@ -6,6 +6,7 @@ import Navbar from './navbar'
 import {StoreContext} from '../services/store'
 import CovidStats from './CovidStats'
 import Footer from './Footer'
+import PublishButtons from './PublishButtons'
 
 const Body = () => {
   const {current, send} = useContext(StoreContext)
@@ -50,33 +51,10 @@ const Body = () => {
             editableValue={current.context.editableValue}
             loading={current.context.loading}
           />
-
-          {/* <ButtonsContainer>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://gc-awards.netlify.app/?token=${localStorage.getItem(
-                    'token',
-                  )}`,
-                )
-              }
-              className="waves-effect waves-light btn-large"
-            >
-              Lucky Spin
-            </button>
-            {localStorage.getItem('session_id') && (
-              <div className="right-align">
-                <button
-                  onClick={() =>
-                    doPublishStandup(store, mutation, stats, globalStats)
-                  }
-                  className="orange waves-effect waves-light btn-large"
-                >
-                  Publish!
-                </button>
-              </div>
-            )}
-          </ButtonsContainer> */}
+          <PublishButtons
+            sessionId={current.context.activeSession.id}
+            send={send}
+          />
         </CardContainer>
       </StyledBody>
       <Footer />

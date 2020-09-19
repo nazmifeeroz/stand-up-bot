@@ -15,7 +15,7 @@ const Loader = React.memo(({current}) => {
         damping: 20,
       }}
     >
-      <CircleLoader color={'#36D7B7'} />
+      {!current.matches('showErrorMsg') && <CircleLoader color={'#36D7B7'} />}
       <LoadingLabel>{current.context.loadingMsg}</LoadingLabel>
     </SpinnerWrapper>
   )

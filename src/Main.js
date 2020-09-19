@@ -19,7 +19,7 @@ const Main = () => {
   return (
     <>
       <GlobalStyles darkMode={current.context.darkMode} />
-      {['verifyAuth', 'checkSession'].some(current.matches) && (
+      {['verifyAuth', 'checkSession', 'showErrorMsg'].some(current.matches) && (
         <Loader current={current} />
       )}
       {current.matches('promptStartSession') && <PromptStartSession />}

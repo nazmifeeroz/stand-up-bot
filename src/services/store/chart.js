@@ -34,9 +34,23 @@ const storeMachine = Machine(
           assign({loadingMsg: 'Verifying authentication...'}),
         ],
         on: {
-          HAS_ERROR: {actions: 'routeToLogin'},
+          HAS_ERROR: 'errorRoute',
         },
       },
+      errorRoute: {
+        entry: assign((_, e) => ({loadingMsg: e.error})),
+        always: [
+          {
+            target: 'routeToLogin',
+            cond: ctx => {
+              return !ctx.loadingMsg.includes('Network error')
+            },
+          },
+          {target: 'showErrorMsg'},
+        ],
+      },
+      routeToLogin: {entry: 'routeToLogin'},
+      showErrorMsg: {},
       checkSession: {
         always: [
           {
@@ -76,26 +90,34 @@ const storeMachine = Machine(
       sessionStarted: {
         entry: 'getQueriesData',
         on: {
+          CLOSE_EDIT_ITEM: {actions: 'closeEditItem'},
+          DELETE_ITEM: {actions: ['deleteItem', 'startLoading']},
+          EDIT_ITEM: {actions: 'editItem'},
+          NEW_INPUT_PRESSED: {actions: ['addNewInput', 'startLoading']},
+          ON_EDITABLE_CHANGE: {actions: 'onEditableChange'},
+          ON_INPUT_CHANGE: {actions: 'onInputChange'},
+          REDIRECT_LUCKY_DRAW: {actions: 'redirectLuckyDraw'},
           TOGGLE_DARK_MODE: {actions: 'toggleDarkMode'},
+          UPDATE_EDITED_ITEM: {actions: ['updateEditedItem', 'startLoading']},
           SET_USERNAME: {
             actions: 'setUsername',
           },
           LOAD_QUERIES_DATA: {
             actions: ['loadQueriesData', 'stopLoading'],
           },
-          DELETE_ITEM: {actions: ['deleteItem', 'startLoading']},
-          EDIT_ITEM: {actions: 'editItem'},
-          ON_INPUT_CHANGE: {actions: 'onInputChange'},
-          NEW_INPUT_PRESSED: {actions: ['addNewInput', 'startLoading']},
-          CLOSE_EDIT_ITEM: {actions: 'closeEditItem'},
-          ON_EDITABLE_CHANGE: {actions: 'onEditableChange'},
-          UPDATE_EDITED_ITEM: {actions: ['updateEditedItem', 'startLoading']},
         },
       },
     },
   },
   {
     actions: {
+      redirectLuckyDraw: () => {
+        window.open(
+          `https://gc-awards.netlify.app/?token=${localStorage.getItem(
+            'token',
+          )}`,
+        )
+      },
       stopLoading: assign({
         loading: initialLoading,
       }),

@@ -163,7 +163,7 @@ const StoreProvider = ({children}) => {
 
   useEffect(() => {
     if (activeSessionError) {
-      send('HAS_ERROR')
+      send('HAS_ERROR', {error: activeSessionError.message})
     }
 
     if (sessionsData) {
