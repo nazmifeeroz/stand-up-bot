@@ -12,7 +12,7 @@ const Navbar = () => {
         <SJLogo width={200} />
       </div>
       <StyledUL>
-        <div className="switch valign-wrapper right">
+        {/* <div className="switch valign-wrapper right">
           <label>
             Dark Mode
             <input
@@ -22,7 +22,7 @@ const Navbar = () => {
             />
             <span className="lever" />
           </label>
-        </div>
+        </div> */}
         <div>
           <Username onClick={() => send('SET_USERNAME')}>
             {current.context.username}

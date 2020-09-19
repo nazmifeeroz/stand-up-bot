@@ -177,8 +177,7 @@ const InputSection = React.memo(
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
-
-  & > h5 {
+  h5 {
     margin-right: 10px;
   }
 `
@@ -189,11 +188,40 @@ const SectionForm = styled.form.attrs({
 
 const SectionTitle = styled.h5`
   text-transform: capitalize;
+  background: linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `
 
-const Collections = styled.ul.attrs({className: 'collection'})``
+const Collections = styled.ul.attrs({className: 'collection'})`
+  /* border: none !important;
+  border-radius: 8px;
+  padding: 3px !important;
+  border-color: transparent;
+  background-image: linear-gradient(#333, #333),
+    linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
+  background-origin: border-box;
+  background-clip: content-box, border-box; */
+  border-color: gray !important;
+`
 
-const CollectionItem = styled.li.attrs({className: 'collection-item'})``
+const CollectionItem = styled.li.attrs({className: 'collection-item'})`
+  border-color: gray !important;
+  /* border-color: transparent; */
+  /* background-image: linear-gradient(#333, #333),
+    linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
+  background-origin: border-box;
+  background-clip: content-box, border-box; */
+  /* padding: 1px !important; */
+  /* border: none !important;
+  padding: 1px !important;
+  border-color: transparent;
+  background-image: linear-gradient(#333, #333),
+    linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
+  background-origin: border-box;
+  background-clip: content-box, border-box; */
+`
 
 const StyledDiv = styled.div`
   display: flex;

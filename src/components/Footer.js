@@ -28,6 +28,7 @@ const StyledBlockquote = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+  margin-bottom: 15px;
   @media only screen and (max-width: 600px) {
     flex-direction: column;
   }
