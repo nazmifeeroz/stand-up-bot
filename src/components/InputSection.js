@@ -141,7 +141,7 @@ const InputSection = React.memo(
             <SectionTitle>{title}</SectionTitle>
             <SyncLoader size={8} color={'#36D7B7'} loading={loading[title]} />
           </TitleWrapper>
-          {data && (
+          {data && data.length > 0 && (
             <Collections>
               {data.map(obj => (
                 <RenderCollection

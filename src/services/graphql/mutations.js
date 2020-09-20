@@ -69,6 +69,14 @@ export const DELETE_SHARE = gql`
   }
 `
 
+export const DELETE_SESSION = gql`
+  mutation {
+    delete_sessions(where: {active: {_eq: true}}) {
+      affected_rows
+    }
+  }
+`
+
 export const DELETE_PAIR = gql`
   mutation($id: Int!) {
     delete_pairs(where: {id: {_eq: $id}}) {

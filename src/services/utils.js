@@ -7,6 +7,7 @@ import {
   DELETE_HELP,
   DELETE_PAIR,
   DELETE_SHARE,
+  DELETE_SESSION,
   START_SESSION,
   UPDATE_HELP,
   UPDATE_PAIR,
@@ -19,6 +20,7 @@ export const useMutationReducer = type => {
   const [addPair] = useMutation(ADD_PAIR)
   const [addShare] = useMutation(ADD_SHARE)
   const [deleteHelp] = useMutation(DELETE_HELP)
+  const [deleteSession] = useMutation(DELETE_SESSION)
   const [deletePair] = useMutation(DELETE_PAIR)
   const [deleteShare] = useMutation(DELETE_SHARE)
   const [updateHelp] = useMutation(UPDATE_HELP)
@@ -45,7 +47,11 @@ export const useMutationReducer = type => {
       }
     case 'session':
       return {
-        mutation: {insert: startSession, update: updateSession},
+        mutation: {
+          insert: startSession,
+          update: updateSession,
+          delete: deleteSession,
+        },
       }
     default:
       return false
