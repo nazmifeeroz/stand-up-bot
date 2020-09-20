@@ -7,14 +7,16 @@ import PromptStartSession from './components/PromptStartSession'
 import {StoreContext} from './services/store'
 
 const Main = () => {
-  const {current} = useContext(StoreContext)
+  const {current, send} = useContext(StoreContext)
 
   return (
     <>
       {['verifyAuth', 'checkSession', 'showErrorMsg'].some(current.matches) && (
         <Loader current={current} />
       )}
-      {current.matches('promptStartSession') && <PromptStartSession />}
+      {current.matches('promptStartSession') && (
+        <PromptStartSession send={send} />
+      )}
       {current.matches('sessionStarted') && <Body />}
     </>
   )

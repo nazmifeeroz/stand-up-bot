@@ -1,12 +1,10 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {motion} from 'framer-motion'
 import styled from 'styled-components'
-import {StoreContext} from '../services/store'
+// import {StoreContext} from '../services/store'
 import LogoBox from './LogoBox'
 
-const PromptStartSession = () => {
-  const {send} = useContext(StoreContext)
-
+const PromptStartSession = ({send}) => {
   return (
     <CenterContainer
       initial={{opacity: 0}}
