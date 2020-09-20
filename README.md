@@ -2,6 +2,15 @@
 
 > A form to publish daily Stand Ups on discord
 
+## New Release (1.0.0) (sneak peek)
+
+- Much improved rendering time!
+- all users can now publish
+- gradients background for border
+- on admin page can toggle dev mode and reset session
+- loading indicator on CRUD actions
+- Tests!
+
 ## Architecture
 
 This app is build on:
