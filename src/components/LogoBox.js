@@ -49,7 +49,8 @@ const StyledAppTitle = styled.div`
   }
 
   span:nth-child(2) {
-    margin: 0 1rem;
+    display: block;
+    text-align: center;
     font-size: 12px;
   }
 `
