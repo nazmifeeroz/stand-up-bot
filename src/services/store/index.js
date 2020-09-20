@@ -196,7 +196,8 @@ const StoreProvider = ({children}) => {
         loadQueriesData: assign((_ctx, {queries}) => {
           return {...queries}
         }),
-        startSession: ({devMode}) => {
+        startSession: () => {
+          const devMode = JSON.parse(localStorage.getItem('devMode'))
           const disclaimer = window.prompt(
             'You are about to host the standup session. Only you have the power to publish the session when it ends! Will you take this responsibility? (Only correct answer is "yes")',
           )
