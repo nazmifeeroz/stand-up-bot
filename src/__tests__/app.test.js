@@ -2,6 +2,9 @@ import React from 'react'
 import {fireEvent, render, screen} from '@testing-library/react'
 import PromptStartSession from '../components/PromptStartSession'
 import Loader from '../components/Loader'
+import DevMode from '../components/DevMode'
+import Footer from '../components/Footer'
+import InputSection from '../components/InputSection'
 
 describe('in prompt start session', () => {
   const send = jest.fn()
@@ -39,6 +42,67 @@ describe('Loader component', () => {
     render(<Loader current={current} />)
 
     expect(screen.getByTestId('circle-loader').children.length).toBe(1)
+  })
+})
+
+describe('dev mode component', () => {
+  test('should show text when in dev mode', () => {
+    render(<DevMode devMode={true} />)
+
+    expect(screen.getByText('Dev Mode')).toBeTruthy()
+  })
+
+  test('should show settings icon if false', () => {
+    render(<DevMode devMode={false} />)
+
+    expect(screen.getByText('settings')).toBeTruthy()
+  })
+})
+
+describe('footer component', () => {
+  test('should display copyrights', () => {
+    render(<Footer />)
+
+    expect(screen.getByText('Silicon Jungles')).toBeTruthy()
+  })
+})
+
+describe('footer component', () => {
+  test('should display copyrights', () => {
+    render(<Footer />)
+
+    expect(screen.getByText('Silicon Jungles')).toBeTruthy()
+  })
+})
+
+describe('input section component', () => {
+  const mockedProps = {
+    title: 'sharing',
+    placeholder: 'some place holder',
+    loading: {
+      sharing: false,
+    },
+    data: [{id: 1, contributor: 'me', sharing: 'some share'}],
+    editableItem: 1,
+    send: jest.fn(),
+  }
+
+  test('should display title', () => {
+    render(<InputSection {...mockedProps} />)
+
+    expect(screen.getByText('sharing')).toBeTruthy()
+  })
+
+  test('should display input element with placeholder', () => {
+    render(<InputSection {...mockedProps} />)
+
+    expect(screen.getByPlaceholderText(mockedProps.placeholder)).toBeTruthy()
+  })
+
+  test('input should show when edit is pressed', () => {
+    render(<InputSection {...mockedProps} />)
+
+    expect(screen.getByText('close')).toBeTruthy()
   })
 })
 
