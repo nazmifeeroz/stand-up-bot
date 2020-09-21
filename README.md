@@ -1,24 +1,31 @@
 # Stand Up Bot
 
-## A form to publish daily Stand Ups on discord
+> A form to publish daily Stand Ups on discord
+
+## New Release (1.0.0) (sneak peek)
+
+- Much improved rendering time!
+- covid api shows lazy loading
+- all users can now publish
+- gradients background for border
+- on admin page can toggle dev mode and reset session
+- loading indicator on CRUD actions
+- Tests!
+
+## Architecture
+
+This app is build on:
+
+- React JS
+- Hasura GraphQL
+- Netlify functions
 
 ## SETUP
 
 To run the app, you need create an `.env` file and copy the keys from `.env.sample` and fill in the values.
 
-### Todos
-
-- [ ] Add sub items
-- [ ] add backend with Lambda
-- [ ] to deploy on netlify or gigalixir
-- [ ] fix failing tests on useContext
-
-## Bugs
-
-- [ ] When user press enter without editing, it becomes blank
-
 ## GC Awards intergration
 
-- [ ] add a table for GC awardee
-- [ ] the GC app receives the token to mutate Hasura server
-- [ ] on receive mutation, Hasura calls discord webhook to post in Discord
+- [x] add a table for GC awardee
+- [x] the GC app receives the token to mutate Hasura server
+- [x] on receive mutation, Hasura calls discord webhook to post in Discord
