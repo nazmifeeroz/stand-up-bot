@@ -198,16 +198,12 @@ const StoreProvider = ({children}) => {
         }),
         startSession: () => {
           const devMode = JSON.parse(localStorage.getItem('devMode'))
-          const disclaimer = window.prompt(
-            'You are about to host the standup session. Only you have the power to publish the session when it ends! Will you take this responsibility? (Only correct answer is "yes")',
-          )
-          if (disclaimer === 'yes')
-            sessionMutation.insert({variables: {token, devMode}}).then(resp => {
-              localStorage.setItem(
-                'session_id',
-                resp.data.insert_sessions.returning[0].id,
-              )
-            })
+          sessionMutation.insert({variables: {token, devMode}}).then(resp => {
+            localStorage.setItem(
+              'session_id',
+              resp.data.insert_sessions.returning[0].id,
+            )
+          })
         },
         toggleDevMode: assign(({devMode}) => {
           if (!devMode) {
