@@ -2,15 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 
 const DevMode = ({devMode}) => {
-  if (!devMode) return null
-
-  return <ModeBox>Dev Mode</ModeBox>
+  return (
+    <ModeBox href="/admin">
+      {devMode ? 'Dev Mode' : <i className="material-icons">settings</i>}
+    </ModeBox>
+  )
 }
 
-const ModeBox = styled.div`
+const ModeBox = styled.a`
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 0.5em;
+  right: 0.5em;
   background: linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
 
   background-clip: text;
