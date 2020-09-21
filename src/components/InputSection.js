@@ -102,7 +102,6 @@ const InputElement = React.memo(({title, placeholder, value, onChange}) => {
   return (
     <>
       <input
-        autoFocus
         placeholder={placeholder}
         aria-label={`${title}-input`}
         type="text"
