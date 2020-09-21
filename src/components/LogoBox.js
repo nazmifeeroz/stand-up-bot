@@ -31,6 +31,7 @@ const StyledBorder = styled.div`
     linear-gradient(to right, hsl(150 100% 40%), hsl(180 100% 59%));
   background-origin: border-box;
   background-clip: content-box, border-box;
+  min-height: 120px;
 `
 
 const StyledAppTitle = styled.div`

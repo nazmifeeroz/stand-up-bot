@@ -61,9 +61,18 @@ const storeMachine = Machine(
         ],
       },
       promptStartSession: {
-        on: {
-          START_SESSION: {actions: 'startSession'},
-          TOGGLE_DEV_MODE: {actions: 'toggleDevMode'},
+        initial: 'idle',
+        states: {
+          idle: {
+            on: {
+              START_SESSION: {
+                target: 'startingSession',
+                actions: 'startSession',
+              },
+              TOGGLE_DEV_MODE: {actions: 'toggleDevMode'},
+            },
+          },
+          startingSession: {},
         },
       },
       checksUsername: {

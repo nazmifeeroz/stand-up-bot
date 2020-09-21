@@ -15,7 +15,12 @@ const Main = () => {
         <Loader current={current} />
       )}
       {current.matches('promptStartSession') && (
-        <PromptStartSession send={send} />
+        <PromptStartSession
+          send={send}
+          isSessionStarting={current.matches(
+            'promptStartSession.startingSession',
+          )}
+        />
       )}
       {current.matches('sessionStarted') && <Body />}
     </>
