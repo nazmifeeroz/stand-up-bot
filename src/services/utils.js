@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo'
+import {useMutation} from 'react-apollo'
 
 import {
   ADD_HELP,
@@ -7,6 +7,7 @@ import {
   DELETE_HELP,
   DELETE_PAIR,
   DELETE_SHARE,
+  DELETE_SESSION,
   START_SESSION,
   UPDATE_HELP,
   UPDATE_PAIR,
@@ -19,6 +20,7 @@ export const useMutationReducer = type => {
   const [addPair] = useMutation(ADD_PAIR)
   const [addShare] = useMutation(ADD_SHARE)
   const [deleteHelp] = useMutation(DELETE_HELP)
+  const [deleteSession] = useMutation(DELETE_SESSION)
   const [deletePair] = useMutation(DELETE_PAIR)
   const [deleteShare] = useMutation(DELETE_SHARE)
   const [updateHelp] = useMutation(UPDATE_HELP)
@@ -37,15 +39,19 @@ export const useMutationReducer = type => {
       }
     case 'pairing':
       return {
-        mutation: { insert: addPair, update: updatePair, delete: deletePair },
+        mutation: {insert: addPair, update: updatePair, delete: deletePair},
       }
     case 'help':
       return {
-        mutation: { insert: addHelp, update: updateHelp, delete: deleteHelp },
+        mutation: {insert: addHelp, update: updateHelp, delete: deleteHelp},
       }
     case 'session':
       return {
-        mutation: { insert: startSession, update: updateSession },
+        mutation: {
+          insert: startSession,
+          update: updateSession,
+          delete: deleteSession,
+        },
       }
     default:
       return false
@@ -68,7 +74,7 @@ export const doPublishStandup = (
     help: [helpData],
     pairing: [pairingData],
     pollsData: {
-      data: { polls },
+      data: {polls},
     },
   },
   mutation,
@@ -122,10 +128,10 @@ export const doPublishStandup = (
   const id = localStorage.getItem('session_id')
   mutation
     .update({
-      variables: { id, content, status: 'COMPLETED', active: false },
+      variables: {id, content, status: 'COMPLETED', active: false},
     })
     .then(() => {
-      window.M.toast({ html: 'Stand up published! Have a good day!' })
+      window.M.toast({html: 'Stand up published! Have a good day!'})
     })
     .catch(err => console.log('err', err))
   return

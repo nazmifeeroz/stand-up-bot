@@ -1,11 +1,23 @@
 {
   "name": "standup-bot",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "200x200"
+    }
+  ],
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "apollo-cache-inmemory": "^1.6.2",
-    "apollo-client": "^2.6.3",
-    "apollo-link-ws": "^1.0.18",
+    "@apollo/react-hooks": "^3.1.5",
+    "@xstate/react": "^0.8.1",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "apollo-utilities": "^1.3.4",
     "cheerio": "^1.0.0-rc.3",
     "codemirror": "^5.48.0",
     "dayjs": "^1.8.15",
@@ -21,9 +33,10 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-spinners": "^0.5.13",
+    "react-spinners": "^0.9.0",
     "styled-components": "^4.3.2",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.9.16",
+    "xstate": "^4.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,7 +60,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^8.0.4",
+    "@testing-library/react": "^11.0.4",
     "jest-dom": "^3.5.0"
   }
 }
