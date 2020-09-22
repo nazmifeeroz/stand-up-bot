@@ -17,7 +17,7 @@ const Body = () => {
       animate={{opacity: 1}}
       transition={{duration: 1.5}}
     >
-      <Navbar />
+      <Navbar username={current.context.username} send={send} />
       <StyledBody>
         <CardContainer>
           <CovidStats send={send} />

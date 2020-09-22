@@ -1,11 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import {StoreContext} from '../services/store'
 import {ReactComponent as SJLogo} from '../assets/sj-logo.svg'
 
-const Navbar = () => {
-  const {current, send} = React.useContext(StoreContext)
-
+const Navbar = React.memo(({username, send}) => {
   return (
     <StyledNav>
       <div>
@@ -24,14 +21,12 @@ const Navbar = () => {
           </label>
         </div> */}
         <div>
-          <Username onClick={() => send('SET_USERNAME')}>
-            {current.context.username}
-          </Username>
+          <Username onClick={() => send('SET_USERNAME')}>{username}</Username>
         </div>
       </StyledUL>
     </StyledNav>
   )
-}
+})
 
 const Username = styled.a.attrs({
   className: 'waves-effect waves-light btn',

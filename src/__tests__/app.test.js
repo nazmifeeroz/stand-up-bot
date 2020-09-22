@@ -1,6 +1,5 @@
 import React from 'react'
 import {fireEvent, render, screen} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import PromptStartSession from '../components/PromptStartSession'
 import Loader from '../components/Loader'
 import DevMode from '../components/DevMode'
@@ -174,7 +173,7 @@ describe('input section component when NOT in edit mode', () => {
 })
 
 describe('in body', () => {
-  test('lucky draw button should all the correct event', () => {
+  test('lucky draw button should fire the correct event', () => {
     const send = jest.fn()
     render(<PublishButtons send={send} />)
 
@@ -183,7 +182,7 @@ describe('in body', () => {
     expect(send).toHaveBeenCalledWith('REDIRECT_LUCKY_DRAW')
   })
 
-  test('publish button should all the correct event', () => {
+  test('publish button should fire the correct event', () => {
     const send = jest.fn()
     render(<PublishButtons send={send} />)
 
