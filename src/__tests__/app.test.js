@@ -6,6 +6,7 @@ import DevMode from '../components/DevMode'
 import Footer from '../components/Footer'
 import InputSection from '../components/InputSection'
 import PublishButtons from '../components/PublishButtons'
+import LogoBox from '../components/LogoBox'
 
 describe('in prompt start session', () => {
   const send = jest.fn()
@@ -189,5 +190,27 @@ describe('in body', () => {
     fireEvent.click(screen.getByText('Publish!'))
 
     expect(send).toHaveBeenCalledWith('PUBLISH_STANDUP_SESSION')
+  })
+})
+
+describe('Logobox', () => {
+  test('should display title', () => {
+    render(<LogoBox />)
+    expect(screen.getByText('Standup Bot')).toBeTruthy()
+  })
+
+  test('should display subtitle', () => {
+    render(<LogoBox subtitle="Admin" />)
+    expect(screen.getByText('Admin')).toBeTruthy()
+  })
+
+  test('should display button', () => {
+    const SomeButton = () => <button>Start</button>
+    render(
+      <LogoBox>
+        <SomeButton />
+      </LogoBox>,
+    )
+    expect(screen.getByText('Start')).toBeTruthy()
   })
 })
