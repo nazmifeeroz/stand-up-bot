@@ -1,10 +1,12 @@
 import React from 'react'
 import {fireEvent, render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import PromptStartSession from '../components/PromptStartSession'
 import Loader from '../components/Loader'
 import DevMode from '../components/DevMode'
 import Footer from '../components/Footer'
 import InputSection from '../components/InputSection'
+import PublishButtons from '../components/PublishButtons'
 
 describe('in prompt start session', () => {
   const send = jest.fn()
@@ -75,7 +77,7 @@ describe('footer component', () => {
   })
 })
 
-describe('input section component', () => {
+describe('input section component when in edit mode', () => {
   const mockedProps = {
     title: 'sharing',
     placeholder: 'some place holder',
@@ -104,166 +106,89 @@ describe('input section component', () => {
 
     expect(screen.getByText('close')).toBeTruthy()
   })
+
+  test('edit button should not show on edit mode', () => {
+    render(<InputSection {...mockedProps} />)
+
+    expect(screen.queryByText('edit')).toBeFalsy()
+  })
+
+  test('delete button should not show on edit mode', () => {
+    render(<InputSection {...mockedProps} />)
+
+    expect(screen.queryByText('delete')).toBeFalsy()
+  })
+
+  test('when close button is pressed', () => {
+    render(<InputSection {...mockedProps} />)
+
+    fireEvent.click(screen.getByText('close'))
+
+    expect(mockedProps.send).toHaveBeenCalledWith('CLOSE_EDIT_ITEM')
+  })
 })
 
-// import React from 'react'
-// import { render, fireEvent, cleanup } from '@testing-library/react'
-// import 'jest-dom/extend-expect'
-// import App from '../App'
-// import Provider from '../utils/context'
+describe('input section component when NOT in edit mode', () => {
+  const mockedProps = {
+    title: 'sharing',
+    placeholder: 'some place holder',
+    loading: {
+      sharing: false,
+    },
+    data: [{id: 1, contributor: 'me', sharing: 'some share'}],
+    editableItem: 0,
+    send: jest.fn(),
+  }
 
-// afterEach(cleanup)
+  test('edit button should show on edit mode', () => {
+    render(<InputSection {...mockedProps} />)
 
-// let utils
+    expect(screen.queryByText('edit')).toBeTruthy()
+  })
 
-// beforeEach(() => {
-//   utils = render(
-//     <Provider>
-//       <App />
-//     </Provider>
-//   )
-// })
+  test('delete button should show on edit mode', () => {
+    render(<InputSection {...mockedProps} />)
 
-// describe('on page load', () => {
-//   test('Sharing section is loaded', () => {
-//     expect(utils.getByTestId('sharing')).toBeVisible()
-//     expect(utils.getByTestId('sharing')).toHaveTextContent('Sharing')
-//     expect(utils.getByTestId('sharing')).not.toContainElement(
-//       utils.queryByTestId('sharing-items')
-//     )
-//   })
-//   test('Help section is loaded', () => {
-//     expect(utils.getByTestId('help')).toBeVisible()
-//     expect(utils.getByTestId('help')).toHaveTextContent('Need Help')
-//     expect(utils.getByTestId('help')).not.toContainElement(
-//       utils.queryByTestId('help-items')
-//     )
-//   })
-//   test('Pairing section is loaded', () => {
-//     expect(utils.getByTestId('pairing')).toBeVisible()
-//     expect(utils.getByTestId('pairing')).toHaveTextContent('Pairing')
-//     expect(utils.getByTestId('pairing')).not.toContainElement(
-//       utils.queryByTestId('pairing-items')
-//     )
-//   })
-// })
+    expect(screen.queryByText('delete')).toBeTruthy()
+  })
 
-// describe('when new item is added', () => {
-//   test('should display new sharing item', () => {
-//     fireEvent.change(utils.getByLabelText('sharing-input'), {
-//       target: { value: 'sharing 1' },
-//     })
-//     expect(utils.getByLabelText('sharing-input').value).toBe('sharing 1')
+  test('close button should not be visible', () => {
+    render(<InputSection {...mockedProps} />)
 
-//     fireEvent.click(utils.getByTestId('sharing-submit'))
-//     expect(utils.getByTestId('sharing')).toContainElement(
-//       utils.queryByTestId('sharing-items')
-//     )
-//   })
+    expect(screen.queryByText('close')).toBeFalsy()
+  })
 
-//   test('should display new help item', () => {
-//     const helpInput = utils.getByLabelText('help-input')
-//     fireEvent.change(helpInput, {
-//       target: { value: 'help 1' },
-//     })
-//     expect(helpInput.value).toBe('help 1')
+  test('on new input change', () => {
+    render(<InputSection {...mockedProps} />)
 
-//     fireEvent.click(utils.getByTestId('help-submit'))
-//     expect(utils.getByTestId('help')).toContainElement(
-//       utils.queryByTestId('help-items')
-//     )
-//   })
+    fireEvent.change(screen.getByLabelText('sharing-input'), {
+      target: {
+        value: 'new input',
+      },
+    })
 
-//   test('should display new pair item', () => {
-//     const pairInput = utils.getByLabelText('pair-input')
-//     fireEvent.change(pairInput, {
-//       target: { value: 'pair 1' },
-//     })
-//     expect(pairInput.value).toBe('pair 1')
+    expect(mockedProps.send).toHaveBeenCalledWith('ON_INPUT_CHANGE', {
+      sharing: 'new input',
+    })
+  })
+})
 
-//     fireEvent.click(utils.getByTestId('pair-submit'))
-//     expect(utils.getByTestId('pairing')).toContainElement(
-//       utils.queryByTestId('pair-items')
-//     )
-//   })
-// })
+describe('in body', () => {
+  test('lucky draw button should all the correct event', () => {
+    const send = jest.fn()
+    render(<PublishButtons send={send} />)
 
-// describe('when there is a list of sharings', () => {
-//   beforeEach(() => {
-//     fireEvent.change(utils.getByLabelText('sharing-input'), {
-//       target: { value: 'sharing 1' },
-//     })
-//     fireEvent.click(utils.getByTestId('sharing-submit'))
-//     fireEvent.change(utils.getByLabelText('sharing-input'), {
-//       target: { value: 'sharing 2' },
-//     })
-//     fireEvent.click(utils.getByTestId('sharing-submit'))
-//     fireEvent.change(utils.getByLabelText('sharing-input'), {
-//       target: { value: 'sharing 3' },
-//     })
-//     fireEvent.click(utils.getByTestId('sharing-submit'))
-//   })
-//   test('should have a list of sharing items', () => {
-//     expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 1')
-//     expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 2')
-//     expect(utils.getByTestId('sharing-items')).toHaveTextContent('sharing 3')
-//   })
-//   test('should remove a sharing item accordingly', () => {
-//     fireEvent.click(utils.getByTestId('remove-sharing0'))
-//     expect(utils.getByTestId('sharing-items')).not.toHaveTextContent(
-//       'sharing 1'
-//     )
-//   })
-// })
+    fireEvent.click(screen.getByText('Lucky Spin'))
 
-// describe('when there is a list of helps', () => {
-//   beforeEach(() => {
-//     fireEvent.change(utils.getByLabelText('help-input'), {
-//       target: { value: 'help 1' },
-//     })
-//     fireEvent.click(utils.getByTestId('help-submit'))
-//     fireEvent.change(utils.getByLabelText('help-input'), {
-//       target: { value: 'help 2' },
-//     })
-//     fireEvent.click(utils.getByTestId('help-submit'))
-//     fireEvent.change(utils.getByLabelText('help-input'), {
-//       target: { value: 'help 3' },
-//     })
-//     fireEvent.click(utils.getByTestId('help-submit'))
-//   })
-//   test('should have a list of help items', () => {
-//     expect(utils.getByTestId('help-items')).toHaveTextContent('help 1')
-//     expect(utils.getByTestId('help-items')).toHaveTextContent('help 2')
-//     expect(utils.getByTestId('help-items')).toHaveTextContent('help 3')
-//   })
-//   test('should remove a help item accordingly', () => {
-//     fireEvent.click(utils.getByTestId('remove-help1'))
-//     expect(utils.getByTestId('help-items')).not.toHaveTextContent('help 2')
-//   })
-// })
+    expect(send).toHaveBeenCalledWith('REDIRECT_LUCKY_DRAW')
+  })
 
-// describe('when there is a list of pairs', () => {
-//   beforeEach(() => {
-//     fireEvent.change(utils.getByLabelText('pair-input'), {
-//       target: { value: 'pair 1' },
-//     })
-//     fireEvent.click(utils.getByTestId('pair-submit'))
-//     fireEvent.change(utils.getByLabelText('pair-input'), {
-//       target: { value: 'pair 2' },
-//     })
-//     fireEvent.click(utils.getByTestId('pair-submit'))
-//     fireEvent.change(utils.getByLabelText('pair-input'), {
-//       target: { value: 'pair 3' },
-//     })
-//     fireEvent.click(utils.getByTestId('pair-submit'))
-//   })
-//   test('should have a list of pair items', () => {
-//     expect(utils.getByTestId('pair-items')).toHaveTextContent('pair 1')
-//     expect(utils.getByTestId('pair-items')).toHaveTextContent('pair 2')
-//     expect(utils.getByTestId('pair-items')).toHaveTextContent('pair 3')
-//   })
-//   test('should remove a pair item accordingly', () => {
-//     fireEvent.click(utils.getByTestId('remove-pair2'))
-//     expect(utils.getByTestId('pair-items')).not.toHaveTextContent('pair 3')
-//   })
-// })
+  test('publish button should all the correct event', () => {
+    const send = jest.fn()
+    render(<PublishButtons send={send} />)
+
+    fireEvent.click(screen.getByText('Publish!'))
+
+    expect(send).toHaveBeenCalledWith('PUBLISH_STANDUP_SESSION')
+  })
+})

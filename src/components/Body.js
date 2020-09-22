@@ -51,10 +51,7 @@ const Body = () => {
             editableValue={current.context.editableValue}
             loading={current.context.loading}
           />
-          <PublishButtons
-            sessionId={current.context.activeSession.id}
-            send={send}
-          />
+          <PublishButtons send={send} />
         </CardContainer>
       </StyledBody>
       <Footer />

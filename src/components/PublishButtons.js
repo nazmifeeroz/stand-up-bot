@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const PublishButtons = ({sessionId, send}) => {
+const PublishButtons = ({send}) => {
   return (
     <ButtonsContainer>
       <button
