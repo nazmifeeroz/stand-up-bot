@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
+    "@materializecss/materialize": "^1.0.0",
     "@xstate/react": "^0.8.1",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
@@ -24,7 +25,6 @@
     "framer-motion": "^1.5.0",
     "graphql": "^14.4.2",
     "graphql-tag": "^2.10.1",
-    "materialize-css": "^1.0.0-rc.2",
     "node-fetch": "^2.6.1",
     "react": "^16.8.6",
     "react-apollo": "^3.0.0",
