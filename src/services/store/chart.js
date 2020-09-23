@@ -49,7 +49,9 @@ const storeMachine = Machine(
           {target: 'showErrorMsg'},
         ],
       },
-      routeToLogin: {entry: 'routeToLogin'},
+      routeToLogin: {
+        entry: 'routeToLogin',
+      },
       showErrorMsg: {},
       checkSession: {
         always: [

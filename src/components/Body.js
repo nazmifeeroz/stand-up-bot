@@ -1,16 +1,13 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {motion} from 'framer-motion'
 import styled from 'styled-components'
 import InputSection from './InputSection'
 import Navbar from './navbar'
-import {StoreContext} from '../services/store'
 import CovidStats from './CovidStats'
 import Footer from './Footer'
 import PublishButtons from './PublishButtons'
 
-const Body = () => {
-  const {current, send} = useContext(StoreContext)
-
+const Body = ({current, send}) => {
   return (
     <motion.div
       initial={{opacity: 0}}

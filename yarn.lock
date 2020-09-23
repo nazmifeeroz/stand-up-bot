@@ -1965,10 +1965,23 @@
   dependencies:
     tslib "^1.9.3"
 
+"@xstate/graph@^1.1.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@xstate/graph/-/graph-1.2.0.tgz#83618bbff4f801fecb9b4f33f1d4a44e1b5a40ff"
+  integrity sha512-6h8ZRmnHsg1BW2NmkM2gb1l6bJwi6SaSLi7ErFzzseLKmcQL2oWBSjHJdsdYMuD2DXFsnHbVi3WqsQE++R7nmA==
+
 "@xstate/react@^0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@xstate/react/-/react-0.8.1.tgz#df200547cca24c909572b7aef1ddab8bca3a0603"
   integrity sha512-8voZm4GX3x70lNQVvoGedoObPYapkQIbgMhE+xOQEsm8Ait4Zto6R01SZ6WJD4qvLl8JPV6uq96OcFRdEsVESg==
+
+"@xstate/test@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@xstate/test/-/test-0.4.1.tgz#115aed246dc352a52da3e5594d273ad9ccf483df"
+  integrity sha512-N8xEWcnWPVVpRkVgGGhpHGTJKLnm2UyGqkvk7eNaMqWdcg8fT6SyRSLtzJuqtJe8wZviScTr7P71Yp1cLawDWg==
+  dependencies:
+    "@xstate/graph" "^1.1.0"
+    chalk "^2.4.2"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
