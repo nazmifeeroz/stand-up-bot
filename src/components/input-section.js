@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import Linkify from 'react-linkify'
-import { useMutationReducer } from '../services/utils'
+import {useMutationReducer} from '../services/utils'
 
-import { Controlled as CodeMirror } from 'react-codemirror2'
+import {Controlled as CodeMirror} from 'react-codemirror2'
 import '../codemirror.css'
 import 'codemirror/keymap/vim.js'
 
-import { StoreContext } from '../services/store'
-export default ({ type, description }) => {
+import {StoreContext} from '../services/store'
+export default ({type, description}) => {
   const [editableItem, setEditableItem] = React.useState(null)
   const [input, setInput] = React.useState('')
   const [removeItem, setRemoveItem] = React.useState('')
@@ -18,14 +18,14 @@ export default ({ type, description }) => {
     name,
   } = React.useContext(StoreContext)
 
-  const { mutation } = useMutationReducer(type)
+  const {mutation} = useMutationReducer(type)
 
   React.useEffect(() => {
     if (removeItem === '') return
     if (window.confirm('Are you sure you wish to delete?')) {
       const newData = data.filter(i => i !== data[removeItem])
       mutation
-        .delete({ variables: { id: data[removeItem].id } })
+        .delete({variables: {id: data[removeItem].id}})
         .catch(err => console.log('err', err))
       setData(newData)
       if (type === 'pairing')
@@ -41,16 +41,14 @@ export default ({ type, description }) => {
   const addItem = e => {
     e && e.preventDefault()
     if (!input) return
-    let addItem = { input }
+    let addItem = {input}
     if (type === 'sharing') {
       // const userName = localStorage.getItem('name')
-      addItem = { ...addItem, contributor: name }
+      addItem = {...addItem, contributor: name}
     }
-    const newItem = [{ value: input, ...addItem }, ...data]
+    const newItem = [{value: input, ...addItem}, ...data]
     setData(newItem)
-    mutation
-      .insert({ variables: addItem })
-      .catch(err => console.log('err', err))
+    mutation.insert({variables: addItem}).catch(err => console.log('err', err))
     if (type === 'pairing')
       localStorage.setItem('pairing', JSON.stringify(newItem))
     setInput('')
@@ -62,7 +60,7 @@ export default ({ type, description }) => {
     setData(data)
     mutation
       .update({
-        variables: { id: data[editableItem].id, editedItem: input },
+        variables: {id: data[editableItem].id, editedItem: input},
       })
       .catch(err => console.log('err', err))
     setInput('')

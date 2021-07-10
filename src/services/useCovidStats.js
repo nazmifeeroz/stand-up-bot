@@ -12,7 +12,7 @@ const useCovidStats = () => {
       ).then(resp => resp.json())
 
       const {yesterdayCases} = await fetch(
-        'https://sj-standup.netlify.app/.netlify/functions/yesterday-cases',
+        `${process.env.REACT_APP_URL}/.netlify/functions/yesterday-cases`,
       ).then(resp => resp.json())
 
       setStats({...data, yesterdayCases})
@@ -29,7 +29,7 @@ const useCovidStats = () => {
     fetchSgData().then(() => fetchGlobalData().then(() => setLoading(false)))
   }, [])
 
-  return {stats, globalStats, loading}
+  return {sgStats: stats, globalStats, loading}
 }
 
 export default useCovidStats
