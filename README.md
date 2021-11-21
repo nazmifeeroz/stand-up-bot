@@ -29,3 +29,7 @@ To run the app, you need create an `.env` file and copy the keys from `.env.samp
 - [x] add a table for GC awardee
 - [x] the GC app receives the token to mutate Hasura server
 - [x] on receive mutation, Hasura calls discord webhook to post in Discord
+
+## Fly Deploment
+
+- Generous free tier!
